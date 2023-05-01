@@ -2,7 +2,7 @@
 
 Use Terraform to create your own vulnerable by design AWS penetration testing playground
 
-<image>
+![image](https://user-images.githubusercontent.com/46326948/235528856-64ffddb0-b1a0-4eda-bb88-6c0bc95d936b.png)
 
 CloudFox helps penetration testers and security professionals find exploitable attack paths in cloud infrastructure. However, what if you want to find and exploit services not yet present in your current environment? What if you lack access to an enterprise AWS environment? 
 
@@ -11,8 +11,8 @@ Enter CloudFoxable, an intentionally vulnerable AWS environment created specific
 Similar to CloudGoat and IAM-Vulnerable, CloudFoxable deploys intentionally vulnerable AWS resources in a user-managed playground account, for users to learn about identifying and exploiting cloud vulnerabilities.
 
 
-Total number of challenges:    X
-Total number of flags:         X
+* Total number of challenges:    X
+* Total number of flags:         X
 
 
 # Table of Contents
