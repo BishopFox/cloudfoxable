@@ -65,5 +65,5 @@ You have now deployed the mallory challenge.
 **Cleanup**
 
 Whenever you want to remove all of the CloudFoxable-created resources, you can run these commands:
-1. `cd cloudfoxable/`
+1. `cd cloudfoxable/aws`
 1. `terraform destroy`
