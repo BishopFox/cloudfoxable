@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS credit_cards (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    card_holder_name VARCHAR(255) NOT NULL,
+    card_number VARCHAR(16) NOT NULL,
+    expiry_date DATE NOT NULL,
+    cvv INT NOT NULL,
+    notes TEXT
+);
+
+INSERT INTO credit_cards (card_holder_name, card_number, expiry_date, cvv, notes)
+VALUES ('Jane Smith', '2345678923456789', '2024-06-30', 456, NULL),
+       ('Alice Johnson', '3456789034567890', '2023-12-31', 789, NULL),
+       ('Bob Brown', '4567890145678901', '2023-05-31', 321, 'FLAG{DidYouKnowDatabasesHoldSensitiveData}'),
+       ('Charlie Davis', '5678901256789012', '2022-11-30', 654, NULL),
+       ('John Doe', '1234567812345678', '2025-01-31', 123, NULL);

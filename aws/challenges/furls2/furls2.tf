@@ -1,0 +1,126 @@
+
+
+
+
+
+
+data "archive_file" "lambda_zip" {
+    type          = "zip"
+    source_dir   = "challenges/furls2/data/lambda/src/"
+    output_path   = "challenges/furls2/data/lambda/lambda_function.zip"
+}
+
+
+resource "aws_lambda_function" "auth-me" {
+  filename         = "challenges/furls2/data/lambda/lambda_function.zip"
+  function_name    = "auth-me"
+  role             = aws_iam_role.furls2.arn
+  handler          = "index.handler"
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
+  runtime          = "nodejs12.x"
+
+  environment {
+    variables = {
+      lambda_http_user = "admin",
+      lambda_http_password = "NotSummer2023"
+    }
+  }
+}
+
+resource "aws_iam_policy" "furls2" {
+  name        = "furls2"
+  path        = "/"
+  description = "Low priv policy used by lambdas"
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [      
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+
+    ],
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role" "furls2" {
+  name                = "sauerbrunn"
+  assume_role_policy  = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      },
+    ]
+  })
+  managed_policy_arns = [aws_iam_policy.furls2.arn]
+}
+
+
+
+
+resource "aws_lambda_function_url" "furls2" {
+  function_name      = aws_lambda_function.auth-me.function_name
+  authorization_type = "NONE"
+}
+
+
+// create an iam role called mewis that trusts the ctf-starting-user role to assume it
+resource "aws_iam_role" "mewis" {
+  name                = "mewis"
+  assume_role_policy  = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          AWS = var.ctf_starting_user_arn
+        }
+      },
+    ]
+  })
+}
+
+// create an iam policy called mewis that allows the user to list lambda functions
+resource "aws_iam_policy" "mewis" {
+  name        = "mewis"
+  path        = "/"
+  description = "Low priv policy used by lambdas"
+
+  // Terraform's "jsonencode" function converts a
+  // Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [      
+      "lambda:ListFunctions",
+
+    ],
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+// attach the mewis policy to the mewis role
+resource "aws_iam_role_policy_attachment" "mewis" {
+  role       = aws_iam_role.mewis.name
+  policy_arn = aws_iam_policy.mewis.arn
+}
