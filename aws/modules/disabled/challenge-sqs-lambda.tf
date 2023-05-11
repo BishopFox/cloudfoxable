@@ -1,3 +1,6 @@
+
+
+
 resource "aws_iam_role" "event_bridge_sqs_rce_role" {
   name = "event_bridge_sqs_rce_role"
 
@@ -209,3 +212,6 @@ target {
   
   }
 }
+
+
+

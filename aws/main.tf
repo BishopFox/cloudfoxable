@@ -47,8 +47,99 @@ module "enabled" {
 
 module "challenge_its_a_secret" {
   source = "./challenges/its-a-secret"
-  count = var.challenge_its_a_secret_enabled ? 1 : 0
+  count = var.its_a_secret_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
+  account_id = data.aws_caller_identity.current.account_id
+  aws_local_profile = var.aws_local_profile
+  user_ip = local.user_ip
+  ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+  ctf_starting_user_name = module.enabled.ctf_starting_user_name
+
+}
+
+module "challenge_its_another_secret" {
+  source = "./challenges/its-another-secret"
+  count = var.its_another_secret_enabled ? 1 : 0
+  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
+  account_id = data.aws_caller_identity.current.account_id
+  aws_local_profile = var.aws_local_profile
+  user_ip = local.user_ip
+  ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+  ctf_starting_user_name = module.enabled.ctf_starting_user_name
+}
+
+module "challenge_backwards" {
+  source = "./challenges/backwards"
+  count = var.backwards_enabled ? 1 : 0
+  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
+  account_id = data.aws_caller_identity.current.account_id
+  aws_local_profile = var.aws_local_profile
+  user_ip = local.user_ip
+  ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+  ctf_starting_user_name = module.enabled.ctf_starting_user_name
+}
+
+module "challenge_the_topic_is_execution" {
+  source = "./challenges/the-topic-is-execution"
+  count = var.the_topic_is_execution_enabled ? 1 : 0
+  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+  account_id = data.aws_caller_identity.current.account_id
+  aws_local_profile = var.aws_local_profile
+  user_ip = local.user_ip
+}
+
+
+###################################################
+#  Category -- Exploit Public-Facing Application  #
+###################################################
+
+module "challenge_search1and2" {
+  source = "./challenges/search1and2"
+  count = var.search1and2_enabled ? 1 : 0
+  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
+  account_id = data.aws_caller_identity.current.account_id
+  aws_local_profile = var.aws_local_profile
+  user_ip = local.user_ip
+  ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+  ctf_starting_user_name = module.enabled.ctf_starting_user_name
+
+}
+
+module "challenge_furls1" {
+  source = "./challenges/furls1"
+  count = var.furls1_enabled ? 1 : 0
+  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
+  account_id = data.aws_caller_identity.current.account_id
+  aws_local_profile = var.aws_local_profile
+  user_ip = local.user_ip
+}
+
+
+module "challenge_furls2" {
+  source = "./challenges/furls2"
+  count = var.furls2_enabled ? 1 : 0
+  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
+  account_id = data.aws_caller_identity.current.account_id
+  aws_local_profile = var.aws_local_profile
+  user_ip = local.user_ip
+  ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+  ctf_starting_user_name = module.enabled.ctf_starting_user_name
+}
+
+module "challenge_the_topic_is_exposure" {
+  source = "./challenges/the-topic-is-exposure"
+  count = var.the_topic_is_exposure_enabled ? 1 : 0
+  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+  account_id = data.aws_caller_identity.current.account_id
+  aws_local_profile = var.aws_local_profile
+  user_ip = local.user_ip
+
+}
+
+module "challenge_middle" {
+  source = "./challenges/middle"
+  count = var.middle_enabled ? 1 : 0
+  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
   account_id = data.aws_caller_identity.current.account_id
   aws_local_profile = var.aws_local_profile
   user_ip = local.user_ip
@@ -59,38 +150,47 @@ module "challenge_its_a_secret" {
 
 
 
-###################################################
-#  Category -- Exploit Public-Facing Application  #
-###################################################
+########################################################################
+#  Category -- Assumed Breach: Accplication Compromise/Network Access  #
+########################################################################
 
-module "challenge_opensearch_github_pat" {
-  source = "./challenges/opensearch-github-pat"
-  count = var.challenge_opensearch_github_pat_enabled ? 1 : 0
+module "challenge_bastion" {
+  source = "./challenges/bastion"
+  count = var.bastion_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
   account_id = data.aws_caller_identity.current.account_id
   aws_local_profile = var.aws_local_profile
   user_ip = local.user_ip
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+  ctf_starting_user_name = module.enabled.ctf_starting_user_name
+  vpc_id = module.enabled.vpc_id
+  subnet1_id = module.enabled.subnet1_id
+  subnet2_id = module.enabled.subnet2_id
+  subnet3_id = module.enabled.subnet3_id
+
 }
 
-# module "challenge_lambda_functionurl" {
-#   source = "./challenges/lambda-functionurl"
-#   count = var.challenge_lambda_functionurl_enabled ? 1 : 0
-#   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
-#   account_id = data.aws_caller_identity.current.account_id
-#   aws_local_profile = var.aws_local_profile
-#   user_ip = local.user_ip
-# }
-
+module "challenge_variable" {
+  source = "./challenges/variable"
+  count = var.variable_enabled ? 1 : 0
+  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
+  account_id = data.aws_caller_identity.current.account_id
+  aws_local_profile = var.aws_local_profile
+  user_ip = local.user_ip
+  intra-sg-access-id = module.challenge_bastion[0].intra-sg-access-id
+  subnet1_id = module.enabled.subnet1_id
+  subnet2_id = module.enabled.subnet2_id
+  subnet3_id = module.enabled.subnet3_id
+}
 
 ##############################################
 #  Category -- Exploit Trusted Relationship  #
 ##############################################
 
 
-module "challenge_oidc_github" {  
-  source = "./challenges/oidc-github"
-  count = var.challenge_oidc_github_enabled ? 1 : 0
+module "challenge_blurred_lines-1" {  
+  source = "./challenges/blurred_lines_1"
+  count = var.blurred_lines-1_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
   account_id = data.aws_caller_identity.current.account_id
   aws_local_profile = var.aws_local_profile
@@ -130,53 +230,24 @@ module "challenge_oidc_github" {
 
 
 
-
-
-
-# output "AWS_Profiled_Used" {
-#   value = var.aws_local_profile
-# }
-
-
-# output "CTF_Deployed_to_Account" {
-#   value = data.aws_caller_identity.current.account_id
-# }
-
-# output "CTF_Deployment_Caller_Arn" {
-#   value = data.aws_caller_identity.current.arn
-# }
-
-# # output "caller_id" {
-# #   value = data.aws_caller_identity.current.user_id
-# # }
-
-# output "CTF_Start_User_Access_Key_Id" {
-#   value     = module.enabled.ctf_user_output_access_key_id
-  
-# }
-# output "CTF_Start_User_Secret_Access_Key" {
-#   value     = module.enabled.ctf_user_output_secret_access_key
-#   sensitive = true
-# }
-
-# output "Participant_User_IP_For_Security_groups" {
-#   value = local.user_ip
-# }
-
-# output "CTF_Start_User_Arn" {
-#   value       = module.enabled.ctf_starting_user_arn
-#   description = "ARN of the CTF starting user"
-# }
-
-# output "Scoreboard_URL" {
-#   value       = "https://cloudfoxable.bishopfox.com"
-#   description = "URL of the CTF scoreboard"
-# }
-
-
-output "ZZ_First_Flag" {
-  value       = "FLAG{congrats_you_are_now_a_terraform_expert_happy_hunting}"
-  description = "First flag of the CTF"
+locals {
+  enabled_challenges = [
+    var.secretsmanager_enabled ?          "secretsmanager" : "",
+    var.its_a_secret_enabled ?            "its_a_secret                 | $.40/month   |" : "",
+    var.its_another_secret_enabled ?      "its_another_secret           | $.40/month   |" : "",
+    var.backwards_enabled ?               "backwards                    | No cost      |" : "",
+    var.blurred_lines-1_enabled ?         "blurred_lines-1              | No cost      |" : "",
+    var.furls1_enabled ?                  "furls1                       | No cost      |" : "",
+    var.furls2_enabled ?                  "furls2                       | No cost      |" : "",
+    var.the_topic_is_exposure_enabled ?   "the_topic_is_exposure        | No cost      |" : "",
+    var.the_topic_is_execution_enabled ?  "the_topic_is_execution       | No cost      |" : "",
+    var.middle_enabled ?                  "middle                       | No cost      |" : "",
+    var.search1and2_enabled ?             "search1and2                  | $27/month    |" : "",
+    #var.opensearch_dynamodb_enabled ? "opensearch_dynamodb" : "",
+    var.github_pat_enabled ?              "github_pat" : "",
+    var.bastion_enabled ?                 "bastion                      | $3/month     |" : "",
+    var.variable_enabled ?                "variable                     | $13/month    |" : ""
+  ]
 }
 
 output "Next_Steps" {
@@ -195,7 +266,7 @@ output "Next_Steps" {
 | 
 | Next steps:
 | 
-|   1. Set up your starting user credentials (From within this directory):
+|   1. Set up your starting user credentials (From within this directory):sum
 |  
 |      +---------------------------------+  
 |      | Option 1: Environment variables |
@@ -220,6 +291,11 @@ output "Next_Steps" {
 |
 |      You'll need this: FLAG{congrats_you_are_now_a_terraform_expert_happy_hunting}
 |
+|  +---------------------------------+--------------+
+|  |  Currently Enabled Challenges   |  Cost/Month  | 
+|  +---------------------------------+--------------+
+|  |    ${join("\n|  |    ", [for c in local.enabled_challenges : c if c != ""])}
+|  +------------------------------------------------+
 +---------
 EOT
 }

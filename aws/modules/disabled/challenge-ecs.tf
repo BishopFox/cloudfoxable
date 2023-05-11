@@ -208,57 +208,57 @@ resource "aws_security_group" "cloudfox-ecs-http-security-group" {
 }
 
 
-data "aws_ami" "amazon-2-ecs-challenge" {
-  most_recent = true
+# data "aws_ami" "amazon-2-ecs-challenge" {
+#   most_recent = true
 
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-ebs"]
-  }
+#   filter {
+#     name   = "name"
+#     values = ["amzn2-ami-hvm-*-x86_64-ebs"]
+#   }
 
-  owners = ["amazon"] # Canonical
-}
+#   owners = ["amazon"] # Canonical
+# }
 
 
-resource "aws_instance" "ec2-for-challenge-ecs-ssm" {
-  ami           = data.aws_ami.amazon-2-ecs-challenge.id
-  instance_type = "t3a.nano"
-  subnet_id = aws_subnet.cloudfox-operational-1.id
-  iam_instance_profile = aws_iam_instance_profile.challenge-ecs-ssm.name
-  associate_public_ip_address = true
-  vpc_security_group_ids = [ aws_security_group.cloudfox-ecs-http-security-group.id ]
+# resource "aws_instance" "ec2-for-challenge-ecs-ssm" {
+#   ami           = data.aws_ami.amazon-2-ecs-challenge.id
+#   instance_type = "t3a.nano"
+#   subnet_id = aws_subnet.cloudfox-operational-1.id
+#   iam_instance_profile = aws_iam_instance_profile.challenge-ecs-ssm.name
+#   associate_public_ip_address = true
+#   vpc_security_group_ids = [ aws_security_group.cloudfox-ecs-http-security-group.id ]
   
-  tags = {
-    Name = "bastion"
-  }
-}
+#   tags = {
+#     Name = "bastion"
+#   }
+# }
 
-resource "aws_iam_role" "role-for-challenge-ecs-ssm" {
-  name                = "reyna"
-  assume_role_policy  = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Sid    = ""
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      },
-    ]
-  })
-}
+# resource "aws_iam_role" "role-for-challenge-ecs-ssm" {
+#   name                = "reyna"
+#   assume_role_policy  = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Action = "sts:AssumeRole"
+#         Effect = "Allow"
+#         Sid    = ""
+#         Principal = {
+#           Service = "ec2.amazonaws.com"
+#         }
+#       },
+#     ]
+#   })
+# }
 
 
 
-resource "aws_iam_role_policy_attachment" "ssmcore" {
-  role       = aws_iam_role.role-for-challenge-ecs-ssm.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+# resource "aws_iam_role_policy_attachment" "ssmcore" {
+#   role       = aws_iam_role.role-for-challenge-ecs-ssm.name
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 
-}  
+# }  
 
-resource "aws_iam_instance_profile" "challenge-ecs-ssm" {
-  name = "challenge-ecs-ssm"
-  role = aws_iam_role.role-for-challenge-ecs-ssm.name
-}
+# resource "aws_iam_instance_profile" "challenge-ecs-ssm" {
+#   name = "challenge-ecs-ssm"
+#   role = aws_iam_role.role-for-challenge-ecs-ssm.name
+# }

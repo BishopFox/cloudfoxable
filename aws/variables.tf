@@ -22,6 +22,8 @@ variable "shared_high_priv_servicerole" {
   default     = ""
 }
 
+
+
 variable "AWS_REGION" {
   type    = string
   default = "us-west-2" 
@@ -54,44 +56,97 @@ variable "github_repo" {
   default     = null
 }
 
-variable "challenge_oidc_github_enabled" {
-  description = "Enable or disable oidc_github challenge (true = enabled, false = disabled)"
+variable "blurred_lines-1_enabled" {
+  description = "Enable or disable blurred_lines-1 challenge (true = enabled, false = disabled)"
   type        = bool
   default     = false
 }
 
-variable "challenge_opensearch_dynamodb_enabled" {
+variable "opensearch_dynamodb_enabled" {
   description = "Enable or disable the open search dynamodb challenge (true = enabled, false = disabled)"
   type        = bool
   default     = false
 }
 
-variable "challenge_lambda_functionurl_enabled" {
-  description = "Enable or disable lambda_functionurl challenge (true = enabled, false = disabled)"
+variable "furls1_enabled" {
+  description = "Enable or disable furls1 challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+}
+variable "furls2_enabled" {
+  description = "Enable or disable furls2 challenge (true = enabled, false = disabled)"
   type        = bool
   default     = false
 }
 
-# variable "challenge_secretsmanager_enabled" {
-#   description = "Enable or disable secretsmanager challenge (true = enabled, false = disabled)"
-#   type        = bool
-#   default     = false
-# }
+variable "secretsmanager_enabled" {
+  description = "Enable or disable secretsmanager challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+}
 
-variable "challenge_github_pat_enabled" {
+variable "github_pat_enabled" {
   description = "Enable or disable github_pat challenge (true = enabled, false = disabled)"
   type        = bool
   default     = false
 }
 
-variable "challenge_opensearch_github_pat_enabled" {
+variable "search1and2_enabled" {
   description = "Enable or disable opensearch_github_pat challenge (true = enabled, false = disabled)"
   type        = bool
   default     = false
 }
 
-variable "challenge_its_a_secret_enabled" {
+variable "its_a_secret_enabled" {
   description = "Enable or disable its_a_secret challenge (true = enabled, false = disabled)"
   type        = bool
   default     = false
+}
+
+variable "its_another_secret_enabled" {
+  description = "Enable or disable its_another_secret challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+}
+
+variable "backwards_enabled" {
+  description = "Enable or disable backwards challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+}
+
+variable "bastion_enabled" {
+  description = "Enable or disable bastion challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+}
+
+variable "variable_enabled" {
+  description = "Enable or disable variable challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+}
+
+variable "the_topic_is_exposure_enabled" {
+  description = "Enable or disable the_topic_is_exposure challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+}
+
+variable "the_topic_is_execution_enabled" {
+  description = "Enable or disable the_topic_is_execution challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+}
+
+variable "middle_enabled" {
+  description = "Enable or disable middle challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+}
+
+variable "intra-sg-access-id" {
+  description = "The ID of the intra-sg-access security group"
+  type        = string
+  default     = null
 }

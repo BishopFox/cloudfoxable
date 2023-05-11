@@ -36,6 +36,7 @@ terraform.tfvars
 cloudfox-output
 .terraform
 *.zip
+.infracost
 
 
 
