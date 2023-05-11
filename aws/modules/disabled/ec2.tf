@@ -38,7 +38,7 @@ resource "aws_security_group" "allow_ssh_from_world" {
 
 resource "aws_instance" "ec2-1" {
   ami           = data.aws_ami.amazon-2.id
-  instance_type = "t3.medium"
+  instance_type = "t3a.nano"
   subnet_id = aws_subnet.cloudfox-operational-1.id
   iam_instance_profile = aws_iam_instance_profile.cf_profile.name
   associate_public_ip_address = true

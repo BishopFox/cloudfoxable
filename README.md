@@ -6,9 +6,9 @@ Use Terraform to create your own vulnerable by design AWS penetration testing pl
 
 CloudFox helps penetration testers and security professionals find exploitable attack paths in cloud infrastructure. However, what if you want to find and exploit services not yet present in your current environment? What if you lack access to an enterprise AWS environment? 
 
-Enter CloudFoxable, an intentionally vulnerable AWS environment created specifically to showcase CloudFox’s capabilities and help you find latent attack paths more effectively. Drawing inspiration from CloudGoat, flaws.cloud, and Metasploitable, CloudFoxable provides a wide array of flags and attack paths in a CTF format. 
+Enter CloudFoxable, an intentionally vulnerable AWS environment created specifically to showcase CloudFox’s capabilities and help you find latent attack paths more effectively. Drawing inspiration from [CloudGoat](https://github.com/RhinoSecurityLabs/cloudgoat), [flaws.cloud](https://flaws.cloud/), [flaws2.cloud](https://flaws2.cloud/) and [Metasploitable 1-3](https://github.com/rapid7/metasploitable3), CloudFoxable provides a wide array of flags and attack paths in a CTF format. 
 
-Similar to CloudGoat and IAM-Vulnerable, CloudFoxable deploys intentionally vulnerable AWS resources in a user-managed playground account, for users to learn about identifying and exploiting cloud vulnerabilities.
+Similar to CloudGoat](https://github.com/RhinoSecurityLabs/cloudgoat) and [IAM-Vulnerable](https://github.com/BishopFox/iam-vulnerable), CloudFoxable deploys intentionally vulnerable AWS resources in a user-managed playground account, for users to learn about identifying and exploiting cloud vulnerabilities. However, more like [flaws.cloud](https://flaws.cloud/), your experience is more web based and guided. 
 
 
 * Total number of challenges:    X
@@ -89,3 +89,50 @@ You have now deployed the mallory challenge.
 Whenever you want to remove all of the CloudFoxable-created resources, you can run these commands:
 1. `cd cloudfoxable/aws`
 1. `terraform destroy`
+
+# Hungry for more? 
+
+https://github.com/iknowjason/Awesome-CloudSec-Labs
+
+
+# Contributing
+
+If you'd like to add a new challenge, here's the steps within CloudFoxable once you fork the repo: 
+
+* cp aws/challenges/1_challenge_template aws/challenges/challenge_name
+* Rename mv aws/challenges/challenge_name/challenge-name.tf to the name of your challenge
+* Add your terraform code
+* Make a new variable in aws/variables.tf
+  ```
+  variable "challenge_name_enabled" {
+  description = "Enable or disable challenge_name challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+  }
+  ```
+* Add it to the "Enabled/Disabled Challenge section in `terraform.tfvars.example`. Specify if it should be enabled by default (low/no cost), or disabled by default (costs $$)
+  ```
+  challenge_name_enabled = false
+  ```
+* Add the module to aws/main.tf
+  ```
+  module "challenge_challenge_name" {
+    source = "./challenges/challenge-name"
+    count = var.challenge_name_enabled ? 1 : 0
+    aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+    account_id = data.aws_caller_identity.current.account_id
+    aws_local_profile = var.aws_local_profile
+    user_ip = local.user_ip
+    }
+   ```
+* Add the challenge name to the `enabled_challenges` local variable:
+  ```
+  var.challenge_name_enabled ?   "challenge_name | No cost" : "",
+  ```
+
+
+
+
+
+
+

@@ -74,3 +74,20 @@ resource "aws_route_table_association" "cloudfox-operational-3" {
 
 
 
+// output vpc_id
+output "vpc_id" {
+  value = aws_vpc.cloudfox.id
+}
+
+// output subnet_id
+output "subnet1_id" {
+  value = aws_subnet.cloudfox-operational-1.id
+}
+
+output "subnet2_id" {
+  value = aws_subnet.cloudfox-operational-2.id
+}
+
+output "subnet3_id" {
+  value = aws_subnet.cloudfox-operational-3.id
+}
