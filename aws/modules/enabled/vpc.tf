@@ -79,6 +79,10 @@ output "vpc_id" {
   value = aws_vpc.cloudfox.id
 }
 
+output "vpc_cidr" {
+  value = aws_vpc.cloudfox.cidr_block
+}
+
 // output subnet_id
 output "subnet1_id" {
   value = aws_subnet.cloudfox-operational-1.id

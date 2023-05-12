@@ -59,7 +59,6 @@ its_a_secret_enabled = true
 its_another_secret_enabled = true
 backwards_enabled = true
 
-blurred_lines-1_enabled = false
 furls1_enabled = true
 furls2_enabled = true
 the_topic_is_exposure_enabled = true
@@ -69,6 +68,7 @@ middle_enabled = true
 
 # This challenges incur noticeable cost. Enable when needed
 search1and2_enabled = false
+wyatt_enabled = false
 
 ##  Bastion host related challenges           
 ##  The following challenges all need `bastion_enabled = true`
@@ -76,13 +76,10 @@ search1and2_enabled = false
 bastion_enabled = false
 variable_enabled = false
 
-
-
-##################################
 # Enable/Disable blurred_lines-1 
-##################################
-# The repository name where you will create the malicious action (a repository that you own and trust)
-# example: github_repo = "sethsec/cloudfoxable"
+# blurred_lines-1 is a challenge that requires you to create a GitHub repo. 
+# The the private repository that you own and trust 
+# example: github_repo = "sethsec/blurred-lines-demo"
 
-github_repo = ""
 blurred_lines-1_enabled = false
+github_repo = null

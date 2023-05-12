@@ -9,8 +9,8 @@ data "aws_ami" "amazon-2-ecs" {
   owners = ["amazon"] # Canonical
 }
 
-resource "aws_iam_role" "ecs-ec2-ssrf-instance-role" {
-  name = "ecs-ec2-ssrf-instance-role"
+resource "aws_iam_role" "wyatt-instance-role" {
+  name = "wyatt-instance-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -27,17 +27,17 @@ resource "aws_iam_role" "ecs-ec2-ssrf-instance-role" {
 }
 EOF
   tags = {
-      Name = "ecs-ec2-ssrf-instance-role"
+      Name = "wyatt-instance-role"
   }
 }
 
-resource "aws_iam_instance_profile" "ecs-ec2-ssrf-instance-profile" {
-  name = "ecs-ec2-ssrf-instance-profile"
-  role = aws_iam_role.ecs-ec2-ssrf-instance-role.name
+resource "aws_iam_instance_profile" "wyatt-instance-profile" {
+  name = "wyatt-instance-profile"
+  role = aws_iam_role.wyatt-instance-role.name
 }
 
 resource "aws_ecs_cluster" "ecs" {
-  name = "ecs-ec2-ssrf-cluster"
+  name = "wyatt-cluster"
 }
 
 resource "aws_launch_configuration" "ecs" {
@@ -45,7 +45,7 @@ resource "aws_launch_configuration" "ecs" {
   image_id             = data.aws_ami.amazon-2-ecs.id
   instance_type        = "t2.micro"
   security_groups      = [aws_security_group.cloudfox-ecs-ec2-http-security-group-8000.id]
-  iam_instance_profile = aws_iam_instance_profile.ecs-ec2-ssrf-instance-profile.id
+  iam_instance_profile = aws_iam_instance_profile.wyatt-instance-profile.id
   user_data            = "#!/bin/bash\necho ECS_CLUSTER=${aws_ecs_cluster.ecs.name} >> /etc/ecs/ecs.config"
 
 
@@ -59,11 +59,11 @@ resource "aws_autoscaling_group" "ecs" {
   min_size                  = 1
   max_size                  = 1
   desired_capacity          = 1
-  vpc_zone_identifier       = [aws_subnet.cloudfox-operational-1.id, aws_subnet.cloudfox-operational-2.id]
+  vpc_zone_identifier       = [var.subnet1_id]
 }
 
-resource "aws_ecs_service" "challenge-ecs-ec2-ssrf" {
-  name          = "challenge-ecs-ec2-ssrf-service"
+resource "aws_ecs_service" "challenge-wyatt" {
+  name          = "challenge-wyatt-service"
   cluster       = "${aws_ecs_cluster.ecs.name}"
   desired_count = 1
   launch_type   = "EC2"
@@ -74,22 +74,22 @@ resource "aws_ecs_service" "challenge-ecs-ec2-ssrf" {
 
  network_configuration  {
     security_groups = [aws_security_group.cloudfox-ecs-ec2-http-security-group-8000.id]
-    subnets         = ["${aws_subnet.cloudfox-operational-1.id}"]
+    subnets         = [var.subnet1_id, var.subnet2_id]
     //assign_public_ip = true
   }
 
   # Track the latest ACTIVE revision
-  task_definition = "${aws_ecs_task_definition.challenge-ecs-ec2-ssrf.family}:${max("${aws_ecs_task_definition.challenge-ecs-ec2-ssrf.revision}", "${data.aws_ecs_task_definition.challenge-ecs-ec2-ssrf.revision}")}"
+  task_definition = "${aws_ecs_task_definition.challenge-wyatt.family}:${max("${aws_ecs_task_definition.challenge-wyatt.revision}", "${data.aws_ecs_task_definition.challenge-wyatt.revision}")}"
 }
 
-resource "aws_ecs_task_definition" "challenge-ecs-ec2-ssrf" {
-  family = "challenge-ecs-ec2-ssrf"
+resource "aws_ecs_task_definition" "challenge-wyatt" {
+  family = "challenge-wyatt"
   requires_compatibilities = ["EC2"]
   network_mode             = "awsvpc"
   cpu                      = "256"
   memory                   = "512"
-  task_role_arn = "${aws_iam_role.ecs-ec2-ssrf-task-role.arn}"
-  execution_role_arn = "${aws_iam_role.shared-ecs-execution-role.arn}"
+  task_role_arn = "${aws_iam_role.wyatt-task-role.arn}"
+  execution_role_arn = "${aws_iam_role.wyatt-task-role.arn}"
 
 //task definition that runs the image sethsec/nodejs-ssrf-app fro docker hub with minimal cpu and memory and listens on port 8000 for incoming https requests
   container_definitions = <<DEFINITION
@@ -99,11 +99,11 @@ resource "aws_ecs_task_definition" "challenge-ecs-ec2-ssrf" {
     "essential": true,
     "image": "sethsec/nodejs-ssrf-app",
     "memory": 128,
-    "name": "challenge-ecs-ec2-ssrf",
+    "name": "challenge-wyatt",
     "portMappings": [ 
             { 
                "containerPort": 8000,
-               "hostPort": 8000,
+               "hostPort": 12380,
                "protocol": "tcp"
             }
     ]
@@ -114,15 +114,15 @@ DEFINITION
 }
 
 
-data "aws_ecs_task_definition" "challenge-ecs-ec2-ssrf" {
-  task_definition = "${aws_ecs_task_definition.challenge-ecs-ec2-ssrf.family}"
+data "aws_ecs_task_definition" "challenge-wyatt" {
+  task_definition = "${aws_ecs_task_definition.challenge-wyatt.family}"
 }
 
 
 
 
-resource "aws_iam_role" "ecs-ec2-ssrf-task-role" {
-  name = "ecs-ec2-ssrf-task-role"
+resource "aws_iam_role" "wyatt-task-role" {
+  name = "wyatt-task-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -139,15 +139,15 @@ resource "aws_iam_role" "ecs-ec2-ssrf-task-role" {
 }
 EOF
   tags = {
-      Name = "ecs-ec2-ssrf-role"
+      Name = "wyatt-role"
   }
 }
 
 
 #Iam Role Policy
-resource "aws_iam_policy" "ecs-ec2-ssrf-policy" {
-  name = "ecs-ec2-ssrf-policy"
-  description = "ecs-ec2-ssrf-policy"
+resource "aws_iam_policy" "wyatt-policy" {
+  name = "wyatt-policy"
+  description = "wyatt-policy"
   policy = <<POLICY
 {
     "Version": "2012-10-17",
@@ -177,19 +177,19 @@ POLICY
 
 
 
-resource "aws_iam_policy_attachment" "ecs-ec2-ssrf-policy-attachment" {
-  name = "ecs-ec2-ssrf-policy-attachment"
+resource "aws_iam_policy_attachment" "wyatt-policy-attachment" {
+  name = "wyatt-policy-attachment"
   roles = [
-      "${aws_iam_role.ecs-ec2-ssrf-task-role.name}",
-      "${aws_iam_role.ecs-ec2-ssrf-instance-role.name}",
+      "${aws_iam_role.wyatt-task-role.name}",
+      "${aws_iam_role.wyatt-instance-role.name}",
       
   ]
-  policy_arn = "${aws_iam_policy.ecs-ec2-ssrf-policy.arn}"
+  policy_arn = "${aws_iam_policy.wyatt-policy.arn}"
 }
 
 
-resource "aws_iam_role_policy_attachment" "ecs-ec2-ssrf-policy" {
-  role       = aws_iam_role.ecs-ec2-ssrf-instance-role.name
+resource "aws_iam_role_policy_attachment" "wyatt-policy" {
+  role       = aws_iam_role.wyatt-instance-role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 
 }  
@@ -197,17 +197,17 @@ resource "aws_iam_role_policy_attachment" "ecs-ec2-ssrf-policy" {
 resource "aws_security_group" "cloudfox-ecs-ec2-http-security-group-8000" {
   name = "cloudfox-ecs-ec2-http-8000"
   description = "Cloudfox Security Group for ecs"
-  vpc_id = "${aws_vpc.cloudfox.id}"
+  vpc_id = "${var.vpc_id}"
   ingress {
       from_port = 8000
-      to_port = 8000
+      to_port =  8000
       protocol = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
       from_port = 0
-      to_port = 0
-      protocol = "-1"
+      to_port = 65535
+      protocol = "tcp"
       cidr_blocks = [
           "0.0.0.0/0"
       ]
@@ -217,3 +217,5 @@ resource "aws_security_group" "cloudfox-ecs-ec2-http-security-group-8000" {
     Stack = "CloudFox"
   }
 }
+
+
