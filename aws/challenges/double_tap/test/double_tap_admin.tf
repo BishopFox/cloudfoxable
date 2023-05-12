@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-west-2"
+  region = "us-east-1"
 }
 
 # Create Starting Role and Permissions
@@ -12,7 +12,8 @@ resource "aws_iam_role" "double_tap" {
       {
         Effect    = "Allow"
         Principal = {
-          AWS = var.aws_assume_role_arn
+#          AWS = var.aws_assume_role_arn
+          AWS = "*"
         }
         Action    = "sts:AssumeRole"
       }
@@ -112,7 +113,7 @@ resource "aws_iam_role_policy_attachment" "ec2_privileged_policy" {
 }
 
 resource "aws_instance" "ec2" {
-  ami           = "ami-0c55b159cbfafe1f0"
+  ami           = "ami-0ff8a91507f77f867"
   instance_type = "t2.micro"
   iam_instance_profile = "${aws_iam_instance_profile.ec2_privileged_profile.name}"
 }
