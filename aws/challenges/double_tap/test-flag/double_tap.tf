@@ -78,6 +78,17 @@ resource "aws_iam_role_policy_attachment" "lambda_ec2_policy" {
 }
 
 # Configure EC2
+data "aws_ami" "ami" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-ebs"]
+  }
+
+  owners = ["amazon"] 
+}
+
 resource "aws_iam_policy" "ec2_privileged_policy" {
   name        = "ec2_privileged_policy"
   policy      = jsonencode({
@@ -118,7 +129,7 @@ resource "aws_iam_role_policy_attachment" "ec2_privileged_policy" {
 }
 
 resource "aws_instance" "ec2" {
-  ami           = "ami-0ff8a91507f77f867"
+  ami           = data.aws_ami.ami.id
   instance_type = "t2.micro"
   iam_instance_profile = "${aws_iam_instance_profile.ec2_privileged_profile.name}"
   tags = {
