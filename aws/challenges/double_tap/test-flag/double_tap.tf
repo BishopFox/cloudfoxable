@@ -12,7 +12,7 @@ resource "aws_iam_role" "double_tap" {
       {
         Effect    = "Allow"
         Principal = {
-          AWS = var.ctf_starting_user_arn
+          AWS = "*"
         }
         Action    = "sts:AssumeRole"
       }
@@ -48,7 +48,7 @@ resource "aws_iam_policy" "lambda_ec2_policy" {
         Resource = "*"
         Condition = {
           StringEquals = {
-            "aws:ResourceTag/double_tap" = "true"
+            "aws:ResourceTag/double_tap1" = "true"
           }
         }
       }
@@ -87,6 +87,11 @@ resource "aws_iam_policy" "ec2_privileged_policy" {
         Effect   = "Allow"
         Action   = "ssm:*"
         Resource = "*"
+        Condition = {
+          StringEquals = {
+            "aws:ResourceTag/double_tap2" = "true"
+          }
+        }
       }
     ]
   })
@@ -117,7 +122,7 @@ resource "aws_instance" "ec2" {
   instance_type = "t2.micro"
   iam_instance_profile = "${aws_iam_instance_profile.ec2_privileged_profile.name}"
   tags = {
-    double_tap  = "true"
+    double_tap1  = "true"
   }
 }
 
@@ -130,6 +135,9 @@ resource "aws_iam_instance_profile" "ec2_privileged_profile" {
 resource "aws_instance" "flag" {
   ami           = "ami-0ff8a91507f77f867"
   instance_type = "t2.micro"
+  tags = {
+    double_tap2  = "true"
+  }
 
   user_data = <<-EOF
               #!/bin/bash
