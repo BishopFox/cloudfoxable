@@ -50,6 +50,11 @@ variable "user_ip" {
   default     = ""
 }
 
+variable "intra-sg-access-id" {
+  description = "The ID of the intra-sg-access security group"
+  type        = string
+  default     = null
+}
 variable "github_repo" {
   description = "The github repo for the OIDC-GitHub challenge"
   type        = string
@@ -145,8 +150,10 @@ variable "middle_enabled" {
   default     = false
 }
 
-variable "intra-sg-access-id" {
-  description = "The ID of the intra-sg-access security group"
-  type        = string
-  default     = null
-}
+variable "wyatt_enabled" {
+  description = "Enable or disable wyatt challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+  }
+
+

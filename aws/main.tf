@@ -148,6 +148,20 @@ module "challenge_middle" {
 
 }
 
+  module "challenge_wyatt" {
+    source = "./challenges/wyatt"
+    count = var.wyatt_enabled ? 1 : 0
+    aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+    account_id = data.aws_caller_identity.current.account_id
+    aws_local_profile = var.aws_local_profile
+    user_ip = local.user_ip
+    vpc_id = module.enabled.vpc_id
+    vpc_cidr = module.enabled.vpc_cidr
+    subnet1_id = module.enabled.subnet1_id
+    subnet2_id = module.enabled.subnet2_id
+    subnet3_id = module.enabled.subnet3_id
+    }
+
 
 
 ########################################################################
@@ -190,7 +204,7 @@ module "challenge_variable" {
 
 module "challenge_blurred_lines-1" {  
   source = "./challenges/blurred_lines_1"
-  count = var.blurred_lines-1_enabled ? 1 : 0
+  count = (var.blurred_lines-1_enabled && var.github_repo != "") ? 1 : 0    
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
   account_id = data.aws_caller_identity.current.account_id
   aws_local_profile = var.aws_local_profile
@@ -198,6 +212,17 @@ module "challenge_blurred_lines-1" {
   github_repo = var.github_repo
 }
 
+# locals {
+#   error_message = "You have tried to enable the challenge by setting var.blurred_lines-1_enabled to true, but you forgot to specify a repo in var.github_repo."
+# }
+
+# resource "null_resource" "validate_variables" {
+#   count = var.blurred_lines-1_enabled && var.github_repo == "" ? 1 : 0
+
+#   provisioner "local-exec" {
+#     command = "echo '${local.error_message}'; exit 1"
+#   }
+# }
 
 
 
@@ -245,8 +270,10 @@ locals {
     var.search1and2_enabled ?             "search1and2                  | $27/month    |" : "",
     #var.opensearch_dynamodb_enabled ? "opensearch_dynamodb" : "",
     var.github_pat_enabled ?              "github_pat" : "",
-    var.bastion_enabled ?                 "bastion                      | $3/month     |" : "",
-    var.variable_enabled ?                "variable                     | $13/month    |" : ""
+    var.bastion_enabled ?                 "bastion                      | $4/month     |" : "",
+    var.variable_enabled ?                "variable                     | $13/month    |" : "",
+    var.wyatt_enabled ?                   "wyatt                        | $4/month     |" : ""
+
   ]
 }
 

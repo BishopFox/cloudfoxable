@@ -127,7 +127,7 @@ If you'd like to add a new challenge, here's the steps within CloudFoxable once 
    ```
 * Add the challenge name to the `enabled_challenges` local variable:
   ```
-  var.challenge_name_enabled ?   "challenge_name | No cost" : "",
+    var.wyatt_enabled ?                   "name                      | $12/month    |" : ""
   ```
 
 
