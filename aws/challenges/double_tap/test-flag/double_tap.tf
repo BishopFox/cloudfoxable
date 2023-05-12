@@ -80,12 +80,10 @@ resource "aws_iam_role_policy_attachment" "lambda_ec2_policy" {
 # Configure EC2
 data "aws_ami" "ami" {
   most_recent = true
-
   filter {
     name   = "name"
     values = ["amzn2-ami-hvm-*-x86_64-ebs"]
   }
-
   owners = ["amazon"] 
 }
 
@@ -143,9 +141,61 @@ resource "aws_iam_instance_profile" "ec2_privileged_profile" {
 }
 
 # Create flag
+resource "aws_secretsmanager_secret" "double_tap_flag_secret" {
+  name = "double_tap_flag"
+}
+
+resource "aws_secretsmanager_secret_version" "double_tap_flag_secret_version" {
+  secret_id     = aws_secretsmanager_secret.double_tap_flag_secret.id
+  secret_string = "12345"
+}
+
+resource "aws_iam_policy" "double_tap_secret_policy" {
+  name        = "double_tap_secret_policy"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret",
+          "secretsmanager:ListSecretVersionIds",
+          "secretsmanager:ListSecrets"
+        ]
+        Effect   = "Allow"
+        Resource = [
+          aws_secretsmanager_secret.double_tap_flag_secret.arn
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role" "double_tap_secret" {
+  name = "double_tap_secret"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = { Service = "ec2.amazonaws.com" }
+        Action    = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "double_tap_secret_policy" {
+  policy_arn = aws_iam_policy.double_tap_secret_policy.arn
+  role       = aws_iam_role.double_tap_secret.name
+}
+
+
 resource "aws_instance" "flag" {
-  ami           = "ami-0ff8a91507f77f867"
+  ami           = data.aws_ami.ami.id
   instance_type = "t2.micro"
+  iam_instance_profile = "${aws_iam_instance_profile.double_tap_secret_profile.name}"  
   tags = {
     double_tap2  = "true"
   }
@@ -158,6 +208,10 @@ resource "aws_instance" "flag" {
               echo 'Starting SSM agent...'
               sudo systemctl start amazon-ssm-agent
               echo 'SSM agent started.'
-              echo "test" > /root/flag.txt
               EOF
+}
+
+resource "aws_iam_instance_profile" "double_tap_secret_profile" {
+  name = "double_tap_secret_profile"
+  role = aws_iam_role.double_tap_secret.name
 }
