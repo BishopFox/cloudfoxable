@@ -82,3 +82,14 @@ variable "user_ip" {
   default     = ""
 }
 
+variable "ctf_starting_user_arn" {
+  description = "The arn of the user that is created at the start of the CTF"
+  type        = string
+  default     = ""
+}
+
+variable "ctf_starting_user_name" {
+  description = "The name of the user that is created at the start of the CTF"
+  type        = string
+  default     = ""
+}

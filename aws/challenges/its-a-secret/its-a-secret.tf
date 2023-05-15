@@ -27,7 +27,7 @@ resource "aws_ssm_parameter" "secret4" {
 resource "aws_ssm_parameter" "flag" {
     name  = "/cloudfoxable/flag/its-a-secret"
     type  = "SecureString"
-    value = "{FLAG:IsASecretASecretIfTooManyPeopleHaveAccessToIt?}"
+    value = "FLAG{ItsASecret::IsASecretASecretIfTooManyPeopleHaveAccessToIt?}"
 }
 
 // create an iam policy that only allows access to this flag

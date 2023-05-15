@@ -86,6 +86,8 @@ module "challenge_the_topic_is_execution" {
   account_id = data.aws_caller_identity.current.account_id
   aws_local_profile = var.aws_local_profile
   user_ip = local.user_ip
+  ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+  ctf_starting_user_name = module.enabled.ctf_starting_user_name
 }
 
 module "challenge_root" {
