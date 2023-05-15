@@ -157,3 +157,8 @@ variable "wyatt_enabled" {
   }
 
 
+variable "root_enabled" {
+  description = "Enable or disable root challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+}

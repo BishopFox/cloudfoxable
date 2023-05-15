@@ -88,6 +88,18 @@ module "challenge_the_topic_is_execution" {
   user_ip = local.user_ip
 }
 
+module "challenge_root" {
+  source = "./challenges/root"
+  count = var.root_enabled ? 1 : 0
+  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+  account_id = data.aws_caller_identity.current.account_id
+  aws_local_profile = var.aws_local_profile
+  aws_root_user = format("arn:aws:iam::%s:root", data.aws_caller_identity.current.account_id)
+  user_ip = local.user_ip
+  ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+  ctf_starting_user_name = module.enabled.ctf_starting_user_name
+}
+
 
 ###################################################
 #  Category -- Exploit Public-Facing Application  #
@@ -275,6 +287,15 @@ locals {
     var.wyatt_enabled ?                   "wyatt                        | $4/month     |" : ""
 
   ]
+}
+
+output "CTF_Start_User_Access_Key_Id" {
+  value     = module.enabled.ctf_user_output_access_key_id
+
+}
+output "CTF_Start_User_Secret_Access_Key" {
+  value     = module.enabled.ctf_user_output_secret_access_key
+  sensitive = true
 }
 
 output "Next_Steps" {
