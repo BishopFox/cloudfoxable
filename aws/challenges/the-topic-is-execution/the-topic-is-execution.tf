@@ -30,7 +30,7 @@ resource "aws_iam_role" "execution" {
 
 // attach root-policy1 to root-role
 resource "aws_iam_role_policy_attachment" "execution" {
-  role       = "aws_iam_role.execution.name"
+  role       = aws_iam_role.execution.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSNSReadOnlyAccess"
 }
 
