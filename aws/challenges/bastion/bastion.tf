@@ -80,6 +80,33 @@ resource "aws_iam_role_policy_attachment" "ssmcore" {
 
 }  
 
+resource "aws_iam_policy" "rootdeny_ssm_parameter_access" {
+  name        = "rootdeny_ssm_parameter_access-bastion"
+  path        = "/"
+  description = "IAM policy to deny access to certain SSM permissions"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Deny"
+        Action   = [
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+        ]
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "bastion-deny" {
+  role       = aws_iam_role.bastion.name
+  policy_arn = aws_iam_policy.rootdeny_ssm_parameter_access.arn
+
+}  
+
+
 resource "aws_iam_instance_profile" "bastion" {
   name = "bastion"
   role = aws_iam_role.bastion.name
@@ -182,3 +209,4 @@ resource "aws_iam_user_policy_attachment" "bastion-ssm" {
   user       = var.ctf_starting_user_name
   policy_arn = aws_iam_policy.bastion-ssm.arn
 }
+

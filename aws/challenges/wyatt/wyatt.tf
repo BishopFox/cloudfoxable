@@ -15,7 +15,7 @@ data "aws_ami" "amazon_linux" {
 
 resource "aws_instance" "wyatt" {
   ami           = data.aws_ami.amazon_linux.id
-  security_groups = [aws_security_group.wyatt.id ]
+  //security_groups = [aws_security_group.wyatt.id ]
   vpc_security_group_ids = [ aws_security_group.wyatt.id ]
   iam_instance_profile = aws_iam_instance_profile.wyatt.name
 
@@ -115,11 +115,37 @@ resource "aws_iam_role_policy_attachment" "wyatt" {
   policy_arn = aws_iam_policy.wyatt.arn
 }
 
-resource "aws_iam_role_policy_attachment" "ssmcore" {
-  role       = aws_iam_role.wyatt.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+# resource "aws_iam_role_policy_attachment" "ssmcore" {
+#   role       = aws_iam_role.wyatt.name
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 
-}  
+# }  
+
+# resource "aws_iam_policy" "rootdeny_ssm_parameter_access-wyatt" {
+#   name        = "rootdeny_ssm_parameter_access-wyatt"
+#   path        = "/"
+#   description = "IAM policy to deny access to certain SSM permissions"
+
+#   policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Effect   = "Deny"
+#         Action   = [
+#           "ssm:GetParameter",
+#           "ssm:GetParameters",
+#         ]
+#         Resource = "*"
+#       },
+#     ]
+#   })
+# }
+
+# resource "aws_iam_role_policy_attachment" "wyatt-deny-ssm" {
+#   role       = aws_iam_role.wyatt.name
+#   policy_arn = aws_iam_policy.rootdeny_ssm_parameter_access-wyatt.arn
+
+# }  
 
 
 
