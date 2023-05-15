@@ -1,8 +1,39 @@
 # Attack path summary
-# 1. Anyone in the caller account can subscribe to and publish to the SNS topic
-# 2. They SNS topic has a lambda function subscribed to it, which contains an RCE vulnerability
-# 3. An attacker who has any type of AWS access to the account can send an RCE payload to the SNS topic and execute code on the lambda function
-# 4. The lambda function has a role with a policy that allows it to read secrets from SSM, which contains the flag
+# 1. viniciusjur is the assumed breach role and can list SNS topics
+# 2. Anyone in the caller account can subscribe to and publish to the SNS topic
+# 3. They SNS topic has a lambda function subscribed to it, which contains an RCE vulnerability
+# 4. An attacker who has any type of AWS access to the account can send an RCE payload to the SNS topic and execute code on the lambda function
+# 5. The lambda function has a role with a policy that allows it to read secrets from SSM, which contains the flag
+
+
+resource "aws_iam_role" "execution" {
+  name               = "viniciusjr"
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "AWS" : [
+            "${var.ctf_starting_user_arn}"
+          ]
+        },
+        "Action" : [
+          "sts:AssumeRole"
+        ]
+      }
+    ]
+  })
+}
+
+
+
+// attach root-policy1 to root-role
+resource "aws_iam_role_policy_attachment" "execution" {
+  role       = "aws_iam_role.execution.name"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSNSReadOnlyAccess"
+}
+
 
 
 resource "aws_iam_role" "executioner-role" {
@@ -158,7 +189,7 @@ resource "aws_lambda_permission" "allow_sns" {
 resource "aws_ssm_parameter" "executioner-secret" {
   name  = "/cloudfoxable/flag/executioner"
   type  = "SecureString"
-  value = "{FLAG:theTopicIsExecution::WeJustPoppedALambdaByInjectingAnEvilSNSmessage}"
+  value = "FLAG{theTopicIsExecution::WeJustPoppedALambdaByInjectingAnEvilSNSmessage}"
 }
 
 
