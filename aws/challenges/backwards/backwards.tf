@@ -50,8 +50,8 @@ resource "aws_iam_policy" "corpoate-domain-admin-password-policy" {
 }
 
 //create iam role that trusts the ctf starting user and attach the policy to it
-resource "aws_iam_role" "corpoate-domain-admin-password-role" {
-  name               = "corpoate-domain-admin-password-role"
+resource "aws_iam_role" "Alexander-Arnold" {
+  name               = "Alexander-Arnold"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -72,6 +72,6 @@ resource "aws_iam_role" "corpoate-domain-admin-password-role" {
 
 //attach the policy to the role
 resource "aws_iam_role_policy_attachment" "corpoate-domain-admin-password-policy-attachment" {
-  role       = aws_iam_role.corpoate-domain-admin-password-role.name
+  role       = aws_iam_role.Alexander-Arnold.name
   policy_arn = aws_iam_policy.corpoate-domain-admin-password-policy.arn
 }

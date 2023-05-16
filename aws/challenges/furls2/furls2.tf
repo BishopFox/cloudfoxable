@@ -1,9 +1,3 @@
-
-
-
-
-
-
 data "archive_file" "lambda_zip" {
     type          = "zip"
     source_dir   = "challenges/furls2/data/lambda/src/"
