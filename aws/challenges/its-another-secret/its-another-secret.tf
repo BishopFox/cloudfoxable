@@ -1,7 +1,7 @@
 resource "aws_ssm_parameter" "flag2" {
     name  = "/cloudfoxable/flag/its-another-secret"
     type  = "SecureString"
-    value = "FLAG{ThereWillBeAlotOfAssumingRolesInThisCTF}"
+    value = "FLAG{ItsAnotherSecret::ThereWillBeALotOfAssumingRolesInThisCTF}"
 }
 
 // create an iam policy that only allows access to this flag

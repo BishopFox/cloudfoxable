@@ -34,7 +34,7 @@ exports.handler = async (event) => {
             </html>
         `;
     } else {
-        message = 'To authenticate, send a GET request with the following parameters: username=[username]&password=[password].';
+        message = 'To authenticate, send a GET request with the following parameters: username=[username]&password=[password].<br><br>You should check out the furls2 challenge for more information.';
     }
 
     const response = {

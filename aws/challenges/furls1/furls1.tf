@@ -1,6 +1,3 @@
-# Source: https://gist.github.com/smithclay/e026b10980214cbe95600b82f67b4958
-# Simple AWS Lambda Terraform Example
-
 data "archive_file" "lambda_zip" {
     type          = "zip"
     source_file   = "challenges/furls1/data/lambda/src/index.js"
