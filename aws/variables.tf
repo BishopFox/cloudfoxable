@@ -150,3 +150,9 @@ variable "intra-sg-access-id" {
   type        = string
   default     = null
 }
+
+variable "double_tap_enabled" {
+  description = "Enable or disable double_tap challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+}

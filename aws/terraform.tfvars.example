@@ -69,6 +69,7 @@ middle_enabled = true
 
 # This challenges incur noticeable cost. Enable when needed
 search1and2_enabled = false
+double_tap_enabled = false
 
 ##  Bastion host related challenges           
 ##  The following challenges all need `bastion_enabled = true`
