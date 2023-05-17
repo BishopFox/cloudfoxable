@@ -102,6 +102,16 @@ module "challenge_root" {
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
 }
 
+module "challenge_double_tap" {
+    source = "./challenges/double_tap"
+    count = var.double_tap_enabled ? 1 : 0
+    aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+    account_id = data.aws_caller_identity.current.account_id
+    aws_local_profile = var.aws_local_profile
+    user_ip = local.user_ip
+    ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+    ctf_starting_user_name = module.enabled.ctf_starting_user_name
+}
 
 ###################################################
 #  Category -- Exploit Public-Facing Application  #
@@ -286,7 +296,8 @@ locals {
     var.github_pat_enabled ?              "github_pat" : "",
     var.bastion_enabled ?                 "bastion                      | $4/month     |" : "",
     var.variable_enabled ?                "variable                     | $13/month    |" : "",
-    var.wyatt_enabled ?                   "wyatt                        | $4/month     |" : ""
+    var.wyatt_enabled ?                   "wyatt                        | $4/month     |" : "",
+    var.double_tap_enabled ?              "double_tap                   | $9/month     |" : ""
 
   ]
 }
@@ -350,16 +361,3 @@ output "Next_Steps" {
 EOT
 }
 
-######################################################
-#  Category -- Advanced Attacks (requires pivoting)  #
-######################################################
-
-
-module "challenge_double_tap" {
-    source = "./challenges/double_tap"
-    count = var.double_tap_enabled ? 1 : 0
-    aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
-    account_id = data.aws_caller_identity.current.account_id
-    aws_local_profile = var.aws_local_profile
-    user_ip = local.user_ip
-    }

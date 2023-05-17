@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "us-east-1"
-}
-
 # Configure EC2
 resource "aws_security_group" "instance_sg" {
   name        = "instance_sg"
@@ -40,7 +36,7 @@ resource "aws_secretsmanager_secret" "double_tap_flag_secret" {
 # Configure flag secret
 resource "aws_secretsmanager_secret_version" "double_tap_flag_secret_version" {
   secret_id     = aws_secretsmanager_secret.double_tap_flag_secret.id
-  secret_string = "12345"
+  secret_string = "FLAG{double_tap::ExploitChainsAreFun}"
 }
 
 resource "aws_iam_policy" "double_tap_secret_policy" {
@@ -63,7 +59,7 @@ resource "aws_iam_policy" "double_tap_secret_policy" {
     ]
   })
 }
-
+// role that gets applied to second instance - the one that can get the flag
 resource "aws_iam_role" "double_tap_secret" {
   name = "double_tap_secret"
 
@@ -89,15 +85,40 @@ resource "aws_iam_role_policy_attachment" "ssm_ec2_secret_policy_attachment" {
   role       = aws_iam_role.double_tap_secret.name
 }
 
-resource "aws_instance" "flag" {
-  timeouts {
-    create = "1h"
-    update = "30m"
-    delete = "30m"
-  }
+resource "aws_iam_policy" "double_tap_deny_ssm_parameter_access" {
+  name        = "double_tap_deny_ssm_parameter_access-bastion"
+  path        = "/"
+  description = "IAM policy to deny access to certain SSM permissions"
 
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Deny"
+        Action   = [
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+        ]
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "double-tap-deny" {
+  role       = aws_iam_role.double_tap_secret.name
+  policy_arn = aws_iam_policy.double_tap_deny_ssm_parameter_access.arn
+
+}  
+
+
+
+
+
+
+resource "aws_instance" "flag" {
   ami           = data.aws_ami.ami.id
-  instance_type = "t2.micro"
+  instance_type = "t3a.nano"
   iam_instance_profile = "${aws_iam_instance_profile.double_tap_secret_profile.name}"  
   security_groups = ["instance_sg"]
   tags = {
@@ -105,15 +126,15 @@ resource "aws_instance" "flag" {
     Name = "double_tap"
   }
 
-  user_data = <<-EOF
-              #!/bin/bash
-              echo 'Starting SSM agent installation...'
-              sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
-              echo 'SSM agent installation complete.'
-              echo 'Starting SSM agent...'
-              sudo systemctl start amazon-ssm-agent
-              echo 'SSM agent started.'
-              EOF
+  # user_data = <<-EOF
+  #             #!/bin/bash
+  #             echo 'Starting SSM agent installation...'
+  #             sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+  #             echo 'SSM agent installation complete.'
+  #             echo 'Starting SSM agent...'
+  #             sudo systemctl start amazon-ssm-agent
+  #             echo 'SSM agent started.'
+  #             EOF
 }
 
 resource "aws_iam_instance_profile" "double_tap_secret_profile" {
@@ -153,6 +174,7 @@ resource "aws_iam_policy" "ec2_privileged_policy" {
   })
 }
 
+// the role that gets applied to the first instance
 resource "aws_iam_role" "ec2_privileged" {
   name = "ec2_privileged"
 
@@ -173,20 +195,15 @@ resource "aws_iam_role_policy_attachment" "ec2_privileged_policy" {
   role       = aws_iam_role.ec2_privileged.name
 }
 
-resource "aws_iam_role_policy_attachment" "ssm_ec2_priv_policy_attachment" {
-  role       = aws_iam_role.ec2_privileged.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-}
+# resource "aws_iam_role_policy_attachment" "ssm_ec2_priv_policy_attachment" {
+#   role       = aws_iam_role.ec2_privileged.name
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+# }
 
 resource "aws_instance" "ec2" {
-  timeouts {
-    create = "1h"
-    update = "30m"
-    delete = "30m"
-  }
 
   ami           = data.aws_ami.ami.id
-  instance_type = "t2.micro"
+  instance_type = "t3a.nano"
   iam_instance_profile = "${aws_iam_instance_profile.ec2_privileged_profile.name}"
   security_groups = ["instance_sg"]
 

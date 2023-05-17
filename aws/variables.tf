@@ -162,12 +162,6 @@ variable "root_enabled" {
   type        = bool
   default     = false
 }
-variable "intra-sg-access-id" {
-  description = "The ID of the intra-sg-access security group"
-  type        = string
-  default     = null
-}
-
 variable "double_tap_enabled" {
   description = "Enable or disable double_tap challenge (true = enabled, false = disabled)"
   type        = bool
