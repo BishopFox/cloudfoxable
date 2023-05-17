@@ -204,9 +204,6 @@ resource "aws_iam_instance_profile" "ec2_privileged_profile" {
 
 # Create Starting Role and Permissions
 
-########################################## 
-######          CHANGE THIS         ######
-##########################################
 resource "aws_iam_role" "double_tap" {
   name = "double_tap"
 
@@ -216,7 +213,7 @@ resource "aws_iam_role" "double_tap" {
       {
         Effect    = "Allow"
         Principal = {
-          AWS = "*"
+          "AWS": "${var.ctf_starting_user_arn}"
         }
         Action    = "sts:AssumeRole"
       }
