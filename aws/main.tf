@@ -350,3 +350,16 @@ output "Next_Steps" {
 EOT
 }
 
+######################################################
+#  Category -- Advanced Attacks (requires pivoting)  #
+######################################################
+
+
+module "challenge_double_tap" {
+    source = "./challenges/double_tap"
+    count = var.double_tap_enabled ? 1 : 0
+    aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+    account_id = data.aws_caller_identity.current.account_id
+    aws_local_profile = var.aws_local_profile
+    user_ip = local.user_ip
+    }
