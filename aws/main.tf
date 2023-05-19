@@ -38,6 +38,11 @@ module "enabled" {
   account_id = data.aws_caller_identity.current.account_id
   aws_local_profile = var.aws_local_profile
   user_ip = local.user_ip
+  AWS_REGION = var.AWS_REGION
+  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
+
 }
 
 
@@ -54,6 +59,10 @@ module "challenge_its_a_secret" {
   user_ip = local.user_ip
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
+  AWS_REGION = var.AWS_REGION
+  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 
 }
 
@@ -66,6 +75,10 @@ module "challenge_its_another_secret" {
   user_ip = local.user_ip
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
+  AWS_REGION = var.AWS_REGION
+  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 }
 
 module "challenge_backwards" {
@@ -77,6 +90,10 @@ module "challenge_backwards" {
   user_ip = local.user_ip
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
+  AWS_REGION = var.AWS_REGION
+  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 }
 
 module "challenge_the_topic_is_execution" {
@@ -88,6 +105,10 @@ module "challenge_the_topic_is_execution" {
   user_ip = local.user_ip
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
+  AWS_REGION = var.AWS_REGION
+  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 }
 
 module "challenge_root" {
@@ -100,6 +121,10 @@ module "challenge_root" {
   user_ip = local.user_ip
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
+  AWS_REGION = var.AWS_REGION
+  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 }
 
 module "challenge_double_tap" {
@@ -111,7 +136,11 @@ module "challenge_double_tap" {
     user_ip = local.user_ip
     ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
     ctf_starting_user_name = module.enabled.ctf_starting_user_name
-}
+    AWS_REGION = var.AWS_REGION
+    AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+    AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+    AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
+  }
 
 ###################################################
 #  Category -- Exploit Public-Facing Application  #
@@ -126,6 +155,10 @@ module "challenge_search1and2" {
   user_ip = local.user_ip
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
+  AWS_REGION = var.AWS_REGION
+  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 
 }
 
@@ -136,6 +169,10 @@ module "challenge_furls1" {
   account_id = data.aws_caller_identity.current.account_id
   aws_local_profile = var.aws_local_profile
   user_ip = local.user_ip
+  AWS_REGION = var.AWS_REGION
+  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 }
 
 
@@ -148,6 +185,10 @@ module "challenge_furls2" {
   user_ip = local.user_ip
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
+  AWS_REGION = var.AWS_REGION
+  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 }
 
 module "challenge_the_topic_is_exposure" {
@@ -157,6 +198,10 @@ module "challenge_the_topic_is_exposure" {
   account_id = data.aws_caller_identity.current.account_id
   aws_local_profile = var.aws_local_profile
   user_ip = local.user_ip
+  AWS_REGION = var.AWS_REGION
+  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 
 }
 
@@ -169,6 +214,10 @@ module "challenge_middle" {
   user_ip = local.user_ip
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
+  AWS_REGION = var.AWS_REGION
+  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 
 }
 
@@ -184,6 +233,10 @@ module "challenge_middle" {
     subnet1_id = module.enabled.subnet1_id
     subnet2_id = module.enabled.subnet2_id
     subnet3_id = module.enabled.subnet3_id
+    AWS_REGION = var.AWS_REGION
+    AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+    AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+    AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
     }
 
 
@@ -205,6 +258,10 @@ module "challenge_bastion" {
   subnet1_id = module.enabled.subnet1_id
   subnet2_id = module.enabled.subnet2_id
   subnet3_id = module.enabled.subnet3_id
+  AWS_REGION = var.AWS_REGION    
+  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 
 }
 
@@ -219,6 +276,11 @@ module "challenge_variable" {
   subnet1_id = module.enabled.subnet1_id
   subnet2_id = module.enabled.subnet2_id
   subnet3_id = module.enabled.subnet3_id
+  AWS_REGION = var.AWS_REGION    
+  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
+
 }
 
 ##############################################
@@ -226,22 +288,27 @@ module "challenge_variable" {
 ##############################################
 
 
-module "challenge_blurred_lines-1" {  
-  source = "./challenges/blurred_lines_1"
-  count = (var.blurred_lines-1_enabled && var.github_repo != "") ? 1 : 0    
+module "challenge_trust_me" {  
+  source = "./challenges/trust-me"
+  count = (var.trust_me_enabled && var.github_repo != "") ? 1 : 0    
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
   account_id = data.aws_caller_identity.current.account_id
   aws_local_profile = var.aws_local_profile
   user_ip = local.user_ip
   github_repo = var.github_repo
+  AWS_REGION = var.AWS_REGION    
+  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
+
 }
 
 # locals {
-#   error_message = "You have tried to enable the challenge by setting var.blurred_lines-1_enabled to true, but you forgot to specify a repo in var.github_repo."
+#   error_message = "You have tried to enable the challenge by setting var.trust_me_enabled to true, but you forgot to specify a repo in var.github_repo."
 # }
 
 # resource "null_resource" "validate_variables" {
-#   count = var.blurred_lines-1_enabled && var.github_repo == "" ? 1 : 0
+#   count = var.trust_me_enabled && var.github_repo == "" ? 1 : 0
 
 #   provisioner "local-exec" {
 #     command = "echo '${local.error_message}'; exit 1"
@@ -285,7 +352,7 @@ locals {
     var.its_a_secret_enabled ?            "its_a_secret                 | $.40/month   |" : "",
     var.its_another_secret_enabled ?      "its_another_secret           | $.40/month   |" : "",
     var.backwards_enabled ?               "backwards                    | No cost      |" : "",
-    var.blurred_lines-1_enabled ?         "blurred_lines-1              | No cost      |" : "",
+    var.trust_me_enabled ?                "trust_me                     | No cost      |" : "",
     var.furls1_enabled ?                  "furls1                       | No cost      |" : "",
     var.furls2_enabled ?                  "furls2                       | No cost      |" : "",
     var.the_topic_is_exposure_enabled ?   "the_topic_is_exposure        | No cost      |" : "",
@@ -357,6 +424,9 @@ output "Next_Steps" {
 |  +---------------------------------+--------------+
 |  |    ${join("\n|  |    ", [for c in local.enabled_challenges : c if c != ""])}
 |  +------------------------------------------------+
+|
+| Note: The cost/month does not account for AWS Free Tier discounts. If you have not 
+| already used your credits for the month, your costs will be lower.
 +---------
 EOT
 }

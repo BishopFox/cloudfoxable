@@ -7,7 +7,7 @@ resource "aws_elasticsearch_domain" "pat" {
   elasticsearch_version = "7.9"
 
   cluster_config {
-    instance_type = "t2.small.elasticsearch"
+    instance_type = "t2.micro.elasticsearch"
     instance_count = 1
   }
 
