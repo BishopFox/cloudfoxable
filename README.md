@@ -8,7 +8,7 @@ CloudFox helps penetration testers and security professionals find exploitable a
 
 Enter CloudFoxable, an intentionally vulnerable AWS environment created specifically to showcase CloudFox’s capabilities and help you find latent attack paths more effectively. Drawing inspiration from [CloudGoat](https://github.com/RhinoSecurityLabs/cloudgoat), [flaws.cloud](https://flaws.cloud/), [flaws2.cloud](https://flaws2.cloud/) and [Metasploitable 1-3](https://github.com/rapid7/metasploitable3), CloudFoxable provides a wide array of flags and attack paths in a CTF format. 
 
-Similar to CloudGoat](https://github.com/RhinoSecurityLabs/cloudgoat) and [IAM-Vulnerable](https://github.com/BishopFox/iam-vulnerable), CloudFoxable deploys intentionally vulnerable AWS resources in a user-managed playground account, for users to learn about identifying and exploiting cloud vulnerabilities. However, more like [flaws.cloud](https://flaws.cloud/), your experience is more web based and guided. 
+Similar to [CloudGoat](https://github.com/RhinoSecurityLabs/cloudgoat) and [IAM-Vulnerable](https://github.com/BishopFox/iam-vulnerable), CloudFoxable deploys intentionally vulnerable AWS resources in a user-managed playground account, for users to learn about identifying and exploiting cloud vulnerabilities. However, more like [flaws.cloud](https://flaws.cloud/), your experience is more web based and guided. 
 
 
 * Total number of challenges:    X
