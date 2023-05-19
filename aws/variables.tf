@@ -61,8 +61,8 @@ variable "github_repo" {
   default     = null
 }
 
-variable "blurred_lines-1_enabled" {
-  description = "Enable or disable blurred_lines-1 challenge (true = enabled, false = disabled)"
+variable "trust_me_enabled" {
+  description = "Enable or disable trust_me challenge (true = enabled, false = disabled)"
   type        = bool
   default     = false
 }
