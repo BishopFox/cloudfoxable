@@ -27,8 +27,8 @@ resource "aws_iam_policy" "its-another-secret-policy" {
 }
 
 // create iam role that trusts the ctf starting user and attach the policy to it
-resource "aws_iam_role" "its-another-secret-role" {
-  name               = "Ertz"
+resource "aws_iam_role" "its-another-secret-role-4" {
+  name               = "Ertz4"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -49,8 +49,69 @@ resource "aws_iam_role" "its-another-secret-role" {
 
 // attach the policy to the role
 resource "aws_iam_role_policy_attachment" "its-a-secret-policy-attachment" {
-  role       = aws_iam_role.its-another-secret-role.name
+  role       = aws_iam_role.its-another-secret-role-4.name
   policy_arn = aws_iam_policy.its-another-secret-policy.arn
 }
 
 
+// false roles
+
+resource "aws_iam_role" "its-another-secret-role-1" {
+  name               = "Ertz1"
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "AWS" : [
+            "arn:aws:iam::${var.account_id}:user/${var.ctf_starting_user_name}"
+          ]
+        },
+        "Action" : [
+          "sts:AssumeRole"
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role" "its-another-secret-role-2" {
+  name               = "Ertz2"
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "AWS" : [
+            "arn:aws:iam::${var.account_id}:user/${var.ctf_starting_user_name}"
+          ]
+        },
+        "Action" : [
+          "sts:AssumeRole"
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role" "its-another-secret-role-3" {
+  name               = "Ertz3"
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "AWS" : [
+            "arn:aws:iam::${var.account_id}:user/${var.ctf_starting_user_name}"
+          ]
+        },
+        "Action" : [
+          "sts:AssumeRole"
+        ]
+      }
+    ]
+  })
+}

@@ -394,22 +394,20 @@ output "Next_Steps" {
 | 
 | Next steps:
 | 
-|   1. Set up your starting user credentials (From within this directory):sum
+|   1. Set up your starting user credentials (From within this directory):
 |  
 |      +---------------------------------+  
-|      | Option 1: Environment variables |
+|      | Option 1: Configure new profile |
+|      +---------------------------------+  
+|      Note: This command below needs to be executed from this directory.
+|      echo "" >> ~/.aws/credentials && echo "[cloudfoxable]" >> ~/.aws/credentials && echo "aws_access_key_id = `terraform output -raw CTF_Start_User_Access_Key_Id`" >> ~/.aws/credentials && echo "aws_secret_access_key = `terraform output -raw CTF_Start_User_Secret_Access_Key`" >> ~/.aws/credentials && echo "region = us-east-1" >> ~/.aws/credentials
+|
+|      +---------------------------------+  
+|      | Option 2: Environment variables |
 |      +---------------------------------+
 |      AWS_ACCESS_KEY_ID=`terraform output CTF_Start_User_Access_Key_Id`
 |      AWS_SECRET_ACCESS_KEY=`terraform output CTF_Start_User_Secret_Access_Key`
 |      AWS_REGION=${var.AWS_REGION}
-|
-|      +---------------------------------+  
-|      | Option 2: Configure new profile |
-|      +---------------------------------+  
-|      echo "[cloudfoxable]" >> ~/.aws/credentials
-|      echo "aws_access_key_id = `terraform output -raw CTF_Start_User_Access_Key_Id`" >> ~/.aws/credentials
-|      echo "aws_secret_access_key = `terraform output -raw CTF_Start_User_Secret_Access_Key`" >> ~/.aws/credentials
-|      echo "region = ${var.AWS_REGION}" >> ~/.aws/credentials
 |
 |   2. Verify your credentials are working:
 |
