@@ -1,1 +1,1 @@
-{FLAG:ifYouHaveAccessToAnEC2YouHaveAccessToItsIamPermissions}
+{FLAG:bastion::ifYouHaveAccessToAnEC2YouHaveAccessToItsIamPermissions}

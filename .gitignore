@@ -37,7 +37,7 @@ cloudfox-output
 .terraform
 *.zip
 .infracost
-
+response.json
 
 
 

@@ -69,6 +69,7 @@ root_enabled = true
 # This challenges incur noticeable cost. Enable when needed
 search1and2_enabled = false
 wyatt_enabled = false
+double_tap_enabled = false
 
 ##  Bastion host related challenges           
 ##  The following challenges all need `bastion_enabled = true`
@@ -76,10 +77,10 @@ wyatt_enabled = false
 bastion_enabled = false
 variable_enabled = false
 
-# Enable/Disable blurred_lines-1 
-# blurred_lines-1 is a challenge that requires you to create a GitHub repo. 
+# Enable/Disable trust_me 
+# trust_me is a challenge that requires you to create a GitHub repo. 
 # The the private repository that you own and trust 
-# example: github_repo = "sethsec/blurred-lines-demo"
+# example: github_repo = "sethsec/trust-me-demo"
 
-blurred_lines-1_enabled = false
+trust_me_enabled = false
 github_repo = null
