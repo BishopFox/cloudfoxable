@@ -219,10 +219,14 @@ resource "aws_iam_instance_profile" "ec2_privileged_profile" {
 }
 
 
+
+
+
+
 # Create Starting Role and Permissions
 
-resource "aws_iam_role" "double_tap" {
-  name = "double_tap"
+resource "aws_iam_role" "double_tap_xsdf" {
+  name = "double_tap_xsdf"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -244,15 +248,22 @@ resource "aws_iam_policy" "double_tap_iam_policy" {
     Version = "2012-10-17"
     Statement = [{
       Effect   = "Allow"
-      Action   = ["lambda:CreateFunction", "lambda:InvokeFunction", "iam:PassRole"]
+      Action   = ["lambda:CreateFunction", "lambda:InvokeFunction"]
       Resource = "*"
-    }]
+    },
+    {
+      Effect   = "Allow"
+      Action   = ["iam:PassRole"]
+      Resource = "arn:aws:iam::049881439828:role/double_tap_*"
+    }
+    ],
+    
   })
 }
 
 resource "aws_iam_role_policy_attachment" "double_tap_iam_policy_attachment" {
   policy_arn = aws_iam_policy.double_tap_iam_policy.arn
-  role       = aws_iam_role.double_tap.name
+  role       = aws_iam_role.double_tap_xsdf.name
 }
 
 resource "aws_iam_policy" "lambda_ec2_policy" {
@@ -298,4 +309,75 @@ resource "aws_iam_role_policy_attachment" "lambda_ec2_policy" {
 resource "aws_iam_role_policy_attachment" "lambda_ec2_read_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
   role       = aws_iam_role.lambda_ec2.name
+}
+
+
+## dead end roles
+
+resource "aws_iam_role" "double_tap_asdf" {
+  name = "double_tap_asdf"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = {
+          "AWS": "${var.ctf_starting_user_arn}"
+        }
+        Action    = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role" "double_tap_esdf" {
+  name = "double_tap_esdf"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = {
+          "AWS": "${var.ctf_starting_user_arn}"
+        }
+        Action    = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role" "double_tap_qsdf" {
+  name = "double_tap_qsdf"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = {
+          "AWS": "${var.ctf_starting_user_arn}"
+        }
+        Action    = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role" "double_tap_zsdf" {
+  name = "double_tap_zsdf"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = {
+          "AWS": "${var.ctf_starting_user_arn}"
+        }
+        Action    = "sts:AssumeRole"
+      }
+    ]
+  })
 }
