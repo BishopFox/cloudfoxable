@@ -1,5 +1,5 @@
 // iam role that trusts a github repo to assume it as part of an OIDC flow
-resource "aws_iam_role" "blurred-lines-1" {
+resource "aws_iam_role" "trust-me" {
   name = "t_rodman"
   assume_role_policy = <<EOF
 {
@@ -33,16 +33,16 @@ resource "aws_iam_openid_connect_provider" "github" {
 }
 
 // create a ssm parameter to store the flag for this challenge 
-resource "aws_ssm_parameter" "blurred-lines-1-flag" {
-  name = "/cloudfox/blurred-lines-1/flag"
+resource "aws_ssm_parameter" "trust-me-flag" {
+  name = "trust-me"
   type = "SecureString"
-  value = "FLAG{the_lines_have_been_blurred}"
+  value = "FLAG{trustMe::the_lines_have_been_blurred}"
   overwrite = true
 }
 
 // create a policy to allow the github OIDC role to read the flag
-resource "aws_iam_policy" "blurred-lines-1" {
-  name = "blurred-lines-1"
+resource "aws_iam_policy" "trust-me" {
+  name = "trust-me"
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -54,7 +54,7 @@ resource "aws_iam_policy" "blurred-lines-1" {
         "ssm:GetParameter"
       ],
       "Resource": [
-        "${aws_ssm_parameter.blurred-lines-1-flag.arn}"
+        "${aws_ssm_parameter.trust-me-flag.arn}"
       ]
     }   
   ]
@@ -63,7 +63,7 @@ EOF
 }
 
 // attach the policy to the github OIDC role
-resource "aws_iam_role_policy_attachment" "blurred-lines-1" {
-  role = aws_iam_role.blurred-lines-1.name
-  policy_arn = aws_iam_policy.blurred-lines-1.arn
+resource "aws_iam_role_policy_attachment" "trust-me" {
+  role = aws_iam_role.trust-me.name
+  policy_arn = aws_iam_policy.trust-me.arn
 }
