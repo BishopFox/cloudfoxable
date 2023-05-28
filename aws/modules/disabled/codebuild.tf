@@ -38,10 +38,6 @@ resource "aws_s3_bucket" "cf-codebuild" {
   bucket = "cf-codebuild-${random_string.resource-suffix.result}"
 }
 
-resource "aws_s3_bucket_acl" "example" {
-  bucket = aws_s3_bucket.cf-codebuild.id
-  acl    = "private"
-}
 
 
 resource "aws_iam_role" "cf-codebuild-role" {

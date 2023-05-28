@@ -54,7 +54,7 @@ resource "aws_iam_policy" "trust-me" {
         "ssm:GetParameter"
       ],
       "Resource": [
-        "${aws_ssm_parameter.trust-me-flag.arn}"
+        "arn:aws:ssm:${var.AWS_REGION}:${var.account_id}:parameter/trust-*"
       ]
     }   
   ]
@@ -66,4 +66,25 @@ EOF
 resource "aws_iam_role_policy_attachment" "trust-me" {
   role = aws_iam_role.trust-me.name
   policy_arn = aws_iam_policy.trust-me.arn
+}
+
+resource "aws_ssm_parameter" "trust-him" {
+  name = "trust-him"
+  type = "String"
+  value = "not_the_flag"
+  overwrite = true
+}
+
+resource "aws_ssm_parameter" "trust-her" {
+  name = "trust-her"
+  type = "SecureString"
+  value = "not_the_flag"
+  overwrite = true
+}
+
+resource "aws_ssm_parameter" "trust-them" {
+  name = "trust-them"
+  type = "String"
+  value = "not_the_flag"
+  overwrite = true
 }

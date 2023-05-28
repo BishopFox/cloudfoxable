@@ -35,7 +35,7 @@ aws_local_profile = "default"
 #######################
 
 # Specify your IP address here to bre used with security groups (so that "public" challenges are only accessible to you)
-# If you don't specify anything, the default behavior is to use https://api.ipify.org to pull your IP address
+# If you don't specify anything, the default behavior is to use https://ifconfig.me to pull your IP address
 #user_ip = "[YOUR_IP_ADDRESS]"
 
 
@@ -58,13 +58,13 @@ aws_local_profile = "default"
 its_a_secret_enabled = true
 its_another_secret_enabled = true
 backwards_enabled = true
-
 furls1_enabled = true
 furls2_enabled = true
 the_topic_is_exposure_enabled = true
 the_topic_is_execution_enabled = true
 middle_enabled = true
 root_enabled = true
+needles_enabled = true
 
 # This challenges incur noticeable cost. Enable when needed
 search1and2_enabled = false

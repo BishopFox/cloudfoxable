@@ -34,6 +34,27 @@ variable "AWS_REGION" {
   default = "us-west-2"
 }
 
+variable "vpc_id" {
+  type    = string
+  default = ""
+}
+
+variable "subnet1_id" {
+  type    = string
+  default = ""
+}
+
+variable "subnet2_id" {
+  type    = string
+  default = ""
+}
+
+variable "subnet3_id" {
+  type    = string
+  default = ""
+}
+
+
 variable "AWS_REGION_SUB_1" {
   type    = string
   default = "us-west-2a"
@@ -82,3 +103,14 @@ variable "user_ip" {
   default     = ""
 }
 
+variable "ctf_starting_user_arn" {
+  description = "The arn of the user that is created at the start of the CTF"
+  type        = string
+  default     = ""
+}
+
+variable "ctf_starting_user_name" {
+  description = "The name of the user that is created at the start of the CTF"
+  type        = string
+  default     = ""
+}

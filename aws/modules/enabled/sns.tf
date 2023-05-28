@@ -39,13 +39,13 @@ resource "aws_sns_topic_policy" "user_updates" {
 POLICY
 }
 
-resource "aws_sns_topic" "public" {
+resource "aws_sns_topic" "important_updates" {
   name = "public" 
 }
 
 
-resource "aws_sns_topic_policy" "public" {
-  arn = aws_sns_topic.public.arn
+resource "aws_sns_topic_policy" "important_updates" {
+  arn = aws_sns_topic.important_updates.arn
 
   policy = <<POLICY
 {
@@ -59,7 +59,7 @@ resource "aws_sns_topic_policy" "public" {
         "AWS": "*"
       },
       "Action": "sns:Publish",
-      "Resource": "${aws_sns_topic.public.arn}"      
+      "Resource": "${aws_sns_topic.important_updates.arn}"      
     }
   ]
 }
