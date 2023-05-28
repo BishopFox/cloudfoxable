@@ -167,3 +167,9 @@ variable "double_tap_enabled" {
   type        = bool
   default     = false
 }
+
+variable "needles_enabled" {
+  description = "Enable or disable double_tap challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+}

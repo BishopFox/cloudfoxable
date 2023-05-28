@@ -17,6 +17,17 @@ provider "aws" {
   profile                 = var.aws_local_profile
 }
 
+# provider "aws" {
+#   alias   = "us-east-2"
+#   region  = "us-east-2"
+#   profile = var.aws_local_profile
+# }
+
+# provider "aws" {
+#   alias   = "us-west-1"
+#   region  = "us-west-1"
+#   profile = var.aws_local_profile
+# }
 
 data "aws_caller_identity" "current" {}
 
@@ -130,6 +141,21 @@ module "challenge_root" {
 module "challenge_double_tap" {
     source = "./challenges/double_tap"
     count = var.double_tap_enabled ? 1 : 0
+    aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+    account_id = data.aws_caller_identity.current.account_id
+    aws_local_profile = var.aws_local_profile
+    user_ip = local.user_ip
+    ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+    ctf_starting_user_name = module.enabled.ctf_starting_user_name
+    AWS_REGION = var.AWS_REGION
+    AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+    AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+    AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
+  }
+
+module "challenge_needles" {
+    source = "./challenges/needles"
+    count = var.needles_enabled ? 1 : 0
     aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
     account_id = data.aws_caller_identity.current.account_id
     aws_local_profile = var.aws_local_profile
@@ -348,9 +374,6 @@ module "challenge_trust_me" {
 
 locals {
   enabled_challenges = [
-    var.secretsmanager_enabled ?          "secretsmanager" : "",
-    var.its_a_secret_enabled ?            "its_a_secret                 | $.40/month   |" : "",
-    var.its_another_secret_enabled ?      "its_another_secret           | $.40/month   |" : "",
     var.backwards_enabled ?               "backwards                    | No cost      |" : "",
     var.trust_me_enabled ?                "trust_me                     | No cost      |" : "",
     var.furls1_enabled ?                  "furls1                       | No cost      |" : "",
@@ -358,14 +381,14 @@ locals {
     var.the_topic_is_exposure_enabled ?   "the_topic_is_exposure        | No cost      |" : "",
     var.the_topic_is_execution_enabled ?  "the_topic_is_execution       | No cost      |" : "",
     var.middle_enabled ?                  "middle                       | No cost      |" : "",
-    var.search1and2_enabled ?             "search1and2                  | $27/month    |" : "",
-    #var.opensearch_dynamodb_enabled ? "opensearch_dynamodb" : "",
-    var.github_pat_enabled ?              "github_pat" : "",
+    var.needles_enabled ?                 "needles                      | No Cost      |" : "",
+    var.its_a_secret_enabled ?            "its_a_secret                 | $.40/month   |" : "",
+    var.its_another_secret_enabled ?      "its_another_secret           | $.40/month   |" : "",
     var.bastion_enabled ?                 "bastion                      | $4/month     |" : "",
-    var.variable_enabled ?                "variable                     | $13/month    |" : "",
     var.wyatt_enabled ?                   "wyatt                        | $4/month     |" : "",
-    var.double_tap_enabled ?              "double_tap                   | $9/month     |" : ""
-
+    var.double_tap_enabled ?              "double_tap                   | $9/month     |" : "",
+    var.variable_enabled ?                "variable                     | $13/month    |" : "",
+    var.search1and2_enabled ?             "search1and2                  | $27/month    |" : ""
   ]
 }
 
