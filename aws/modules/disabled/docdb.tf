@@ -34,6 +34,7 @@ resource "aws_docdb_cluster" "example_cluster" {
   storage_encrypted         = true
   engine_version            = "3.6.0"
   deletion_protection       = false
+  skip_final_snapshot       = true
 }
 
 # Output the cluster endpoint

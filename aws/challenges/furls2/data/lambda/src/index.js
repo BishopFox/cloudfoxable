@@ -32,7 +32,8 @@ exports.handler = async (event) => {
             <p>Now, what should you do next? While it's true that storing secrets in environment variables is considered bad practice, it's even more crucial for a penetration tester like you to determine WHO can access this secret.</p>
             <p>For instance, if only Administrators and you (the penetration tester who requested SecurityAudit access) have access to this environment variable, the risk is minimal.</p>
             <p>However, if you can find a principal who shouldn't have access to this secret but can still access it, then your discovery becomes significant.</p>
-            <p>As your final challenge, use the 'permissions' command and replace 'PLACEHOLDER' in the flag with the name (just the name, not the entire ARN) of the role that can access this flag!</p>
+            <p>As your final challenge, use the 'permissions' command to find the <b>role</b> that can access this flag (not ctf-starting-user - i know you can see it!) </p>
+            <p> Once you find the role, replace 'PLACEHOLDER' in the flag with the name of the role (just the name, not the entire ARN)</p> 
         </body>
         </html>      
         `;

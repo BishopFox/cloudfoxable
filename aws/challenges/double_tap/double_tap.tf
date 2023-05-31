@@ -254,7 +254,7 @@ resource "aws_iam_policy" "double_tap_iam_policy" {
     {
       Effect   = "Allow"
       Action   = ["iam:PassRole"]
-      Resource = "arn:aws:iam::049881439828:role/double_tap_*"
+      Resource = "arn:aws:iam::${var.account_id}:role/double_tap_*"
     }
     ],
     
