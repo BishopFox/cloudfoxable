@@ -11,7 +11,7 @@ resource "aws_lambda_function" "furls1" {
   role             = aws_iam_role.furls1.arn
   handler          = "index.handler"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
-  runtime          = "nodejs14.x"
+  runtime          = "nodejs18.x"
 }
 
 

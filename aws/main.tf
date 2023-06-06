@@ -374,6 +374,8 @@ module "challenge_trust_me" {
 
 locals {
   enabled_challenges = [
+    var.its_a_secret_enabled ?            "its_a_secret                 | No Cost      |" : "",
+    var.its_another_secret_enabled ?      "its_another_secret           | No Cost      |" : "",
     var.backwards_enabled ?               "backwards                    | No cost      |" : "",
     var.trust_me_enabled ?                "trust_me                     | No cost      |" : "",
     var.furls1_enabled ?                  "furls1                       | No cost      |" : "",
@@ -381,9 +383,7 @@ locals {
     var.the_topic_is_exposure_enabled ?   "the_topic_is_exposure        | No cost      |" : "",
     var.the_topic_is_execution_enabled ?  "the_topic_is_execution       | No cost      |" : "",
     var.middle_enabled ?                  "middle                       | No cost      |" : "",
-    var.needles_enabled ?                 "needles                      | No Cost      |" : "",
-    var.its_a_secret_enabled ?            "its_a_secret                 | $.40/month   |" : "",
-    var.its_another_secret_enabled ?      "its_another_secret           | $.40/month   |" : "",
+    var.needles_enabled ?                 "needles                      | No Cost      |" : "",    
     var.bastion_enabled ?                 "bastion                      | $4/month     |" : "",
     var.wyatt_enabled ?                   "wyatt                        | $4/month     |" : "",
     var.double_tap_enabled ?              "double_tap                   | $9/month     |" : "",
@@ -405,15 +405,15 @@ output "Next_Steps" {
   value = <<-EOT
 +---------
 | 
-|   +----------------------------------------------------------------------------+
-|   | Deployment Information:                                                    |
-|   |                                                                            |
+|   +-------------------------------------------------------------------------------------+
+|   | Deployment Information:                                                             |
+|   |                                                                                     |
 |   | Profile Used:             ${var.aws_local_profile}
-|   | Deployment User:          ${data.aws_caller_identity.current.arn}    |
-|   | CloudFoxable deployed to: ${data.aws_caller_identity.current.account_id}                                     |
-|   | Scoreboard URL:           https://cloudfoxable.bishopfox.com               |
-|   | CTF Starting User:        ${module.enabled.ctf_starting_user_arn} |
-|   +----------------------------------------------------------------------------+
+|   | Deployment User:          ${data.aws_caller_identity.current.arn}             
+|   | CloudFoxable deployed to: ${data.aws_caller_identity.current.account_id}                                              |
+|   | Scoreboard URL:           https://cloudfoxable.bishopfox.com                        |
+|   | CTF Starting User:        ${module.enabled.ctf_starting_user_arn}          |
+|   +-------------------------------------------------------------------------------------+
 | 
 | Next steps:
 | 

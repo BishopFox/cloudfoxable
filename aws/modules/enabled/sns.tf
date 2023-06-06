@@ -33,6 +33,20 @@ resource "aws_sns_topic_policy" "user_updates" {
           "AWS:SourceOwner": "111111111111"
         }
       }
+    },
+    {
+      "Sid": "user_updates1",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "*"
+      },
+      "Action": "sns:Subscribe",
+      "Resource": "${aws_sns_topic.user_updates.arn}",
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceOwner": "111111111111"
+        }
+      }
     }
   ]
 }
