@@ -11,7 +11,7 @@ resource "aws_lambda_function" "auth-me" {
   role             = aws_iam_role.furls2.arn
   handler          = "index.handler"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
-  runtime          = "nodejs12.x"
+  runtime          = "nodejs18.x"
 
   environment {
     variables = {
@@ -26,7 +26,7 @@ resource "aws_iam_policy" "furls2" {
   path        = "/"
   description = "Low priv policy used by lambdas"
 
-  # Terraform's "jsonencode" function converts a
+  # Terraform's "jsonencode" function converts af
   # Terraform expression result to valid JSON syntax.
   policy = jsonencode({
     Version = "2012-10-17"

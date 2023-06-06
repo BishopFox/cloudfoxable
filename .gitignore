@@ -38,6 +38,7 @@ cloudfox-output
 *.zip
 .infracost
 response.json
+cheatsheet.md
 
 
 

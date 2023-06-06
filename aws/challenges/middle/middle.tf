@@ -301,7 +301,7 @@ resource "aws_lambda_function" "consumer" {
   function_name    = "consumer"
   role             = aws_iam_role.consumer.arn
   handler          = "lambda_function.lambda_handler"
-  source_code_hash = data.archive_file.producer_zip.output_base64sha256
+  source_code_hash = data.archive_file.consumer_zip.output_base64sha256
   runtime = "python3.10"
   environment {
     variables = {
@@ -318,15 +318,6 @@ resource "aws_lambda_event_source_mapping" "consumer_mapping" {
   batch_size       = 1
   enabled          = true
 }
-
-# data "archive_file" "lambda_sqs_zip" {
-#     type          = "zip"
-#     source_file   = "data/challenge-sqs-lambda/src/index.js"
-#     output_path   = "data/challenge-sqs-lambda/lambda_function.zip"
-# }
-
-
-
 
 
 
