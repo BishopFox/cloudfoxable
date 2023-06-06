@@ -11,13 +11,8 @@ Enter CloudFoxable, an intentionally vulnerable AWS environment created specific
 Similar to [CloudGoat](https://github.com/RhinoSecurityLabs/cloudgoat) and [IAM-Vulnerable](https://github.com/BishopFox/iam-vulnerable), CloudFoxable deploys intentionally vulnerable AWS resources in a user-managed playground account, for users to learn about identifying and exploiting cloud vulnerabilities. However, more like [flaws.cloud](https://flaws.cloud/), your experience is more web based and guided. 
 
 
-* Total number of challenges:    X
-* Total number of flags:         X
+* Total number of challenges:    18
 
-
-# Table of Contents
-
-TBD
 
 # Quick Start
 
