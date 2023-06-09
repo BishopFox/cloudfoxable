@@ -1,5 +1,4 @@
-
-![cloudfoxable-single-flag](https://github.com/BishopFox/cloudfoxable/assets/46326948/e04b36ad-d6f4-4063-ab0d-9569c721d589)
+![cloudfoxable-single-flag](https://github.com/BishopFox/cloudfoxable/assets/46326948/d0c20a83-0851-4b93-8e57-d6c43edbd506)
 
 Start Hacking: [CloudFoxable](https://cloudfoxable.bishopfox.com)
 
