@@ -12,7 +12,7 @@ resource "aws_secretsmanager_secret_version" "database-secret" {
   secret_string = random_password.database-secret.result
 }
 
-resource "aws_secretsmanager_secret" "corpoate-domain-admin-password" {
+resource "aws_secretsmanager_secret" "corporate-domain-admin-password" {
   name                    = "DomainAdministratorCredentials"
   
   recovery_window_in_days = 0
@@ -22,16 +22,16 @@ resource "aws_secretsmanager_secret" "corpoate-domain-admin-password" {
 
 }
 
-resource "aws_secretsmanager_secret_version" "corpoate-domain-admin-password" {
-  secret_id     = aws_secretsmanager_secret.corpoate-domain-admin-password.id
+resource "aws_secretsmanager_secret_version" "corporate-domain-admin-password" {
+  secret_id     = aws_secretsmanager_secret.corporate-domain-admin-password.id
   secret_string = "FLAG{backwards::IfYouFindSomethingInterstingFindWhoHasAccessToIt}"
 }
 
 //create a policy that only has access to the corporate-domain-admin-password secret
-resource "aws_iam_policy" "corpoate-domain-admin-password-policy" {
-  name        = "corpoate-domain-admin-password-policy"
+resource "aws_iam_policy" "corporate-domain-admin-password-policy" {
+  name        = "corporate-domain-admin-password-policy"
   path        = "/"
-  description = "policy that only allows access to the corpoate-domain-admin-password secret"
+  description = "policy that only allows access to the corporate-domain-admin-password secret"
 
   policy = jsonencode({
     "Version" : "2012-10-17",
@@ -42,7 +42,7 @@ resource "aws_iam_policy" "corpoate-domain-admin-password-policy" {
           "secretsmanager:GetSecretValue"
         ],
         "Resource" : [
-          aws_secretsmanager_secret.corpoate-domain-admin-password.arn
+          aws_secretsmanager_secret.corporate-domain-admin-password.arn
         ]
       }
     ]
@@ -71,7 +71,7 @@ resource "aws_iam_role" "Alexander-Arnold" {
 }
 
 //attach the policy to the role
-resource "aws_iam_role_policy_attachment" "corpoate-domain-admin-password-policy-attachment" {
+resource "aws_iam_role_policy_attachment" "corporate-domain-admin-password-policy-attachment" {
   role       = aws_iam_role.Alexander-Arnold.name
-  policy_arn = aws_iam_policy.corpoate-domain-admin-password-policy.arn
+  policy_arn = aws_iam_policy.corporate-domain-admin-password-policy.arn
 }
