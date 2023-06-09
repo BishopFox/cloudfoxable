@@ -168,7 +168,12 @@ resource "aws_sqs_queue_policy" "schedule-event-rce-policy" {
       "Effect": "Allow",
       "Principal": "*",
       "Action": ["sqs:SendMessage", "sqs:ReceiveMessage"],
-      "Resource": "${aws_sqs_queue.internal_message_bus.arn}"
+      "Resource": "${aws_sqs_queue.internal_message_bus.arn}",
+      "Condition": {
+          "IpAddress": {
+            "aws:SourceIp": "${var.user_ip}/32"
+          }
+      }
     }
   ]
 }
