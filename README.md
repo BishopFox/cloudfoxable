@@ -1,8 +1,11 @@
-# CloudFoxable
 
-Use Terraform to create your own vulnerable by design AWS penetration testing playground
+![cloudfoxable-single-flag](https://github.com/BishopFox/cloudfoxable/assets/46326948/e04b36ad-d6f4-4063-ab0d-9569c721d589)
 
-![image](https://user-images.githubusercontent.com/46326948/235528856-64ffddb0-b1a0-4eda-bb88-6c0bc95d936b.png)
+Start Hacking: [CloudFoxable](https://cloudfoxable.bishopfox.com)
+
+Read the blog for more details: [Introducing CloudFoxable: A Gamified Cloud Hacking Sandbox](https://bishopfox.com/blog/introducing-cloudfoxable-a-gamified-cloud-hacking-sandbox)
+
+# Background
 
 CloudFox helps penetration testers and security professionals find exploitable attack paths in cloud infrastructure. However, what if you want to find and exploit services not yet present in your current environment? What if you lack access to an enterprise AWS environment? 
 
@@ -12,36 +15,6 @@ Similar to [CloudGoat](https://github.com/RhinoSecurityLabs/cloudgoat) and [IAM-
 
 
 * Total number of challenges:    18
-
-
-# Quick Start
-
-1. **Select or create an AWS account** - Do NOT use an account that has any production resources or sensitive data.
-2. **Complete the first challenge** - Head over to [cloudfoxable.bishopfox.com](https://cloudfoxable.bishopfox.com) to get started. The first challenge ["Setup, deploy, get first flag!"](https://cloudfoxable.bishopfox.com/challenges#Setup,%20deploy,%20get%20first%20flag!-4) walks you through deploying CloudFoxable to your playground account. 
-3. **(Optional) Register an account** - Track your progress and compete with others by creating an account at [cloudfoxable.bishopfox.com](https://cloudfoxable.bishopfox.com). Note: You can do all of the challenges without an account. 
-4. Install [CloudFox](https://github.com/BishopFox/cloudfox), [Pmapper](https://github.com/nccgroup/PMapper), [Pacu](https://github.com/RhinoSecurityLabs/pacu) and any other AWS Cloud Penetration Testing tools you like to use. 
-
- 
-
-
-# Deployment Instructions
-This instructions can also be found in the first challenge ["Setup, deploy, get first flag!"](https://cloudfoxable.bishopfox.com/challenges#Setup,%20deploy,%20get%20first%20flag!-4)
-
-1. Select or create an AWS account. (Do NOT use an account that has any production resources or sensitive data!)
-1. [Create a non-root user with administrative access](https://https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html) that you will use when running Terraform.
-2. [Create an access key for that user](https://https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html).
-3. [Install the AWS CLI](https://https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html).
-4. [Configure your AWS CLI](https://https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html) with your newly created admin user as the default profile.
-5. Confirm your CLI is working as expected by executing `aws sts get-caller-identity`.
-6. [Install the Terraform binary ](https://https://www.terraform.io/downloads.html)and add the binary location to your path.
-7. `git clone https://github.com/BishopFox/cloudfoxable`
-8. `cd cloudfoxable/aws`
-9. `cp terraform.tfvars.example terraform.tfvars`  
-10. `terraform init`
-11. Edit `terraform.tfvars` and set set the AWS profile you'd like to use: `aws_local_profile = "YOUR_PROFILE"`
-12. (Optional) `terraform plan`
-13. `terraform apply`
-
 
 # A Modular Approach
 
@@ -61,7 +34,7 @@ challenge_foo_enabled = true
 challenge_bar_enabled = true
 challenge_alice_enabled = true
 
-# Enable as needed (These challenges incur noticeable cost)
+# Enable as needed (These challenges incur cost)
 challenge_bob_enabled = false
 challenge_mallory_enabled = false
 ```
@@ -94,8 +67,8 @@ https://github.com/iknowjason/Awesome-CloudSec-Labs
 
 If you'd like to add a new challenge, here's the steps within CloudFoxable once you fork the repo: 
 
-* cp aws/challenges/1_challenge_template aws/challenges/challenge_name
-* Rename mv aws/challenges/challenge_name/challenge-name.tf to the name of your challenge
+* `cp aws/challenges/1_challenge_template aws/challenges/challenge_name`
+* Rename the challenge template folder and `challenge_name.tf` file to the name of your challenge.
 * Add your terraform code
 * Make a new variable in aws/variables.tf
   ```
