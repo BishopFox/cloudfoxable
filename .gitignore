@@ -38,7 +38,6 @@ cloudfox-output
 *.zip
 .infracost
 response.json
-cheatsheet.md
-aws/challenges/*/cheatsheet.md
+**/cheatsheet.md
 
 

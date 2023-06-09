@@ -34,7 +34,12 @@ resource "aws_sns_topic_policy" "schedule-event-policy" {
       "Effect": "Allow",
       "Principal": "*",
       "Action": ["sns:Subscribe", "sns:Publish"],
-      "Resource": "${aws_sns_topic.eventbridge_sns.arn}"
+      "Resource": "${aws_sns_topic.eventbridge_sns.arn}",
+      "Condition": {
+          "IpAddress": {
+            "aws:SourceIp": "${var.user_ip}/32"
+          }
+        }
     }
   ]
 }
