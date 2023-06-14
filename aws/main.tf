@@ -423,7 +423,7 @@ output "Next_Steps" {
 |      | Option 1: Configure new profile |
 |      +---------------------------------+  
 |      Note: This command below needs to be executed from this directory.
-|      echo "" >> ~/.aws/credentials && echo "[cloudfoxable]" >> ~/.aws/credentials && echo "aws_access_key_id = `terraform output -raw CTF_Start_User_Access_Key_Id`" >> ~/.aws/credentials && echo "aws_secret_access_key = `terraform output -raw CTF_Start_User_Secret_Access_Key`" >> ~/.aws/credentials && echo "region = us-east-1" >> ~/.aws/credentials
+|      echo "" >> ~/.aws/credentials && echo "[cloudfoxable]" >> ~/.aws/credentials && echo "aws_access_key_id = `terraform output -raw CTF_Start_User_Access_Key_Id`" >> ~/.aws/credentials && echo "aws_secret_access_key = `terraform output -raw CTF_Start_User_Secret_Access_Key`" >> ~/.aws/credentials && echo "region = ${var.AWS_REGION}" >> ~/.aws/credentials
 |
 |      +---------------------------------+  
 |      | Option 2: Environment variables |
