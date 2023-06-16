@@ -2,7 +2,7 @@
 
 Start Hacking: [CloudFoxable](https://cloudfoxable.bishopfox.com)
 
-Read the blog for more details: [Introducing CloudFoxable: A Gamified Cloud Hacking Sandbox]([https://bishopfox.com/blog/introducing-cloudfoxable-a-gamified-cloud-hacking-sandbox](https://bishopfox.com/blog/cloudfoxable-gamified-cloud-hacking-sandbox)
+Read the blog for more details: [Introducing CloudFoxable: A Gamified Cloud Hacking Sandbox](https://bishopfox.com/blog/cloudfoxable-gamified-cloud-hacking-sandbox)
 
 # Background
 
