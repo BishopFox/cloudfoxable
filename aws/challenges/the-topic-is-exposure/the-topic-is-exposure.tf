@@ -20,6 +20,30 @@ resource "aws_iam_role" "event_bridge_sns_role" {
   }
 }
 
+resource "aws_iam_policy" "sns_publish_policy" {
+  name        = "sns-publish-policy"
+  path        = "/"
+  description = "Allow sns:Publish"
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "sns:Publish"
+        Resource = "${aws_sns_topic.eventbridge_sns.arn}"
+      }
+    ]
+  })
+}
+
+// attach the sns-publish-policy policy to the sns-spy-role
+resource "aws_iam_role_policy_attachment" "sns_publish_policy_attachment" {
+  role       = aws_iam_role.event_bridge_sns_role.name
+  policy_arn = aws_iam_policy.sns_publish_policy.arn
+}
 
 resource "aws_sns_topic_policy" "schedule-event-policy" {
   arn = aws_sns_topic.eventbridge_sns.arn
