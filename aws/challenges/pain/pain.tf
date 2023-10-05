@@ -19,12 +19,6 @@ resource "aws_iam_role" "pain" {
     })
 }
 
-# // attach the aws cloudformation full access policy to the role
-# resource "aws_iam_role_policy_attachment" "pain-policy-attachment" {
-#     role = aws_iam_role.pain.name
-#     policy_arn = "arn:aws:iam::aws:policy/AWSCloudFormationFullAccess"
-# }
-
 
 // create a policy that allows the ctf starting user to create cloudformation stacks and to pass roles to them, but only roles that trust the cloudformation service
 resource "aws_iam_policy" "pain-policy" {
