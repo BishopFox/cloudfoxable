@@ -65,6 +65,7 @@ the_topic_is_execution_enabled = true
 middle_enabled = true
 root_enabled = true
 needles_enabled = true
+pain_enabled = true
 
 # This challenges incur noticeable cost. Enable when needed
 search1and2_enabled = false

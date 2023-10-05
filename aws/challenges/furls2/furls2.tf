@@ -17,6 +17,12 @@ resource "aws_lambda_function" "auth-me" {
     variables = {
       lambda_http_user = "admin",
       lambda_http_password = "NotSummer2023"
+      # RDS_HOST    = "payments-${random_string.resource-suffix.result}.c9qjxqjxqjxq.us-east-1.rds.amazonaws.com"
+      # RDS_USER    = "admin"
+      # RDS_PASSWORD = "d08ejf387p92idjuf"
+      # RDS_DB_NAME  = "payments"
+      # API_ENDPOINT = "https://api.cloudfoxlabs.com"
+      # API_AUTH_TOKEN = "f89ec87sdca6fbb3ec87sdca6fbec87sdca6fbbb"
     }
   }
 }
