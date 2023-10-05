@@ -24,7 +24,7 @@ resource "aws_iam_policy" "privesc-ec2InstanceConnect-policy" {
 
 
 resource "aws_iam_role" "ec2InstanceConnect" {
-  name                = "pulisic"
+  name                = "ec2InstanceConnect"
   assume_role_policy  = jsonencode({
     Version = "2012-10-17"
     Statement = [

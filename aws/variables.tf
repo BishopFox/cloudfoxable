@@ -173,3 +173,9 @@ variable "needles_enabled" {
   type        = bool
   default     = false
 }
+
+variable "pain_enabled" {
+  description = "Enable or disable pain challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+}

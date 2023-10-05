@@ -18,7 +18,6 @@ def lambda_handler(event, context):
 
         pickled_command = base64.b64decode(encoded_pickled_command)
         command = pickle.loads(pickled_command)
-        #os.system(command)        
         print(command)
 
         sqs.delete_message(QueueUrl=queue_url, ReceiptHandle=receipt_handle)
