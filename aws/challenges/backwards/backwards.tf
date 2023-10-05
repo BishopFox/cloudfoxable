@@ -13,7 +13,7 @@ resource "aws_secretsmanager_secret_version" "database-secret" {
 }
 
 resource "aws_secretsmanager_secret" "corporate-domain-admin-password" {
-  name                    = "DomainAdministratorCredentials"
+  name                    = "DomainAdministrator-Credentials"
   
   recovery_window_in_days = 0
   tags = {
