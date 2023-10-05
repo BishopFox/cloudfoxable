@@ -168,6 +168,21 @@ module "challenge_needles" {
     AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
   }
 
+  module "challenge_pain" {
+    source = "./challenges/pain"
+    count = var.pain_enabled ? 1 : 0
+    aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+    account_id = data.aws_caller_identity.current.account_id
+    aws_local_profile = var.aws_local_profile
+    user_ip = local.user_ip
+    ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+    ctf_starting_user_name = module.enabled.ctf_starting_user_name
+    AWS_REGION = var.AWS_REGION
+    AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
+    AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
+    AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
+  }
+
 ###################################################
 #  Category -- Exploit Public-Facing Application  #
 ###################################################
@@ -329,49 +344,6 @@ module "challenge_trust_me" {
 
 }
 
-# locals {
-#   error_message = "You have tried to enable the challenge by setting var.trust_me_enabled to true, but you forgot to specify a repo in var.github_repo."
-# }
-
-# resource "null_resource" "validate_variables" {
-#   count = var.trust_me_enabled && var.github_repo == "" ? 1 : 0
-
-#   provisioner "local-exec" {
-#     command = "echo '${local.error_message}'; exit 1"
-#   }
-# }
-
-
-
-
-
-
-
-
-# module "challenge_opensearch_dynamodb" {
-#   source = "./challenges/opensearch-dynamodb"
-#   count = var.challenge_opensearch_dynamodb_enabled ? 1 : 0
-#   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
-#   account_id = data.aws_caller_identity.current.account_id
-#   aws_local_profile = var.aws_local_profile
-#   user_ip = local.user_ip
-# }
-
-
-# module "challenge_github_pat" {
-#   source = "./challenges/github-pat"
-#   count = var.challenge_github_pat_enabled ? 1 : 0
-#   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
-#   account_id = data.aws_caller_identity.current.account_id
-#   aws_local_profile = var.aws_local_profile
-#   user_ip = local.user_ip
-#   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
-
-# }
-
-
-
-
 locals {
   enabled_challenges = [
     var.its_a_secret_enabled ?            "its_a_secret                 | No Cost      |" : "",
@@ -383,7 +355,8 @@ locals {
     var.the_topic_is_exposure_enabled ?   "the_topic_is_exposure        | No cost      |" : "",
     var.the_topic_is_execution_enabled ?  "the_topic_is_execution       | No cost      |" : "",
     var.middle_enabled ?                  "middle                       | No cost      |" : "",
-    var.needles_enabled ?                 "needles                      | No Cost      |" : "",    
+    var.needles_enabled ?                 "needles                      | No Cost      |" : "",
+    var.pain_enabled ?                    "pain                         | No Cost      |" : "",    
     var.bastion_enabled ?                 "bastion                      | $4/month     |" : "",
     var.wyatt_enabled ?                   "wyatt                        | $4/month     |" : "",
     var.double_tap_enabled ?              "double_tap                   | $9/month     |" : "",
