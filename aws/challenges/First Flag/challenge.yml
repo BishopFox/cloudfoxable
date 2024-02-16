@@ -1,0 +1,51 @@
+name: First Flag
+category: 1. Do this first!
+description: |-
+  **Overview**
+
+  - **Default state:** Enabled
+  - **Estimated Cost:** No cost
+  - **Starting Point:** [https://github.com/BishopFox/cloudfoxable](https://github.com/BishopFox/cloudfoxable)
+
+
+  **Welcome!**
+
+  CloudFoxable is Terraform code that lives at [https://github.com/BishopFox/cloudfoxable](https://github.com/BishopFox/cloudfoxable). In order to hack against CloudFoxable, you'll have to create a new playground AWS account or use an existing one. You'll then need to install Terraform and deploy CloudFoxable via Terraform. Once you do that, you can use this CTFd instance to walk you through the challenges, and optionally, you can register and submit your flags here.
+
+  **Setup Instructions**
+
+  1. Select or create an AWS account. (Do NOT use an account that has any production resources or sensitive data!)
+  2. [Create a non-root user with administrative access](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html) that you will use when running Terraform.
+  3. [Create an access key for that user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html).
+  4. [Install the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html).
+  5. [Configure your AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html) with your newly created admin user as the default profile.
+  6. Confirm your CLI is working as expected by executing `aws sts get-caller-identity`.
+  7. [Install the Terraform binary](https://www.terraform.io/downloads.html) and add the binary location to your path.
+  8. `git clone https://github.com/BishopFox/cloudfoxable`
+  9. `cd cloudfoxable/aws`
+  10. `cp terraform.tfvars.example terraform.tfvars`
+  11. `terraform init`
+  12. Edit `terraform.tfvars` and set the AWS profile you'd like to use: `aws_local_profile = "YOUR_PROFILE"`
+  13. (Optional) `terraform plan`
+  14. `terraform apply`
+  15. Install CloudFox, Pmapper, Pacu and any other AWS Cloud Penetration Testing tools you like to use.
+
+  **Find the Flag**
+
+  Read the stuff at the end of the `terraform apply` output closely enough, and you'll find the first flag. The Terraform output will show you how to set up your AWS CLI with the `ctf-starting-user`.
+
+  By the way, the flag syntax is always:
+
+  `FLAG{challengeName::CamelCaseText}`
+
+  You will always submit this whole string as shown above with the word flag.
+
+  **Clean up**
+
+  At any point, if you want to remove all CloudFoxable challenges, you can run `terraform destroy` from the `cloudfoxable/aws` directory.
+value: 50
+
+flags:
+- content: FLAG{congrats_you_are_now_a_terraform_expert_happy_hunting}
+  type: static
+  data: case_insensitive

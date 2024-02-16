@@ -1,0 +1,36 @@
+name: Search 2
+category: Exploit Public-Facing Application
+description: |-
+  **Overview**
+
+  - **Default state:** Disable
+  - **Estimated Cost:** $27/month
+  - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:user/ctf-starting-user`
+
+  **CloudFoxable Setup**
+
+  - Edit `cloudfoxable/aws/terraform.tfvars`
+  - Switch the challenge flag to true: `search1and2_enabled = true`
+  - Run `terraform apply`
+
+  **Challenge**
+
+  This is the second phase of the `search` challenge. It is often the case that the blast radius of a cloud breach extends beyond the cloud infrastructure itself. See if you can find a path that starts where Search1 left off but leads somewhere outside your CloudFoxable playground. That's where you'll find the flag.
+
+  **Cleanup Tasks**
+
+  - Edit `cloudfoxable/aws/terraform.tfvars`
+  - Switch the challenge flag to false: `search1and2_enabled = false`
+  - Run `terraform apply`
+value: 200
+
+flags:
+- content: FLAG{careful_where_you_put_those_personal_access_tokens}
+  type: static
+  data: case_insensitive
+
+hints:
+- |-
+  If you found the PAT, the easiest way to use it is to install the gh CLI: https://cli.github.com/
+
+  check out the help functionality for how to use the PAT to authenticate

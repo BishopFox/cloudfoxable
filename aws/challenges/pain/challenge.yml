@@ -1,0 +1,41 @@
+name: Pain
+category: 'Assumed Breach: Principal'
+description: |-
+  **Overview**
+
+  * **Default state:** Enabled
+  * **Estimated Cost:** No cost until you create resources (required)
+  * **Starting Point:** `arn:aws:iam::ACCOUNT_ID:role/christian_pulisic`
+
+  **CloudFoxable Setup**
+
+  Create profile for `pulisic`
+
+  ```
+  [profile pulisic]
+  region = us-west-2
+  role_arn = arn:aws:iam::ACCOUNTID:role/christian_pulisic
+  source_profile = cloudfoxable
+  ```
+
+  **Challange Details**
+
+  In the 2022 FIFA World Cup, Christian Pulisic put his body on the line to net a crucial goal for the USA, ensuring their progression beyond the group stage: https://www.youtube.com/watch?v=Y7VA30UYlQo. He did what he had to do, even though he knew it was going to hurt.
+
+  Similarly, during a penetration test, whether in a cloud environment or otherwise, you might identify a exploit path that won't be pleasant to exploit, but you know the end result will be worth it.
+
+  For this challenge, you have just gained access to the role `christian_pulisic`. The trophy target for this challenge is in an s3 bucket named pain-s3-\[randon-chars] in your account.
+
+  Start with christian_pulisic and follow the permissions until you see the path. That's the easy part :). Executing the exploit chain... not so easy.
+
+  [Pulisic in the hospital](/files/c167bb4c9acea175c2fa993787580e66/pulisic-1-1.webp)
+
+  **Cleanup Tasks**
+
+  Don't forgot to remove any resources you created to solve this challenge. This is good practice, because we must also keep track of things we create on a penetration test and remove them when we are finished with the attack chain.
+value: 400
+
+flags:
+- content: FLAG{pain::pulisic_is_proud_of_you}
+  type: static
+  data: case_insensitive

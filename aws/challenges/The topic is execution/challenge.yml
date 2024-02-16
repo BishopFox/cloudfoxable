@@ -1,0 +1,44 @@
+name: The topic is execution
+category: 'Assumed Breach: Principal'
+description: |-
+  **Overview**
+
+  - **Default state:** Enabled
+  - **Estimated Cost:** None
+  - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:role/viniciusjr`
+
+  **CloudFoxable Setup**
+
+  Create profile for `viniciusjr`
+
+  ```
+  [profile viniciusjr]
+  region = us-west-2
+  role_arn = arn:aws:iam::ACCOUNTID:role/viniciusjr
+  source_profile = cloudfoxable
+  ```
+
+  **Challenge Details**
+
+  You've just gained access to the role `viniciusjr`. At first glance, this role appears to only have some SNS read-only access? But I don't think that's accurate. See if you can get to the flag `/cloudfoxable/flag/executioner` in the SSM parameter store.
+
+  **Cleanup Tasks**
+
+  None required
+value: 300
+
+flags:
+- content: FLAG{theTopicIsExecution::WeJustPoppedALambdaByInjectingAnEvilSNSmessage}
+  type: static
+  data: case_insensitive
+
+hints:
+- |+
+  If you haven't already, you might want to complete "The topic is exposure." It has a few hints and lessons that are relevant for this challenge as well.
+
+
+
+- |-
+  Once you have subscribed to this topic and observed the format of the messages, that should give you some ideas on what types of messages you want to send to this topic and what types of mischief you can pull off.
+
+  You might also want to head over to the AWS console to see who else is subscribed to the topic. That will give you an idea of any limitations you might run into.

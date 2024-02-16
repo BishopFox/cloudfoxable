@@ -1,0 +1,31 @@
+name: Double Tap
+category: 'Assumed Breach: Principal'
+description: |-
+  **Overview**
+
+  - **Author:** Joe Barcia (Bishop Fox)
+  - **Default state:** Disabled
+  - **Estimated Cost:** $9/month
+  - **Starting Point:** ```arn:aws:iam::ID:role/user/ctf-starting-user```
+
+  **CloudFoxable Setup**
+
+  - Edit `cloudfoxable/aws/terraform.tfvars`
+  - Switch the challenge flag to true: `double_tap_enabled = true`
+  - `terraform apply`
+
+  **Challenge Details**
+
+  You've just gained access to the user `ctf-starting-user`. Your objective is to access the critical data stored in  the `DT_flag` secret in secretsmanager.
+
+  **Cleanup Tasks**
+
+  - Edit `cloudfoxable/aws/terraform.tfvars`
+  - Switch the challenge flag to false: `double_tap_enabled = false`
+  - `terraform apply`
+value: 300
+
+flags:
+- content: FLAG{double_tap::ExploitChainsAreFun}
+  type: static
+  data: case_insensitive

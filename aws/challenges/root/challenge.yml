@@ -1,0 +1,43 @@
+name: Root
+category: 'Assumed Breach: Principal'
+description: |-
+  **Overview**
+
+  - **Default state:** Enabled
+  - **Estimated Cost:** No cost
+  - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:role/Kent`
+
+  **CloudFoxable Setup**
+
+  Create profile for `Kent`
+
+  ```
+  [profile Kent]
+  region = us-west-2
+  role_arn = arn:aws:iam::ACCOUNTID:role/Kent
+  source_profile = cloudfoxable
+  ```
+
+  **Challenge Details**
+
+  You've just gained access to the role `Kent`. Can you get to the `root` flag in the SSM parameter store?
+
+  **Cleanup Tasks**
+
+  None required
+value: 200
+
+flags:
+- content: FLAG{root::ExploitingRoleTrustsIsFun}
+  type: static
+  data: case_insensitive
+
+hints:
+- |-
+  As always, you'll want to run the cloudfox `permissions` command on the user you just "compromised".  If you only want to know what a single user/role can do, you can use the --principal flag, like this:
+
+  `cloudfox  aws -p cloudfoxable permissions --principal kent -v2`
+
+  But to really get started on this challenge you'll also want to run this cloudfox command:
+  `cloudfox aws -p cloudfoxable role-trusts -v2`
+- 'The name of this challenge is going to help you take your first hop. '

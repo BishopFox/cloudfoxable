@@ -1,12 +1,12 @@
 data "archive_file" "lambda_zip" {
     type          = "zip"
-    source_file   = "challenges/furls1/data/lambda/src/index.js"
-    output_path   = "challenges/furls1/data/lambda/lambda_function.zip"
+    source_file   = "challenges/Furls 1/data/lambda/src/index.js"
+    output_path   = "challenges/Furls 1/data/lambda/lambda_function.zip"
 }
 
 
 resource "aws_lambda_function" "furls1" {
-  filename         = "challenges/furls1/data/lambda/lambda_function.zip"
+  filename         = "challenges/Furls 1/data/lambda/lambda_function.zip"
   function_name    = "furls1"
   role             = aws_iam_role.furls1.arn
   handler          = "index.handler"

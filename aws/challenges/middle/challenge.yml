@@ -1,0 +1,43 @@
+name: Middle
+category: Exploit Blurred Lines
+description: |-
+  **Overview**
+
+  - **Default state:** Disabled
+  - **Estimated Cost:** $27/month
+  - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:role/pepi`
+
+  **CloudFoxable Setup**
+
+  - Edit `cloudfoxable/aws/terraform.tfvars`
+  - Switch the challenge flag to true: `middle = true`
+  - `terraform apply`
+
+  Create profile for `pepi`
+
+  ```
+  [profile pepi]
+  region = us-west-2
+  role_arn = arn:aws:iam::ACCOUNTID:role/pepi
+  source_profile = cloudfoxable
+  ```
+
+  **Challenge Details**
+
+  Here we have another case of blurred lines. A vulnerability that anyone in the world can exploit, except not really. To successfully exploit it, you need to know some key information, which makes it fall in the "Assumed breach: Malicious/Compromised user" category as well.
+
+  So really the refined statement is: "Anyone in the world can exploit this provided they at some point had/have internal knowledge of the environment". This means someone who used to work at Cloudfoxable Corp could exploit this, or even someone who currently works there but wants to keep their actions anonymous.
+
+  Take a look at the `pepi` role with `cloudfox aws -p cloudfoxable permissions` to find the initial thread to pull on.
+
+  **Cleanup Tasks**
+
+  - Edit `cloudfoxable/aws/terraform.tfvars`
+  - Switch the challenge flag to false: `middle = false`
+  - `terraform apply`
+value: 300
+
+flags:
+- content: '{FLAG:middle::queuesCanBeInterestingToo}'
+  type: static
+  data: case_insensitive

@@ -1,0 +1,39 @@
+name: Furls 2
+category: Exploit Public-Facing Application
+description: |-
+  **Overview**
+
+  - **Default state:** Enabled
+  - **Estimated Cost:** No cost
+  - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:role/ctf-starting-user`
+
+  **CloudFoxable Setup**
+
+  None required
+
+  **Challenge Details**
+
+  This Lambda Function URL doesn't just give you the key like `furls1`. You have to work a little harder for this one. CloudFox can definitely help you here.
+
+  **Cleanup Tasks**
+
+  None required
+value: 100
+
+flags:
+- content: FLAG{furls2::WhoCanExploitTheThingYouFound:mewis}
+  type: static
+  data: case_insensitive
+- content: FLAG{furls2::WhoCanExploitTheThingYouFound:tab_ramos}
+  type: static
+  data: case_insensitive
+
+hints:
+- |-
+  First off, it's not `sauerbrunn` (a commonly submitted incorrect answer).
+
+  ` sauerbrunn` is the role that is assigned to this lambda, but the challenge is asking for who can find those lambda environment variables that allowed you to successfully auth to the page.
+
+  Ask yourself, what AWS permission (or permissions) allows you to see the environment variables in lambda functions.  You might have to google this.
+
+  Then look again at that permissions output to see if there are any roles that are not directly related to this challenge in name, but they do have permission to see those environment variables.

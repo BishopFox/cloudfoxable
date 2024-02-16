@@ -1,0 +1,31 @@
+name: Needles
+category: 'Assumed Breach: Principal'
+description: |-
+  **Overview**
+
+  - **Default state:** Enabled
+  - **Estimated Cost:** None
+  - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:role/ramos`
+
+  **CloudFoxable Setup**
+
+  Create profile for `ramos`
+
+  ```
+  [profile ramos]
+  region = us-west-2
+  role_arn = arn:aws:iam::ACCOUNTID:role/ramos
+  source_profile = cloudfoxable
+  ```
+
+  **Challenge Details**
+
+  You've just gained access to the role `ramos`. This role has a bunch of read only access? Can you comb through the access you have and the resources that exist and see if you can find the flag?
+
+  **Cleanup Tasks**
+
+  None required
+value: 50
+
+flags:
+- FLAG{needles::hardcoded_secret_in_cloudformation}
