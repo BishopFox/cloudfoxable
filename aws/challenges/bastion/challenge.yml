@@ -1,0 +1,43 @@
+name: Bastion
+category: 'Assumed Breach: Application Compromise/Network Access'
+description: |-
+  **Overview**
+
+  - **Default state:** Disabled
+  - **Estimated Cost:** $3.88/month
+  - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:role/ctf-starting-user`
+
+  **CloudFoxable Setup**
+
+  - Edit `cloudfoxable/aws/terraform.tfvars`
+  - Switch the challenge flag to true: `bastion_enabled = true`
+  - `terraform apply`
+
+  **Challenge Details**
+
+  This challenge will set up your bastion host that you can use for all other challenges in this "Assumed Breach: Application Compromise/Network Access" category.
+
+  The easiest way to access an EC2 is to use SSM.
+
+  1. Once the challenge is deployed, run `cloudfox aws -p cloudfoxable instances -v2` to find the instance ID.
+  2. Next, you'll want in to install the [Session Manager plugin](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html)
+  3. Check out the `loot` file from the instances command to find the command needed to connect to the instance with SSM.
+  4. From there, use `cloudfox` to figure out what IAM permissions you have access to and find the flag.
+
+  **Cleanup Tasks**
+
+  - Edit `cloudfoxable/aws/terraform.tfvars`
+  - Switch the challenge flag to false: `bastion_enabled = false`
+  - `terraform apply`
+value: 100
+
+flags:
+- content: '{FLAG:bastion::ifYouHaveAccessToAnEC2YouHaveAccessToItsIamPermissions}'
+  type: static
+  data: case_insensitive
+
+hints:
+- >-
+  Use the `cloudfox aws -p cloudfoxable permissions`  or cloudfox aws -p cloudfoxable
+  permissions --principal \[NameOfInstanceRole\] to figure out what permissions you
+  have.

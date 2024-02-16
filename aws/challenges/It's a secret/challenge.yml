@@ -1,0 +1,51 @@
+name: It's a secret
+category: 'Assumed Breach: Principal'
+description: |-
+  **Overview**
+
+  - **Default state:** Enabled
+  - **Estimated Cost:** $0.10/month
+  - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:user/ctf-starting-user`
+
+  **CloudFoxable Setup**
+
+  None required.
+
+  **Challenge Details**
+
+  For this CTF, your starting CTF user has the following policies:
+  - SecurityAudit (AWS Managed)
+  - CloudFox (Customer Managed)
+  - its-a-secret (Customer Managed)
+
+  The first two policies allow you to run CloudFox. The third policy allows this starting user to get the flag for this challenge. If you followed the setup steps in the Terraform output, you'll have a profile called `cloudfoxable` which is tied to the `user/ctf-starting-user`.
+
+  To confirm this, run `aws --profile cloudfoxable sts get-caller-identity`.
+
+  Now run `cloudfox` using the `cloudfoxable` profile and see if you can access the secret named `its-a-secret`.
+
+  **Cleanup Tasks**
+
+  None required.
+value: 50
+
+flags:
+- content: FLAG{ItsASecret::IsASecretASecretIfTooManyPeopleHaveAccessToIt?}
+  type: static
+  data: case_insensitive
+
+hints:
+- |-
+  You'll probably want to run the `secrets` command in cloudfox:
+
+  ```
+  cloudfox aws -p cloudfoxable secrets -v2
+  ```
+
+  Make sure to check the loot file :)
+- |-
+  Before you leave this challenge, if you havent already, run the following command, which will show you exactly why you can access this secret:
+
+  ```
+  cloudfox aws -p cloudfoxable permissions --principal ctf-starting-user -v2
+  ```

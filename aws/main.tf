@@ -62,7 +62,7 @@ module "enabled" {
 ###########################################
 
 module "challenge_its_a_secret" {
-  source = "./challenges/its-a-secret"
+  source = "./challenges/It's a secret"
   count = var.its_a_secret_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
   account_id = data.aws_caller_identity.current.account_id
@@ -78,7 +78,7 @@ module "challenge_its_a_secret" {
 }
 
 module "challenge_its_another_secret" {
-  source = "./challenges/its-another-secret"
+  source = "./challenges/It's another secret"
   count = var.its_another_secret_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
   account_id = data.aws_caller_identity.current.account_id
@@ -93,7 +93,7 @@ module "challenge_its_another_secret" {
 }
 
 module "challenge_backwards" {
-  source = "./challenges/backwards"
+  source = "./challenges/Backwards"
   count = var.backwards_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
   account_id = data.aws_caller_identity.current.account_id
@@ -108,7 +108,7 @@ module "challenge_backwards" {
 }
 
 module "challenge_the_topic_is_execution" {
-  source = "./challenges/the-topic-is-execution"
+  source = "./challenges/The topic is execution"
   count = var.the_topic_is_execution_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
   account_id = data.aws_caller_identity.current.account_id
@@ -123,7 +123,7 @@ module "challenge_the_topic_is_execution" {
 }
 
 module "challenge_root" {
-  source = "./challenges/root"
+  source = "./challenges/Root"
   count = var.root_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
   account_id = data.aws_caller_identity.current.account_id
@@ -139,7 +139,7 @@ module "challenge_root" {
 }
 
 module "challenge_double_tap" {
-    source = "./challenges/double_tap"
+    source = "./challenges/Double Tap"
     count = var.double_tap_enabled ? 1 : 0
     aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
     account_id = data.aws_caller_identity.current.account_id
@@ -154,7 +154,7 @@ module "challenge_double_tap" {
   }
 
 module "challenge_needles" {
-    source = "./challenges/needles"
+    source = "./challenges/Needles"
     count = var.needles_enabled ? 1 : 0
     aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
     account_id = data.aws_caller_identity.current.account_id
@@ -169,7 +169,7 @@ module "challenge_needles" {
   }
 
   module "challenge_pain" {
-    source = "./challenges/pain"
+    source = "./challenges/Pain"
     count = var.pain_enabled ? 1 : 0
     aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
     account_id = data.aws_caller_identity.current.account_id
@@ -188,7 +188,7 @@ module "challenge_needles" {
 ###################################################
 
 module "challenge_search1and2" {
-  source = "./challenges/search1and2"
+  source = "./challenges/Search 1"
   count = var.search1and2_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
   account_id = data.aws_caller_identity.current.account_id
@@ -204,7 +204,7 @@ module "challenge_search1and2" {
 }
 
 module "challenge_furls1" {
-  source = "./challenges/furls1"
+  source = "./challenges/Furls 1"
   count = var.furls1_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
   account_id = data.aws_caller_identity.current.account_id
@@ -218,7 +218,7 @@ module "challenge_furls1" {
 
 
 module "challenge_furls2" {
-  source = "./challenges/furls2"
+  source = "./challenges/Furls 2"
   count = var.furls2_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
   account_id = data.aws_caller_identity.current.account_id
@@ -233,7 +233,7 @@ module "challenge_furls2" {
 }
 
 module "challenge_the_topic_is_exposure" {
-  source = "./challenges/the-topic-is-exposure"
+  source = "./challenges/The topic is exposure"
   count = var.the_topic_is_exposure_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
   account_id = data.aws_caller_identity.current.account_id
@@ -247,7 +247,7 @@ module "challenge_the_topic_is_exposure" {
 }
 
 module "challenge_middle" {
-  source = "./challenges/middle"
+  source = "./challenges/Middle"
   count = var.middle_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
   account_id = data.aws_caller_identity.current.account_id
@@ -263,7 +263,7 @@ module "challenge_middle" {
 }
 
   module "challenge_wyatt" {
-    source = "./challenges/wyatt"
+    source = "./challenges/Wyatt"
     count = var.wyatt_enabled ? 1 : 0
     aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
     account_id = data.aws_caller_identity.current.account_id
@@ -287,7 +287,7 @@ module "challenge_middle" {
 ########################################################################
 
 module "challenge_bastion" {
-  source = "./challenges/bastion"
+  source = "./challenges/Bastion"
   count = var.bastion_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
   account_id = data.aws_caller_identity.current.account_id
@@ -307,7 +307,7 @@ module "challenge_bastion" {
 }
 
 module "challenge_variable" {
-  source = "./challenges/variable"
+  source = "./challenges/Variable"
   count = var.variable_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
   account_id = data.aws_caller_identity.current.account_id
@@ -330,7 +330,7 @@ module "challenge_variable" {
 
 
 module "challenge_trust_me" {  
-  source = "./challenges/trust-me"
+  source = "./challenges/Trust me"
   count = (var.trust_me_enabled && var.github_repo != "") ? 1 : 0    
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn)
   account_id = data.aws_caller_identity.current.account_id

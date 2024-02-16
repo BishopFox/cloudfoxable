@@ -1,0 +1,34 @@
+name: Wyatt
+category: 'Assumed Breach: Application Compromise/Network Access'
+description: |-
+  **Overview**
+
+  - **Default state:** Disabled
+  - **Estimated Cost:** $4/month (this one) + $4/month (bastion) = $8/month
+  - **Starting Point:** The `bastion` EC2 instance
+
+  **CloudFoxable Setup**
+
+  - Edit `cloudfoxable/aws/terraform.tfvars`
+  - Switch the challenge flag to true: `bastion_enabled = true`
+  - Switch the challenge flag to true: `wyatt_enabled = true`
+  - `terraform apply`
+
+  **Challenge Details**
+
+  1. Connect to the bastion host using SSM (see details in the bastion challenge).
+  2. In this challenge, you have an internal foothold. One of your enumeration items once gaining a foothold is to figure out what services are running on what ports in the VPC. In a real Cloud Penetration Test, you might have dozens or hundreds of instances, containers, etc., running in the environment. You can scan every IP on every port, but there's a better way, thanks to a contribution from Wyatt Dahlenburg.
+  3. Look through the CloudFox commands and see if any of the CloudFox commands can help save you from scanning every port on every IP you find. If you find the right command, you'll find the first thread to pull on in this challenge.
+
+  **Cleanup Tasks**
+
+  - Edit `cloudfoxable/aws/terraform.tfvars`
+  - Switch the challenge flag to false: `bastion_enabled = false`
+  - Switch the challenge flag to true: `wyatt_enabled = false`
+  - `terraform apply`
+value: 300
+
+flags:
+- content: FLAG{wyatt::So_Many_DBs_To_Look_Through}
+  type: static
+  data: case_insensitive
