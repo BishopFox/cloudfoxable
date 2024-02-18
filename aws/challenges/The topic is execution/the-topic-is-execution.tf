@@ -129,7 +129,7 @@ resource "aws_lambda_function" "executioner" {
   role             = aws_iam_role.executioner-role.arn
   handler          = "index.handler"
   source_code_hash = data.archive_file.executioner_zip.output_base64sha256
-  runtime          = "nodejs20.x"
+  runtime          = "nodejs14.x"
 }
 
 
