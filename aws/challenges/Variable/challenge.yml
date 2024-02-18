@@ -1,0 +1,39 @@
+name: Variable
+category: 'Assumed Breach: Application Compromise/Network Access'
+description: |-
+  **Overview**
+
+  - **Default state:** Disabled
+  - **Estimated Cost:** $13/month (this one) + $4/month (bastion) = $18/month
+  - **Starting Point:** The `bastion` EC2 instance
+
+  **CloudFoxable Setup**
+
+  - Edit `cloudfoxable/aws/terraform.tfvars`
+  - Switch the challenge flag to true: `bastion_enabled = true`
+  - Switch the challenge flag to true: `variable_enabled = true`
+  - `terraform apply`
+
+  **Challenge Details**
+
+  1. Connect to the bastion host using SSM (see details in the bastion challenge).
+  2. In this challenge, you are not exploiting any IAM permissions attached to the instance; rather, you are exploiting the fact that you have a network position inside the VPC. This means you can reach network services that are only accessible via network foothold.
+  3. If you haven't already, re-run `cloudfox aws -p cloudfoxable all-checks`, and analyze the output. Does anything stand out to you?
+
+  **Cleanup Tasks**
+
+  - Edit `cloudfoxable/aws/terraform.tfvars`
+  - Switch the challenge flag to false: `bastion_enabled = false`
+  - Switch the challenge flag to true: `variable_enabled = false`
+  - `terraform apply`
+value: 200
+
+flags:
+- content: FLAG{DidYouKnowDatabasesHoldSensitiveData}
+  type: static
+  data: case_insensitive
+
+hints:
+- >-
+  You'll need to put pieces together from two seperate `cloudfox` commands to solve
+  this one.

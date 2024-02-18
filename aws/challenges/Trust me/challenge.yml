@@ -1,0 +1,64 @@
+name: Trust me
+category: Exploit Blurred Lines
+description: |-
+  **Overview**
+
+  - **Default state:** Disabled
+  - **Estimated Cost:** $0/month
+  - **Starting Point:** Your GitHub repo
+
+  **GitHub Setup**
+  1. Create a new GitHub repository for this challenge
+
+  **CloudFoxable Setup**
+
+  Enable Challenge:
+
+  1. Edit `terraform.tfvars`
+  2. Set `trust_me_enabled = true`
+  3. Uncomment/populate the line: `# github_repo = ""` <br> so it looks something like `github_repo = "github_handle/repoName"`
+  4. Run `terraform apply`
+
+  **Challenge Details**
+
+  There's a role that trusts the repo you just created. Find the role and exploit the trust to access the flag.
+
+  **Disable Challenge:**
+
+  1. Edit `terraform.tfvars`
+  2. Set `trust_me_enabled = false`
+  3. Run `terraform apply`
+value: 200
+
+flags:
+- content: FLAG{trustMe::the_lines_have_been_blurred}
+  type: static
+  data: case_insensitive
+
+hints:
+- |-
+  To find the role, use the `role-trusts` command:
+
+  ```cloudfox aws -p cloudfoxable role-trusts -v2```
+
+  Take a close look at the table that contains roles with federated trusts.
+
+  What permissions does that role have?
+- |
+  Once you find the role, see what `permissions` it has.
+
+  ```cloudfox aws -p cloudfoxable permissions -v2 --principal role_name```
+
+  For an extra bonus, run the secrets command and check out the loot file for the command you'll need to retrieve the secret you want:
+
+  ```cloudfox aws -p cloudfoxable secrets -v2```
+
+  ```cat ~/.cloudfox/cloudfox-output/aws/cloudfoxable/loot/pull-secrets-commands.txt | grep <secret>```
+- |-
+  Alright, so now that you have found where the flag is, let's get it!
+
+  What you know: Anyone with write acces to this GitHub repository can access this role via a malicious github action. Scary, right?
+
+  To exploit this, you'll need to create a malicious GitHub action. To learn about GitHub Actions, check this out: https://docs.github.com/en/actions/guides
+
+  You can use packaged modules in your github actionsto do common things. To exploit this, you'll probably want to use https://github.com/aws-actions/configure-aws-credentials and modify the example to fit your needs. Good luck!
