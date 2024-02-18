@@ -1,0 +1,61 @@
+name: It's another secret
+category: 'Assumed Breach: Principal'
+description: |-
+  **Overview**
+
+  - **Default state:** Enabled
+  - **Estimated Cost:** $0.05/month
+  - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:role/Ertz`
+
+  **CloudFoxable Setup**
+
+  None required
+
+  **Challenge Details**
+
+  TL;DR: You've just gained access to the role `Ertz`. Can you find and access the `its-another-secret` flag?
+
+  A lot of the challenges in the category **Assumed Breach: Principal** will have you assume into a role to simulate a new starting point. You'll technically start as `ctf-starting-user`, but your first action will be to assume the role `Ertz` listed above. This is to simulate a scenario where you've just gained access to the role `Ertz`.
+
+  You can do this the "hard way" by running `aws --profile cloudfoxable sts assume-role --role-arn arn:aws:iam::ACCOUNT_ID:role/Ertz --role-session-name Ertz` and then using that output to set up a new profile or environment variables.
+
+  Or, you can do it the easy way and create a new profile that does the role assumption for you!
+
+  Edit `~/.aws/config` and add the following profile:
+
+  ```
+  [profile ertz]
+  region = us-west-2
+  role_arn = arn:aws:iam::ACCOUNT_ID:role/Ertz
+  source_profile = cloudfoxable
+  ```
+
+  Now verify it!
+  ```
+  ❯ aws --profile ertz sts get-caller-identity
+  {
+      "UserId": "AROAQXHJKLZKFYSRACOES:botocore-session-1684201365",
+      "Account": "ACCOUNT_ID",
+      "Arn": "arn:aws:sts::ACCOUNT_ID:assumed-role/Ertz/botocore-session-1684201365"
+  }
+  ```
+
+  For each of these challenges, and on a cloud penetration test, the next thing you'll want to do is see what permissions the assumed breach user has, and see if any of them are "interesting".
+
+  If you've completed `It's a secret`, the rest of this challenge will look the same. The main goal here is to make sure you are comfortable assuming new roles. Good luck!
+
+  **Cleanup Tasks**
+
+  None required
+value: 50
+
+flags:
+- content: FLAG{ItsAnotherSecret::ThereWillBeALotOfAssumingRolesInThisCTF}
+  type: static
+  data: case_insensitive
+
+hints:
+- |-
+  Once you have confirmed you have access to the Ertz role, you'll want to do two things:
+  * Check what permisisons Ertz has
+  * Find the `its-another-secret` secret

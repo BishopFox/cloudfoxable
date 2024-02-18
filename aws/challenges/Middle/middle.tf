@@ -2,14 +2,14 @@
 
 data "archive_file" "producer_zip" {
     type          = "zip"
-    source_file   = "challenges/middle/data/lambda/producer/lambda_function.py"
-    output_path   = "challenges/middle/data/lambda/producer/lambda_function.zip"
+    source_file   = "challenges/Middle/data/lambda/producer/lambda_function.py"
+    output_path   = "challenges/Middle/data/lambda/producer/lambda_function.zip"
 }
 
 
 // lambda to sned sqs messages
 resource "aws_lambda_function" "producer" {
-  filename         = "challenges/middle/data/lambda/producer/lambda_function.zip"
+  filename         = "challenges/Middle/data/lambda/producer/lambda_function.zip"
   function_name    = "producer"
   role             = aws_iam_role.producer.arn
   handler          = "lambda_function.lambda_handler"
@@ -295,14 +295,14 @@ resource "aws_iam_policy" "lambda-sqs-secret-policy" {
 
 data "archive_file" "consumer_zip" {
     type          = "zip"
-    source_file   = "challenges/middle/data/lambda/consumer/lambda_function.py"
-    output_path   = "challenges/middle/data/lambda/consumer/lambda_function.zip"
+    source_file   = "challenges/Middle/data/lambda/consumer/lambda_function.py"
+    output_path   = "challenges/Middle/data/lambda/consumer/lambda_function.zip"
 }
 
 
 // lambda to consume sqs messages
 resource "aws_lambda_function" "consumer" {
-  filename         = "challenges/middle/data/lambda/consumer/lambda_function.zip"
+  filename         = "challenges/Middle/data/lambda/consumer/lambda_function.zip"
   function_name    = "consumer"
   role             = aws_iam_role.consumer.arn
   handler          = "lambda_function.lambda_handler"

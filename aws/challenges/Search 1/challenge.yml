@@ -1,0 +1,37 @@
+name: Search 1
+category: Exploit Public-Facing Application
+description: |-
+  **Overview**
+
+  - **Default state:** Disabled
+  - **Estimated Cost:** $27/month
+  - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:user/ctf-starting-user`
+
+  **CloudFoxable Setup**
+
+  - Edit `cloudfoxable/aws/terraform.tfvars`
+  - Switch the challenge flag to true: `search1and2_enabled = true`
+  - Run `terraform apply`
+
+  **Challenge**
+
+  As a cloud penetration tester, you need to look at more than just EC2 IP addresses for things to attack. There are services that are only accessible via AWS hostnames or custom DNS that map to those AWS hostnames. Find the Elasticsearch domain that is exposed to the world (really only your IP address). Find the endpoint and see if you can find any flags... or next steps... or both!
+
+  **Cleanup Tasks**
+
+  - Edit `cloudfoxable/aws/terraform.tfvars`
+  - Switch the challenge flag to false: `search1and2_enabled = false`
+  - Run `terraform apply`
+value: 100
+
+flags:
+- content: FLAG{search1::You_will_find_the_craziest_stuff_in_elasticsearch_sometimes}
+  type: static
+  data: case_insensitive
+
+hints:
+- |-
+  Use `cloudfox aws endpoints` to help you find ElasticSearch/OpenSearch domain
+- >-
+  Checkout https://book.hacktricks.xyz/network-services-pentesting/9200-pentesting-elasticsearch
+  for tips on interacting with opensearch/elasticsearch

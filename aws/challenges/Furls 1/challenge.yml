@@ -1,0 +1,34 @@
+name: Furls 1
+category: Exploit Public-Facing Application
+description: |-
+  **Overview**
+
+  - **Default state:** Enabled
+  - **Estimated Cost:** No cost
+  - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:role/ctf-starting-user`
+
+  **CloudFoxable Setup**
+
+  None required
+
+  **Challenge Details**
+
+  A Lambda function URL can be used to expose a Lambda function to the internet without an API gateway or another load balancer. This is really handy for builders, but can also be really handy for offensive security folk, as it's ripe for misconfiguration.
+
+  Use cloudfox to find the `furls1` FunctionURL and find the flag.
+
+  **Cleanup Tasks**
+
+  None required
+value: 50
+
+flags:
+- content: FLAG{furls1::function_urls_can_be_accidentally_expose_internal_data}
+  type: static
+  data: case_insensitive
+
+hints:
+- |
+  Check out cloudfox's endpoints command, which looks through a bunch of different services that have AWS endpoints:
+
+  `cloudfox aws --profile cloudfoxable endpoints -v2`

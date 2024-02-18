@@ -1,0 +1,50 @@
+name: The topic is exposure
+category: Exploit Public-Facing Application
+description: |-
+  **Overview**
+
+  - **Default state:** Enabled
+  - **Estimated Cost:** None
+  - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:user/ctf-starting-user`
+
+  **CloudFoxable Setup**
+
+  None required
+
+  **Challenge Details**
+
+  What does it mean when we say something is "public" in the cloud? Do you need an IP address to be public? What if a resource is accessible to anyone in the world, provided they have an AWS account (any AWS account). That seems close enough to public to scare me!
+
+  Note: FWIW, there is a policy on the resource in question that will only allow you to exploit it from your IP address to prevent misuse)
+
+  There are two cloudfox commands that can help you here.
+
+  **Cleanup Tasks**
+
+  None required
+value: 100
+
+flags:
+- content: FLAG{the-topic-is-exposure::IveBeenReadingUpOnTopics}
+  type: static
+  data: case_insensitive
+
+hints:
+- |-
+  The more general command, `resource-trusts` tries to enumerate many types of resources that have support resource policies.
+
+  `cloudfox aws -p cloudfoxable resource-trusts -v2`.
+
+  There's another cloudfox command that will actually show you how to exploit the topic.
+- |-
+  Run the sns command in cloudfox, and make sure to check the loot!
+
+  `cloudfox aws -p cloudfoxable sns -v2`
+- |-
+  To pull off the exploit, you'll need to set up some type of listener on a public IP so that you can subscribe to the topic.
+
+  In a pinch, you can even use netcat.
+- >-
+  If you have subscribed and you are not getting messages, make sure you have subscribed
+  to the correct topic... the one that only allows sns:subscribe & sns:publish from
+  your IP.

@@ -1,0 +1,67 @@
+name: Backwards
+category: 'Assumed Breach: Principal'
+description: |-
+  **Overview**
+
+  - **Default state:** Enabled
+  - **Estimated Cost:** $0.80/month
+  - **Starting Point:** `arn:aws:secretsmanager:us-west-2:ACCOUNTID:secret:DomainAdministrator-Credentials-SUFFIX`
+
+  **CloudFoxable Setup**
+
+  None required
+
+  **Challenge Details**
+
+  In some challenges, you might not see an IAM role or an IP address as the starting point, but rather, an interesting ARN or something like that.
+
+  Sometimes during cloud penetration tests, we first find something interesting and then work backwards to see who has access to it. Is it just the Administrators? Well, that's not really a big deal. Is it all developers, or all users, or anyone in the world? That might be a really big deal!
+
+  So in this challenge, we'd like you to get comfortable finding who has access to the *interesting thing*. For now, the interesting thing is just another secret in secretsmanager, but in later challenges, and on cloud penetration tests, this approach will become quite important.
+
+  So, go find out who has access to `DomainAdministrator-Credentials` in `secretsmanager` and then use your `cloudfoxable` profile to access that role and grab the secret.
+
+  **Cleanup Tasks**
+
+  None required
+value: 50
+
+flags:
+- content: FLAG{backwards::IfYouFindSomethingInterstingFindWhoHasAccessToIt}
+  type: static
+  data: case_insensitive
+
+hints:
+- |-
+  If your stuck, try running the permissions command in cloudfox and grepping for the word secret:
+
+  `cloudfox aws -p cloudfoxable permissions -v2 | grep -i secret`
+
+  Do you see user or role that has the permission to get all secretsmanager secret values, or even just the value of the secret we want?
+- |-
+  Now that you've found the role that can access the secret, let's cross our fingers and hope we can assume that role from our cloudfoxable profile, which maps to `ctf-starting-user`.
+
+  To do that, you can check the permissions of the ctf-starting-user, but no luck, no `sts:assumerole` granting access to our target role.
+
+  However, role trust policies are tricky. If a role trust policy specifies a principal in the same account specifically, that principal can assume it WITHOUT needing sts:assumerole permission. Yes, it's confusing, welcome to the club.
+
+  This means that you need to not only check your permissions, you need to check all of the role trust policies in the account. Luckily, there's the `role-trusts` command in cloudfox to help you!
+
+  Try:
+
+  `cloudfox -p cloudfoxable role-trusts -v2`
+
+  Find our target role, and see who it trusts?
+- |-
+  Now that you confirmed that we can assume the role `Alexander-Arnold` from our `ctf-starting-user`, let's do it!
+
+  Just like the previous challenge "It's another secret", make a new profile for the role assumption:
+
+  ```
+  [profile Alexander-Arnold]
+  region = us-west-2
+  role_arn = arn:aws:iam::ACCOUNT_ID:role/Alexander-Arnold
+  source_profile = cloudfoxable
+  ```
+
+  At this point, head all the way back to cloudfox secrets command loot file and grab the command to get the secret!

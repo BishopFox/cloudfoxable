@@ -116,15 +116,15 @@ resource "aws_iam_policy" "executioner-secret-policy" {
 
 data "archive_file" "executioner_zip" {
     type          = "zip"
-    source_file   = "challenges/the-topic-is-execution/data/lambda/src/index.js"
-    output_path   = "challenges/the-topic-is-execution/data/lambda/lambda_function.zip"
+    source_file   = "challenges/The topic is execution/data/lambda/src/index.js"
+    output_path   = "challenges/The topic is execution/data/lambda/lambda_function.zip"
 }
 
 
 // lambda function that is triggered by sns that uses the executioner_zip data
 // lambda to accept sns messages
 resource "aws_lambda_function" "executioner" {
-  filename         = "challenges/the-topic-is-execution/data/lambda/lambda_function.zip"
+  filename         = "challenges/The topic is execution/data/lambda/lambda_function.zip"
   function_name    = "executioner"
   role             = aws_iam_role.executioner-role.arn
   handler          = "index.handler"
