@@ -295,6 +295,6 @@ resource "aws_iam_role_policy_attachment" "pain4-policy-attachment" {
 resource "aws_s3_object" "pain-s3-object" {
     bucket = aws_s3_bucket.pain-s3.id
     key = "flag.txt"
-    source = "challenges/pain/data/flag.txt"
+    source = "challenges/Pain/data/flag.txt"
 }
 
