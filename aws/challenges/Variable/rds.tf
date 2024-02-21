@@ -1,14 +1,7 @@
-data "aws_subnets" "cloudfox" {
-  filter {
-    name = "vpc-id"
-    values = [var.vpc_id]
-  }
-}
-
 resource "aws_db_subnet_group" "default" {
   name        = "rds-subnet-group"
   description = "Terraform example RDS subnet group"
-  subnet_ids  = data.aws_subnets.cloudfox.ids 
+  subnet_ids  = var.subnets 
 }
 
 
@@ -31,12 +24,12 @@ resource "aws_db_instance" "default" {
 
 data "archive_file" "lambda-rds_zip" {
     type          = "zip"
-    source_dir   = "challenges/variable/data/lambda-src"
-    output_path   = "challenges/variable/data/lambda_function.zip"
+    source_dir   = "challenges/Variable/data/lambda-src"
+    output_path   = "challenges/Variable/data/lambda_function.zip"
 }
 
 resource "aws_lambda_function" "rds_sql_executor" {
-  filename         = "challenges/variable/data/lambda_function.zip"
+  filename         = "challenges/Variable/data/lambda_function.zip"
   function_name    = "rds-sql-executor"
   runtime          = "python3.9"
   handler          = "lambda_function.lambda_handler"
@@ -45,7 +38,7 @@ resource "aws_lambda_function" "rds_sql_executor" {
   timeout          = 60
 
   vpc_config {
-    subnet_ids         = data.aws_subnets.cloudfox.ids 
+    subnet_ids         = var.subnets 
     security_group_ids = [var.intra-sg-access-id]
   }
 

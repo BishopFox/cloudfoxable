@@ -44,6 +44,11 @@ variable "vpc_cidr" {
   default = ""
 }
 
+variable "subnets" {
+    type = list
+    default = []
+}
+
 
 # Resources
 resource "random_password" "database-secret" {

@@ -230,6 +230,7 @@ module "challenge_middle" {
     vpc_id = module.enabled.vpc_id
     vpc_cidr = module.enabled.vpc_cidr
     AWS_REGION = var.AWS_REGION
+    subnets = output.enabled.subnet_ids
     }
 
 
@@ -249,7 +250,7 @@ module "challenge_bastion" {
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
   vpc_id = module.enabled.vpc_id
   AWS_REGION = var.AWS_REGION    
-
+  subnets = module.enabled.subnet_ids 
 }
 
 module "challenge_variable" {
@@ -261,7 +262,7 @@ module "challenge_variable" {
   user_ip = local.user_ip
   intra-sg-access-id = module.challenge_bastion[0].intra-sg-access-id
   AWS_REGION = var.AWS_REGION    
-
+  subnets = module.enabled.subnet_ids
 }
 
 ##############################################

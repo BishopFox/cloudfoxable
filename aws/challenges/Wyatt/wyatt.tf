@@ -1,10 +1,3 @@
-data "aws_subnets" "first" {
-    filter {
-        name = "tag:Name"
-        values = ["cloudfox Operational Subnet 1"]
-    }
-}
-
 data "aws_ami" "amazon_linux" {
   most_recent = true
   owners      = ["amazon"]
@@ -27,7 +20,7 @@ resource "aws_instance" "wyatt" {
   iam_instance_profile = aws_iam_instance_profile.wyatt.name
 
   instance_type = "t3a.nano"
-  subnet_id = data.aws_subnets.first.ids 
+  subnet_id = var.subnets[0] 
   user_data = <<-EOF
                 #!/bin/bash
                 yum update -y

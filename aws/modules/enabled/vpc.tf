@@ -56,6 +56,6 @@ output "vpc_cidr" {
 }
 
 // output subnet_id
-output "subnet_id" {
+output "subnet_ids" {
   value = aws_subnet.cloudfox-operational.*.id
 }

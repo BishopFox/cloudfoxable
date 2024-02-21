@@ -83,3 +83,9 @@ variable "ctf_starting_user_name" {
   type        = string
   default     = ""
 }
+
+variable "subnets" {
+    description = "List of vpc subnets"
+    type = list
+    default = []
+}

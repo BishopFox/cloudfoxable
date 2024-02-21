@@ -90,6 +90,12 @@ variable "intra-sg-access-id" {
   default     = ""
 }
 
+variable "subnets" {
+  description = "List of vpc subnets"
+  type = list
+  default = []
+}
+
 resource "random_password" "rds-password" {
   length           = 31
   special          = true
