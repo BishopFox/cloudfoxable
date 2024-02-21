@@ -1,3 +1,5 @@
+data "aws_availability_zones" "available" {}
+
 resource "aws_vpc" "cloudfox" {
   cidr_block = "10.0.0.0/16"
   enable_dns_support   = "true"
@@ -26,52 +28,22 @@ resource "aws_route_table" "cloudfox-public" {
   }
 }
 
-resource "aws_subnet" "cloudfox-operational-1" {
+resource "aws_subnet" "cloudfox-operational" {
+  count = length(data.aws_availability_zones.available.names)
   vpc_id                  = aws_vpc.cloudfox.id
-  cidr_block              = "10.0.1.0/24"
+  cidr_block              = cidrsubnet("10.0.0.0/16", 8, count.index)
   map_public_ip_on_launch = "true"
-  availability_zone       = var.AWS_REGION_SUB_1
+  availability_zone       = element(data.aws_availability_zones.available.names, count.index) 
   tags = {
-    Name = "cloudfox Operational Subnet 1"
+    Name = "cloudfox Operational Subnet ${count.index}"
   }
 }
 
-resource "aws_subnet" "cloudfox-operational-2" {
-  vpc_id                  = aws_vpc.cloudfox.id
-  cidr_block              = "10.0.2.0/24"
-  map_public_ip_on_launch = "true"
-  availability_zone       = var.AWS_REGION_SUB_2
-  tags = {
-    Name = "cloudfox Operational Subnet 2"
-  }
-}
-
-resource "aws_subnet" "cloudfox-operational-3" {
-  vpc_id                  = aws_vpc.cloudfox.id
-  cidr_block              = "10.0.3.0/24"
-  map_public_ip_on_launch = "true"
-  availability_zone       = var.AWS_REGION_SUB_3
-  tags = {
-    Name = "cloudfox Operational Subnet 3"
-  }
-}
-
-resource "aws_route_table_association" "cloudfox-operational-1" {
-  subnet_id      = aws_subnet.cloudfox-operational-1.id
+resource "aws_route_table_association" "cloudfox-operational" {
+  count = length(data.aws_availability_zones.available.names)
+  subnet_id      = element(aws_subnet.cloudfox-operational.*.id, count.index)
   route_table_id = aws_route_table.cloudfox-public.id
 }
-
-resource "aws_route_table_association" "cloudfox-operational-2" {
-  subnet_id      = aws_subnet.cloudfox-operational-2.id
-  route_table_id = aws_route_table.cloudfox-public.id
-}
-
-resource "aws_route_table_association" "cloudfox-operational-3" {
-  subnet_id      = aws_subnet.cloudfox-operational-3.id
-  route_table_id = aws_route_table.cloudfox-public.id
-}
-
-
 
 
 // output vpc_id
@@ -84,14 +56,6 @@ output "vpc_cidr" {
 }
 
 // output subnet_id
-output "subnet1_id" {
-  value = aws_subnet.cloudfox-operational-1.id
-}
-
-output "subnet2_id" {
-  value = aws_subnet.cloudfox-operational-2.id
-}
-
-output "subnet3_id" {
-  value = aws_subnet.cloudfox-operational-3.id
+output "subnet_id" {
+  value = aws_subnet.cloudfox-operational.*.id
 }

@@ -1,3 +1,5 @@
+data "aws_availability_zones" "available" {}
+
 # Create a security group
 resource "aws_security_group" "example_security_group" {
   vpc_id = aws_vpc.cloudfox.id
@@ -15,7 +17,7 @@ resource "aws_security_group" "example_security_group" {
 # Create a subnet group
 resource "aws_docdb_subnet_group" "example_subnet_group" {
   name       = "example-subnet-group"
-  subnet_ids = [aws_subnet.cloudfox-operational-1.id, aws_subnet.cloudfox-operational-2.id, aws_subnet.cloudfox-operational-3.id]
+  subnet_ids = aws_subnet.cloudfox-operational.*.id
 }
 
 
@@ -23,7 +25,7 @@ resource "aws_docdb_subnet_group" "example_subnet_group" {
 # Create a DocumentDB cluster
 resource "aws_docdb_cluster" "example_cluster" {
   cluster_identifier        = "example-cluster"
-  availability_zones        = [var.AWS_REGION_SUB_1, var.AWS_REGION_SUB_2, var.AWS_REGION_SUB_3]
+  availability_zones        = data.aws_availability_zones.available.names 
   master_username           = "cloudfoxable"
   master_password           = "password123"  # Replace with your own password
   vpc_security_group_ids    = [aws_security_group.example_security_group.id]

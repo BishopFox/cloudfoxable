@@ -1,3 +1,10 @@
+data "aws_subnets" "first" {
+    filter {
+        name = "tag:Name"
+        values = ["cloudfox Operational Subnet 1"]
+    }
+}
+
 
 data "aws_ami" "bastion" {
   most_recent = true
@@ -45,7 +52,7 @@ output "intra-sg-access-id" {
 resource "aws_instance" "bastion" {
   ami           = data.aws_ami.bastion.id
   instance_type = "t3a.nano"
-  subnet_id = var.subnet1_id
+  subnet_id = data.aws_subnets.first.ids 
   iam_instance_profile = aws_iam_instance_profile.bastion.name
   associate_public_ip_address = true
   vpc_security_group_ids = [ aws_security_group.intra-sg-access.id ]

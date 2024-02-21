@@ -34,21 +34,6 @@ variable "AWS_REGION" {
   default = "us-west-2"
 }
 
-variable "AWS_REGION_SUB_1" {
-  type    = string
-  default = "us-west-2a"
-}
-
-variable "AWS_REGION_SUB_2" {
-  type    = string
-  default = "us-west-2b"
-}
-
-variable "AWS_REGION_SUB_3" {
-  type    = string
-  default = "us-west-2c"
-}
-
 # Resources
 resource "random_password" "database-secret" {
   length           = 31

@@ -1,3 +1,9 @@
+# data "aws_subnets" "first" {
+#     filter {
+#         name = "tag:Name"
+#         values = ["cloudfox Operational Subnet 1"]
+#     }
+# }
 
 # resource "aws_iam_role" "cloud9_role" {
 #   name               = "Cloud9InstanceRole"
@@ -25,7 +31,7 @@
 
 # resource "aws_cloud9_environment_ec2" "example" {
 #   instance_type     = "t2.micro" # or any other desired instance type
-#   subnet_id         = var.subnet1_id 
+#   subnet_id         = data.aws_subnets.first.ids 
 #   name              = "my-cloud9-env"
 #   owner_arn         = aws_iam_role.cloud9_role.arn
 #   automatic_stop_time_minutes = 30 # Automatically stop the environment after it's inactive for 30 minutes

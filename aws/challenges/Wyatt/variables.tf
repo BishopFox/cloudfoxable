@@ -45,37 +45,6 @@ variable "vpc_cidr" {
 }
 
 
-variable "subnet1_id" {
-  type    = string
-  default = ""
-}
-
-variable "subnet2_id" {
-  type    = string
-  default = ""
-}
-
-variable "subnet3_id" {
-  type    = string
-  default = ""
-}
-
-
-variable "AWS_REGION_SUB_1" {
-  type    = string
-  default = "us-west-2a"
-}
-
-variable "AWS_REGION_SUB_2" {
-  type    = string
-  default = "us-west-2b"
-}
-
-variable "AWS_REGION_SUB_3" {
-  type    = string
-  default = "us-west-2c"
-}
-
 # Resources
 resource "random_password" "database-secret" {
   length           = 31
