@@ -230,7 +230,7 @@ module "challenge_middle" {
     vpc_id = module.enabled.vpc_id
     vpc_cidr = module.enabled.vpc_cidr
     AWS_REGION = var.AWS_REGION
-    subnets = output.enabled.subnet_ids
+    subnets = module.enabled.subnet_ids
     }
 
 
