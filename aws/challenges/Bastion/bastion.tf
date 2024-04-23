@@ -178,7 +178,7 @@ resource "aws_s3_bucket_public_access_block" "cloudfoxable-bastion-public-access
 resource "aws_s3_object" "cloudfoxable-bastion-object" {
   bucket = aws_s3_bucket.cloudfoxable-bastion.id
   key    = "flag.txt"
-  source = "./challenges/bastion/data/flag.txt"
+  source = "./challenges/Bastion/data/flag.txt"
 }
 
 // create a policy that will allow the ctf starting user to ssm:startsession to the bastion
