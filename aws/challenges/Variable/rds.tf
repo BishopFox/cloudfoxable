@@ -24,12 +24,12 @@ resource "aws_db_instance" "default" {
 
 data "archive_file" "lambda-rds_zip" {
     type          = "zip"
-    source_dir   = "challenges/variable/data/lambda-src"
-    output_path   = "challenges/variable/data/lambda_function.zip"
+    source_dir   = "challenges/Variable/data/lambda-src"
+    output_path   = "challenges/Variable/data/lambda_function.zip"
 }
 
 resource "aws_lambda_function" "rds_sql_executor" {
-  filename         = "challenges/variable/data/lambda_function.zip"
+  filename         = "challenges/Variable/data/lambda_function.zip"
   function_name    = "rds-sql-executor"
   runtime          = "python3.9"
   handler          = "lambda_function.lambda_handler"
