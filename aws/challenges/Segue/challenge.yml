@@ -1,0 +1,31 @@
+name: Segue
+category: 'Assumed Breach: Principal'
+description: |-
+  **Overview**
+
+  - **Author:** Gerben Kleijn (Bishop Fox)
+  - **Default state:** Enabled
+  - **Estimated Cost:** $0.00/month
+  - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:role/reinier`
+
+  **CloudFoxable Setup**
+
+  None required.
+
+  **Challenge Details**
+
+  You've just gained access to the reinier role. Utilize cloudfox and see where it takes you! 
+
+  **Cleanup Tasks**
+
+  None required.
+value: 200
+
+flags:
+- content: 'FLAG{SEGUE:protect_roles_from_unintended_cross_account_access}'
+  type: static
+  data: case_insensitive
+
+hints:
+- >-
+  Sometimes you have to make an educated guess...
