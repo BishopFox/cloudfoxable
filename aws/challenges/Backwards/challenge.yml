@@ -35,7 +35,7 @@ hints:
 - |-
   If your stuck, try running the permissions command in cloudfox and grepping for the word secret:
 
-  `cloudfox aws -p cloudfoxable aws permissions -v2 | grep -i secret`
+  `cloudfox aws -p cloudfoxable permissions -v2 | grep -i secret`
 
   Do you see user or role that has the permission to get all secretsmanager secret values, or even just the value of the secret we want?
 - |-
