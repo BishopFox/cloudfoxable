@@ -49,7 +49,7 @@ hints:
 
   Try:
 
-  `cloudfox -p cloudfoxable role-trusts -v2`
+  `cloudfox -p cloudfoxable aws role-trusts -v2`
 
   Find our target role, and see who it trusts?
 - |-
