@@ -20,7 +20,7 @@ resource "aws_instance" "wyatt" {
   iam_instance_profile = aws_iam_instance_profile.wyatt.name
 
   instance_type = "t3a.nano"
-  subnet_id = var.subnet1_id
+  subnet_id = var.subnets[0] 
   user_data = <<-EOF
                 #!/bin/bash
                 yum update -y

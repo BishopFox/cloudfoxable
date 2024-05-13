@@ -1,7 +1,7 @@
 resource "aws_db_subnet_group" "default" {
   name        = "rds-subnet-group"
   description = "Terraform example RDS subnet group"
-  subnet_ids  = [var.subnet1_id, var.subnet2_id, var.subnet3_id]
+  subnet_ids  = var.subnets 
 }
 
 
@@ -38,7 +38,7 @@ resource "aws_lambda_function" "rds_sql_executor" {
   timeout          = 60
 
   vpc_config {
-    subnet_ids         = [var.subnet1_id, var.subnet2_id]
+    subnet_ids         = var.subnets 
     security_group_ids = [var.intra-sg-access-id]
   }
 
