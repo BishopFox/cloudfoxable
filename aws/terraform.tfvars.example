@@ -45,9 +45,6 @@ aws_local_profile = "default"
 
 # Uncomment the next lines to use a region other than us-west-2 for your lab
 # AWS_REGION = "us-east-1"
-# AWS_REGION_SUB_1 = "us-east-1a"
-# AWS_REGION_SUB_2 = "us-east-1b"
-# AWS_REGION_SUB_3 = "us-east-1c"
 
 
 ############################

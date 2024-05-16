@@ -1,4 +1,3 @@
-
 data "aws_ami" "bastion" {
   most_recent = true
 
@@ -45,7 +44,7 @@ output "intra-sg-access-id" {
 resource "aws_instance" "bastion" {
   ami           = data.aws_ami.bastion.id
   instance_type = "t3a.nano"
-  subnet_id = var.subnet1_id
+  subnet_id = var.subnets[0] 
   iam_instance_profile = aws_iam_instance_profile.bastion.name
   associate_public_ip_address = true
   vpc_security_group_ids = [ aws_security_group.intra-sg-access.id ]
@@ -108,14 +107,14 @@ resource "aws_iam_role_policy_attachment" "bastion-deny" {
 
 
 resource "aws_iam_instance_profile" "bastion" {
-  name = "bastion"
+  name = "bastion-cloudfoxable"
   role = aws_iam_role.bastion.name
 }
 
 
 // create a policy that allows the bastion to list and download the contents of an S3 bucket called cloudfoxable-bastion-RANDOMSTRING
 resource "aws_iam_policy" "bastion-s3" {
-  name = "bastion-s3"
+  name = "bastion-cloudfoxable-s3"
   description = "Allows the bastion to list and download the contents of the S3 bucket with flag"
   policy = jsonencode({
     Version = "2012-10-17"

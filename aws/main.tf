@@ -50,9 +50,6 @@ module "enabled" {
   aws_local_profile = var.aws_local_profile
   user_ip = local.user_ip
   AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 
 }
 
@@ -71,9 +68,6 @@ module "challenge_its_a_secret" {
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
   AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 
 }
 
@@ -87,9 +81,6 @@ module "challenge_its_another_secret" {
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
   AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 }
 
 module "challenge_backwards" {
@@ -102,9 +93,6 @@ module "challenge_backwards" {
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
   AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 }
 
 module "challenge_the_topic_is_execution" {
@@ -117,9 +105,6 @@ module "challenge_the_topic_is_execution" {
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
   AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 }
 
 module "challenge_root" {
@@ -133,58 +118,45 @@ module "challenge_root" {
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
   AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 }
 
 module "challenge_double_tap" {
-  source = "./challenges/Double Tap"
-  count = var.double_tap_enabled ? 1 : 0
-  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
-  account_id = data.aws_caller_identity.current.account_id
-  aws_local_profile = var.aws_local_profile
-  user_ip = local.user_ip
-  ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
-  ctf_starting_user_name = module.enabled.ctf_starting_user_name
-  AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
-}
+    source = "./challenges/Double Tap"
+    count = var.double_tap_enabled ? 1 : 0
+    aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+    account_id = data.aws_caller_identity.current.account_id
+    aws_local_profile = var.aws_local_profile
+    user_ip = local.user_ip
+    ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+    ctf_starting_user_name = module.enabled.ctf_starting_user_name
+    AWS_REGION = var.AWS_REGION
+  }
 
 module "challenge_needles" {
-  source = "./challenges/Needles"
-  count = var.needles_enabled ? 1 : 0
-  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
-  account_id = data.aws_caller_identity.current.account_id
-  aws_local_profile = var.aws_local_profile
-  user_ip = local.user_ip
-  ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
-  ctf_starting_user_name = module.enabled.ctf_starting_user_name
-  AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
-}
+    source = "./challenges/Needles"
+    count = var.needles_enabled ? 1 : 0
+    aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+    account_id = data.aws_caller_identity.current.account_id
+    aws_local_profile = var.aws_local_profile
+    user_ip = local.user_ip
+    ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+    ctf_starting_user_name = module.enabled.ctf_starting_user_name
+    AWS_REGION = var.AWS_REGION
+  }
 
-module "challenge_pain" {
-  source = "./challenges/Pain"
-  count = var.pain_enabled ? 1 : 0
-  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
-  account_id = data.aws_caller_identity.current.account_id
-  aws_local_profile = var.aws_local_profile
-  user_ip = local.user_ip
-  ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
-  ctf_starting_user_name = module.enabled.ctf_starting_user_name
-  AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
-}
+  module "challenge_pain" {
+    source = "./challenges/Pain"
+    count = var.pain_enabled ? 1 : 0
+    aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+    account_id = data.aws_caller_identity.current.account_id
+    aws_local_profile = var.aws_local_profile
+    user_ip = local.user_ip
+    ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+    ctf_starting_user_name = module.enabled.ctf_starting_user_name
+    AWS_REGION = var.AWS_REGION
+  }
 
-
-module "challenge_segue" {
+  module "challenge_segue" {
   source = "./challenges/Segue"
   count = var.segue_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
@@ -194,9 +166,6 @@ module "challenge_segue" {
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
   AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 }
 
 ###################################################
@@ -213,9 +182,6 @@ module "challenge_search1and2" {
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
   AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 
 }
 
@@ -227,9 +193,6 @@ module "challenge_furls1" {
   aws_local_profile = var.aws_local_profile
   user_ip = local.user_ip
   AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 }
 
 
@@ -243,9 +206,6 @@ module "challenge_furls2" {
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
   AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 }
 
 module "challenge_the_topic_is_exposure" {
@@ -256,9 +216,6 @@ module "challenge_the_topic_is_exposure" {
   aws_local_profile = var.aws_local_profile
   user_ip = local.user_ip
   AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 
 }
 
@@ -272,30 +229,24 @@ module "challenge_middle" {
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
   AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 
 }
 
-module "challenge_wyatt" {
-  source = "./challenges/Wyatt"
-  count = var.wyatt_enabled ? 1 : 0
-  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
-  account_id = data.aws_caller_identity.current.account_id
-  aws_local_profile = var.aws_local_profile
-  user_ip = local.user_ip
-  vpc_id = module.enabled.vpc_id
-  vpc_cidr = module.enabled.vpc_cidr
-  subnet1_id = module.enabled.subnet1_id
-  subnet2_id = module.enabled.subnet2_id
-  subnet3_id = module.enabled.subnet3_id
-  AWS_REGION = var.AWS_REGION
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
+  module "challenge_wyatt" {
+    source = "./challenges/Wyatt"
+    count = var.wyatt_enabled ? 1 : 0
+    aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+    account_id = data.aws_caller_identity.current.account_id
+    aws_local_profile = var.aws_local_profile
+    user_ip = local.user_ip
+    vpc_id = module.enabled.vpc_id
+    vpc_cidr = module.enabled.vpc_cidr
+    AWS_REGION = var.AWS_REGION
+    subnets = module.enabled.subnet_ids
+    }
 
-}
+
+
 
 ########################################################################
 #  Category -- Assumed Breach: Accplication Compromise/Network Access  #
@@ -311,14 +262,8 @@ module "challenge_bastion" {
   ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
   ctf_starting_user_name = module.enabled.ctf_starting_user_name
   vpc_id = module.enabled.vpc_id
-  subnet1_id = module.enabled.subnet1_id
-  subnet2_id = module.enabled.subnet2_id
-  subnet3_id = module.enabled.subnet3_id
   AWS_REGION = var.AWS_REGION    
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
-
+  subnets = module.enabled.subnet_ids 
 }
 
 module "challenge_variable" {
@@ -329,14 +274,8 @@ module "challenge_variable" {
   aws_local_profile = var.aws_local_profile
   user_ip = local.user_ip
   intra-sg-access-id = module.challenge_bastion[0].intra-sg-access-id
-  subnet1_id = module.enabled.subnet1_id
-  subnet2_id = module.enabled.subnet2_id
-  subnet3_id = module.enabled.subnet3_id
   AWS_REGION = var.AWS_REGION    
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
-
+  subnets = module.enabled.subnet_ids
 }
 
 ##############################################
@@ -353,9 +292,6 @@ module "challenge_trust_me" {
   user_ip = local.user_ip
   github_repo = var.github_repo
   AWS_REGION = var.AWS_REGION    
-  AWS_REGION_SUB_1 = var.AWS_REGION_SUB_1
-  AWS_REGION_SUB_2 = var.AWS_REGION_SUB_2
-  AWS_REGION_SUB_3 = var.AWS_REGION_SUB_3
 
 }
 

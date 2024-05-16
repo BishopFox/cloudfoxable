@@ -39,37 +39,6 @@ variable "vpc_id" {
   default = ""
 }
 
-variable "subnet1_id" {
-  type    = string
-  default = ""
-}
-
-variable "subnet2_id" {
-  type    = string
-  default = ""
-}
-
-variable "subnet3_id" {
-  type    = string
-  default = ""
-}
-
-
-variable "AWS_REGION_SUB_1" {
-  type    = string
-  default = "us-west-2a"
-}
-
-variable "AWS_REGION_SUB_2" {
-  type    = string
-  default = "us-west-2b"
-}
-
-variable "AWS_REGION_SUB_3" {
-  type    = string
-  default = "us-west-2c"
-}
-
 # Resources
 resource "random_password" "database-secret" {
   length           = 31
@@ -119,6 +88,12 @@ variable "intra-sg-access-id" {
   description = "The id of the security group that allows intra-sg access"
   type        = string
   default     = ""
+}
+
+variable "subnets" {
+  description = "List of vpc subnets"
+  type = list
+  default = []
 }
 
 resource "random_password" "rds-password" {
