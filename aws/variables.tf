@@ -164,3 +164,9 @@ variable "pain_enabled" {
   type        = bool
   default     = false
 }
+
+variable "segue_enabled" {
+  description = "Enable or disable segue challenge (true = enabled, false = disabled)"
+  type        = bool
+  default     = false
+}

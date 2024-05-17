@@ -156,6 +156,18 @@ module "challenge_needles" {
     AWS_REGION = var.AWS_REGION
   }
 
+  module "challenge_segue" {
+  source = "./challenges/Segue"
+  count = var.segue_enabled ? 1 : 0
+  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+  account_id = data.aws_caller_identity.current.account_id
+  aws_local_profile = var.aws_local_profile
+  user_ip = local.user_ip
+  ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+  ctf_starting_user_name = module.enabled.ctf_starting_user_name
+  AWS_REGION = var.AWS_REGION
+}
+
 ###################################################
 #  Category -- Exploit Public-Facing Application  #
 ###################################################
@@ -235,6 +247,7 @@ module "challenge_middle" {
 
 
 
+
 ########################################################################
 #  Category -- Assumed Breach: Accplication Compromise/Network Access  #
 ########################################################################
@@ -294,7 +307,8 @@ locals {
     var.the_topic_is_execution_enabled ?  "the_topic_is_execution       | No cost      |" : "",
     var.middle_enabled ?                  "middle                       | No cost      |" : "",
     var.needles_enabled ?                 "needles                      | No Cost      |" : "",
-    var.pain_enabled ?                    "pain                         | No Cost      |" : "",    
+    var.pain_enabled ?                    "pain                         | No Cost      |" : "", 
+    var.segue_enabled ?                   "segue                        | No Cost      |" : "",   
     var.bastion_enabled ?                 "bastion                      | $4/month     |" : "",
     var.wyatt_enabled ?                   "wyatt                        | $4/month     |" : "",
     var.double_tap_enabled ?              "double_tap                   | $9/month     |" : "",
