@@ -22,10 +22,12 @@ description: |-
 value: 200
 
 flags:
-- content: 'FLAG{SEGUE:protect_roles_from_unintended_cross_account_access}'
+- content: 'FLAG{SEGUE:not_everything_is_as_it_seems}'
   type: static
   data: case_insensitive
 
 hints:
 - >-
-  Sometimes you have to make an educated guess...
+  Sometimes you have to make an educated guess.
+- >-
+  Just because you don't have list permissions does not mean you don't have get permissions
