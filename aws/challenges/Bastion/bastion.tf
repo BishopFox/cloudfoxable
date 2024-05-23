@@ -197,6 +197,8 @@ resource "aws_iam_policy" "bastion-ssm" {
         Effect = "Allow"
         Resource = [
           aws_instance.bastion.arn,
+          "arn:aws:ssm:us-west-2:${var.account_id}:document/SSM-SessionManagerRunShell",
+          "arn:aws:ssm:us-west-2:${var.account_id}:session/ctf-starting-user-*",
         ]
       },
     ]
