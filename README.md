@@ -57,6 +57,48 @@ Whenever you want to remove all of the CloudFoxable-created resources, you can r
 1. `cd cloudfoxable/aws`
 1. `terraform destroy`
 
+
+# Build with Docker
+
+If you're using **Windows**, you might encounter issues when deploying some of the challenges due to platform-specific limitations. To avoid this, a Dockerfile is provided to help you build and run the application in a consistent environment across different systems.
+
+<details>
+    <summary>Click to expand</summary>
+
+## Clone the Repository
+
+Start by cloning the repository to your local machine:
+
+```bash
+git clone https://github.com/BishopFox/cloudfoxable.git
+cd cloudfoxable
+```
+
+## Build the Docker Image
+Once you have cloned the repository, build the Docker image with the following command. This will ensure that you are using a fresh build without any cached layers:
+```bash
+docker build --no-cache -t cloudfoxable .
+```
+
+### Run Docker on Windows with PowerShell
+If you're on Windows, use the following PowerShell command to run the Docker container. This will:
+- Mount your AWS credentials file to the container for persistence.
+- Mount your Terraform state file to the container for persistence.
+- Start an interactive session where you can run Terraform commands.
+```pwsh
+docker run -it -v $env:USERPROFILE/.aws/credentials:/root/.aws/credentials -v path/to/cloudfox/aws:/root/cloudfox/aws cloudfoxable
+```
+*Replace path/to/cloudfox/aws with the actual path to your cloudfox/aws directory on your local machine.*
+
+### Edit Terraform Files
+You can edit the terraform.tfvars file inside the container using nano, which is available within the Docker container.
+To edit the file, run:
+```bash
+nano /path/to/terraform.tfvars
+```
+After making changes to the terraform.tfvars file, save the file (ctrl + o) and exit (ctrl + x) the editor. You can now proceed to apply the Terraform configurations or perform any other necessary actions.
+</details>
+
 # Hungry for more? 
 
 https://github.com/iknowjason/Awesome-CloudSec-Labs
