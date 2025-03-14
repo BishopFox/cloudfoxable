@@ -31,9 +31,9 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
-
+# ifconfig returns more than just the ip or could return ipv6
 data "http" "current_ip" {
-  url = "https://ifconfig.me"
+  url = "https://api.ipify.org"
 }
 
 locals {
