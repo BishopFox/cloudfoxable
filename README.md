@@ -87,7 +87,7 @@ If you're on Windows, use the following PowerShell command to run the Docker con
 - Start an interactive session where you can run Terraform commands.
 ```pwsh
 cd aws
-docker run -it -v $env:USERPROFILE/.aws/credentials:/root/.aws/credentials -v ${PWD}:/cloudfox/aws cloudfoxable
+docker run -it -v $env:USERPROFILE/.aws/credentials:/root/.aws/credentials -v ${PWD}:/cloudfoxable/aws cloudfoxable
 ```
 </details>
 
