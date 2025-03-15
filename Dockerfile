@@ -7,7 +7,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install dependencies, AWS CLI, Terraform in one RUN step and clean up cache
 RUN apt-get update && apt-get install -y \
     curl \
-    nano \
     unzip \
     ca-certificates \
     gnupg \

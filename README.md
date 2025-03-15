@@ -83,20 +83,12 @@ docker build --no-cache -t cloudfoxable .
 ### Run Docker on Windows with PowerShell
 If you're on Windows, use the following PowerShell command to run the Docker container. This will:
 - Mount your AWS credentials file to the container for persistence.
-- Mount your Terraform state file to the container for persistence.
+- Mount your Terraform (state) file(s) to the container for persistence.
 - Start an interactive session where you can run Terraform commands.
 ```pwsh
-docker run -it -v $env:USERPROFILE/.aws/credentials:/root/.aws/credentials -v path/to/cloudfox/aws:/root/cloudfox/aws cloudfoxable
+cd aws
+docker run -it -v $env:USERPROFILE/.aws/credentials:/root/.aws/credentials -v ${PWD}:/cloudfox/aws cloudfoxable
 ```
-*Replace path/to/cloudfox/aws with the actual path to your cloudfox/aws directory on your local machine.*
-
-### Edit Terraform Files
-You can edit the terraform.tfvars file inside the container using nano, which is available within the Docker container.
-To edit the file, run:
-```bash
-nano /path/to/terraform.tfvars
-```
-After making changes to the terraform.tfvars file, save the file (ctrl + o) and exit (ctrl + x) the editor. You can now proceed to apply the Terraform configurations or perform any other necessary actions.
 </details>
 
 # Hungry for more? 
