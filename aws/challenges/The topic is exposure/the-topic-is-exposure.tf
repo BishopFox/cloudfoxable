@@ -48,27 +48,26 @@ resource "aws_iam_role_policy_attachment" "sns_publish_policy_attachment" {
 resource "aws_sns_topic_policy" "schedule-event-policy" {
   arn = aws_sns_topic.eventbridge_sns.arn
 
-  policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Id": "snspolicy",
-  "Statement": [
-    {
-      "Sid": "First",
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": ["sns:Subscribe", "sns:Publish"],
-      "Resource": "${aws_sns_topic.eventbridge_sns.arn}",
-      "Condition": {
-          "IpAddress": {
-            "aws:SourceIp": "${var.user_ip}/32"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Id      = "snspolicy"
+    Statement = [
+      {
+        Sid       = "First"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = ["sns:Subscribe", "sns:Publish"]
+        Resource  = aws_sns_topic.eventbridge_sns.arn
+        Condition = {
+          IpAddress = {
+            "aws:SourceIp" = "${var.user_ip}/32"
           }
         }
-    }
-  ]
+      }
+    ]
+  })
 }
-POLICY
-}
+
 
 
 resource "aws_sns_topic" "eventbridge_sns" {
@@ -80,7 +79,7 @@ resource "aws_sns_topic" "eventbridge_sns" {
 
 
 variable "jsonDataSNS" {
-  type = string
+  type    = string
   default = <<JSON
 {
      "firstName": "John",
@@ -112,21 +111,21 @@ JSON
 
 // eventbridge schedule to send message to sns topic every minute
 resource "aws_scheduler_schedule" "test_eventbridge-sns" {
-  name                = "test-eventbridge-sns"
-  description         = "sends sns message to topic"
+  name        = "test-eventbridge-sns"
+  description = "sends sns message to topic"
   flexible_time_window {
     mode = "OFF"
   }
 
-schedule_expression = "rate(1 minutes)"
+  schedule_expression = "rate(1 minutes)"
 
-target {
-  arn      = aws_sns_topic.eventbridge_sns.arn
-  role_arn = aws_iam_role.event_bridge_sns_role.arn
+  target {
+    arn      = aws_sns_topic.eventbridge_sns.arn
+    role_arn = aws_iam_role.event_bridge_sns_role.arn
 
 
-  
-  input = var.jsonDataSNS
+
+    input = var.jsonDataSNS
   }
 }
 

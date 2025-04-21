@@ -158,27 +158,26 @@ resource "aws_sqs_queue" "terraform_queue_deadletter" {
 resource "aws_sqs_queue_policy" "schedule-event-rce-policy" {
   queue_url = aws_sqs_queue.internal_message_bus.id
 
-  policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Id": "sqspolicy",
-  "Statement": [
-    {
-      "Sid": "First",
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": ["sqs:SendMessage", "sqs:ReceiveMessage"],
-      "Resource": "${aws_sqs_queue.internal_message_bus.arn}",
-      "Condition": {
-          "IpAddress": {
-            "aws:SourceIp": "${var.user_ip}/32"
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Id        = "sqspolicy"
+    Statement = [
+      {
+        Sid       = "First"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = ["sqs:SendMessage", "sqs:ReceiveMessage"]
+        Resource  = aws_sqs_queue.internal_message_bus.arn
+        Condition = {
+          IpAddress = {
+            "aws:SourceIp" = "${var.user_ip}/32"
           }
+        }
       }
-    }
-  ]
+    ]
+  })
 }
-POLICY
-}
+
 
 
 
