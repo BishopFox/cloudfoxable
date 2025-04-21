@@ -33,7 +33,7 @@ data "aws_caller_identity" "current" {}
 
 # ifconfig returns more than just the ip or could return ipv6
 data "http" "current_ip" {
-  url = "https://api.ipify.org"
+  url = "https://ifconfig.me/ip"
 }
 
 locals {
