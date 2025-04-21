@@ -33,7 +33,7 @@ data "aws_caller_identity" "current" {}
 
 
 data "http" "current_ip" {
-  url = "https://ifconfig.me"
+  url = "https://ifconfig.me/ip"
 }
 
 locals {
