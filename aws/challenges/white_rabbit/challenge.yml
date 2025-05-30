@@ -1,0 +1,38 @@
+name: Fixed
+category: 'Assumed Breach: Developer'
+description: |-
+  **Overview**
+
+  - **Author:** Joseph Barcia (Bishop Fox)
+  - **Default state:** Disabled
+  - **Estimated Cost:** $0.00/month
+  - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:role/fixed_devops`
+
+  **CloudFoxable Setup**
+
+  AWS cli and Docker installed and working.
+
+  **Challenge Details**
+
+  We fixed it! 
+
+  **Cleanup Tasks**
+
+  None required.
+value: 400
+
+flags:
+- content: 'FLAG1{white_rabbit:CodeCommitCanBeUsedToAccessSecrets}'
+  type: static
+  data: case_insensitive
+- content: FLAG2{white_rabbit:RemoveAllCredentialsFromOldRepositories}
+  type: static
+  data: case_insensitive
+- content: 'FLAG3{white_rabbit:PermissionBoundariesCanBeUsedToRestrictPermissions}'
+  type: static
+  data: case_insensitive
+
+
+hints:
+- >-
+  We removed and disabled all of the exposed secrets.

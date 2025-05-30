@@ -168,6 +168,17 @@ module "challenge_needles" {
   AWS_REGION = var.AWS_REGION
 }
 
+module "challenge_white_rabbit" {
+  source = "./challenges/white_rabbit"
+  aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
+  account_id = data.aws_caller_identity.current.account_id
+  aws_local_profile = var.aws_local_profile
+  user_ip = local.user_ip
+  ctf_starting_user_arn = module.enabled.ctf_starting_user_arn
+  ctf_starting_user_name = module.enabled.ctf_starting_user_name
+  AWS_REGION = var.AWS_REGION
+}
+
 ###################################################
 #  Category -- Exploit Public-Facing Application  #
 ###################################################
@@ -249,7 +260,7 @@ module "challenge_middle" {
 
 
 ########################################################################
-#  Category -- Assumed Breach: Accplication Compromise/Network Access  #
+#  Category -- Assumed Breach: Application Compromise/Network Access  #
 ########################################################################
 
 module "challenge_bastion" {
@@ -324,6 +335,14 @@ output "CTF_Start_User_Access_Key_Id" {
 output "CTF_Start_User_Secret_Access_Key" {
   value     = module.enabled.ctf_user_output_secret_access_key
   sensitive = true
+}
+
+output "CTF_Region" {
+  value     = var.AWS_REGION
+}
+
+output "CTF_Account" {
+  value     = data.aws_caller_identity.current.account_id
 }
 
 output "Next_Steps" {

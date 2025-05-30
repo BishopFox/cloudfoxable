@@ -69,6 +69,7 @@ segue_enabled = true
 search1and2_enabled = false
 wyatt_enabled = false
 double_tap_enabled = false
+white_rabbit_enabled = true
 
 ##  Bastion host related challenges           
 ##  The following challenges all need `bastion_enabled = true`
