@@ -590,7 +590,7 @@ resource "aws_iam_role_policy_attachment" "attach_ecr_push_policy_to_cheshire_ca
 
 //flag3 stored in buckets
 resource "aws_s3_bucket" "white-rabbit-flag3" {
-  bucket = "white-rabbit-flag3"
+  bucket = "white-rabbit-flag3-${random_string.resource-suffix.result}"
   force_destroy = true
 }
 
@@ -1064,7 +1064,6 @@ resource "aws_iam_role_policy_attachment" "queen-of-heartsattach" {
 }
 
 # CodeBuild Project
-# CHANGE ME S3 NEEDS TO BE UPDATED
 resource "aws_codebuild_project" "test" {
   name         = "test-codebuild-project"
   description  = "Test project with proper role"
