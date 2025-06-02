@@ -1,1 +1,3 @@
+But that's the point. If you don't think, you shouldn't talk.
+
 FLAG3{white_rabbit:PermissionBoundariesCanBeUsedToRestrictPermissions}

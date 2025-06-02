@@ -1,6 +1,6 @@
 // create users
 locals {
-  users = ["terraform", "webgitactions", "dbgitactions", "white_rabbit", "dbuseracct"]
+  users = ["terraform", "webgitactions", "dbgitactions", "white-rabbit", "dbuseracct"]
   repos = ["webapp", "database", "test"]
 }
 
@@ -28,7 +28,6 @@ resource "aws_secretsmanager_secret_version" "db_credentials_version" {
   })
 }
 
-// flag5
 ///////////////////////////////////////////////////////////////////////////////////////////////
 # Create an ECR repository
 resource "aws_ecr_repository" "repo" {
@@ -292,22 +291,62 @@ resource "aws_iam_role" "queen_of_hearts" {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 //create white rabbit flag2 in secretsmanager
-resource "aws_secretsmanager_secret" "white_rabbit_flag2" {
-  name                    = "white_rabbit_flag2"
+resource "aws_secretsmanager_secret" "white-rabbit_flag2" {
+  name                    = "white-rabbit_flag2"
   recovery_window_in_days = 0
   tags = {
     Name = "white rabbit flag2"
   }
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid      = "WhiteRabbitFlag2",
+        Effect   = "Allow",
+        Principal = {
+          AWS = "arn:aws:iam::${var.account_id}:role/cheshire_cat"
+        },
+        Action   = [
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret"
+        ],
+        Resource = "*"
+      },
+      {
+        Sid    = "DenyEveryoneElse",
+        Effect = "Deny",
+        Principal = "*",
+        Action   = "*",
+        Resource = "*",
+        Condition = {
+          StringNotLikeIfExists = {
+            "aws:PrincipalArn" = [
+              "arn:aws:iam::${var.account_id}:role/cheshire_cat",
+              "arn:aws:iam::${var.account_id}:role/aws-reserved/sso.amazonaws.com/*/AWSReservedSSO_",
+              "arn:aws:sts::${var.account_id}:assumed-role/AWSReservedSSO_*",
+              "arn:aws:iam::${var.account_id}:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_*",
+              "${var.aws_assume_role_arn}"
+            ]
+          }
+        }
+      }
+    ]
+  })
 }
 
-resource "aws_secretsmanager_secret_version" "white_rabbit_flag2" {
-  secret_id     = aws_secretsmanager_secret.white_rabbit_flag2.id
-  secret_string = "RemoveAllCredentialsFromOldRepositories"
+resource "aws_secretsmanager_secret_version" "white-rabbit_flag2" {
+  secret_id     = aws_secretsmanager_secret.white-rabbit_flag2.id
+  secret_string = <<EOF
+If you don't know where you want to go, any road will take you there. Then it doesn't matter which way you go.
+
+FLAG2{white-rabbit:RemoveAllCredentialsFromOldRepositories}
+EOF
 }
 
 # Attach a resource policy to deny access to user and role named "terraform"
 resource "aws_secretsmanager_secret_policy" "deny_terraform_access" {
-  secret_arn = aws_secretsmanager_secret.white_rabbit_flag2.arn
+  secret_arn = aws_secretsmanager_secret.white-rabbit_flag2.arn
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -337,6 +376,53 @@ resource "aws_iam_policy" "cheshire_cat" {
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
+      {
+          "Effect": "Allow",
+          "Action": [
+              "s3-outposts:Get*",
+              "s3-outposts:List*"
+          ],
+          "Resource": "*"
+      },
+      {
+          "Effect": "Allow",
+          "Action": [
+              "s3:Get*",
+              "s3:List*",
+              "s3:Describe*",
+              "s3-object-lambda:Get*",
+              "s3-object-lambda:List*"
+          ],
+          "Resource": "*"
+      },
+      {
+          "Effect": "Allow",
+          "Action": [
+              "datasync:ListTasks",
+              "datasync:ListLocations",
+              "datasync:DescribeTask",
+              "datasync:DescribeLocation*"
+          ],
+          "Resource": "*"
+      },
+      {
+          "Effect": "Allow",
+          "Action": [
+              "ec2:DescribeVpcs",
+              "ec2:DescribeSubnets",
+              "ec2:DescribeSecurityGroups",
+              "ec2:DescribeNetworkInterfaces"
+          ],
+          "Resource": "*"
+      },
+      {
+          "Effect": "Allow",
+          "Action": [
+              "outposts:ListOutposts",
+              "outposts:GetOutpost"
+          ],
+          "Resource": "*"
+      },
       {
         "Effect" : "Allow",
         "Action" : [
@@ -372,7 +458,7 @@ resource "aws_iam_policy" "secret_access" {
         "Action" : [
           "secretsmanager:GetSecretValue"
         ],
-        "Resource" : aws_secretsmanager_secret.white_rabbit_flag2.arn
+        "Resource" : aws_secretsmanager_secret.white-rabbit_flag2.arn
       }
     ]
   })
@@ -482,13 +568,13 @@ resource "aws_iam_role_policy_attachment" "attach_ecr_push_policy_to_cheshire_ca
 
 
 //flag3 stored in buckets
-resource "aws_s3_bucket" "white_rabbit-flag3" {
-  bucket = "white_rabbit-flag3"
+resource "aws_s3_bucket" "white-rabbit-flag3" {
+  bucket = "white-rabbit-flag3"
   force_destroy = true
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "sse" {
-  bucket = aws_s3_bucket.white_rabbit-flag3.id
+  bucket = aws_s3_bucket.white-rabbit-flag3.id
 
   rule {
     apply_server_side_encryption_by_default {
@@ -497,8 +583,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "sse" {
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "white_rabbit-flag3-public-access-block" {
-  bucket = aws_s3_bucket.white_rabbit-flag3.id
+resource "aws_s3_bucket_public_access_block" "white-rabbit-flag3-public-access-block" {
+  bucket = aws_s3_bucket.white-rabbit-flag3.id
 
   block_public_acls       = true
   block_public_policy     = true
@@ -507,15 +593,15 @@ resource "aws_s3_bucket_public_access_block" "white_rabbit-flag3-public-access-b
 }
 
 // upload a file to the bucket.
-resource "aws_s3_object" "white_rabbit-flag3-object" {
-  bucket = aws_s3_bucket.white_rabbit-flag3.id
+resource "aws_s3_object" "white-rabbit-flag3-object" {
+  bucket = aws_s3_bucket.white-rabbit-flag3.id
   key    = "flag.txt"
   source = "${path.module}/data/s3/flag.txt"
 }
 
 // Bucket Policy (deny everyone except roles starting with dev_encrypted)
 resource "aws_s3_bucket_policy" "deny_except_role_prefix" {
-  bucket = aws_s3_bucket.white_rabbit-flag3.id
+  bucket = aws_s3_bucket.white-rabbit-flag3.id
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -526,8 +612,8 @@ resource "aws_s3_bucket_policy" "deny_except_role_prefix" {
         Principal = "*",
         Action    = "s3:*",
         Resource  = [
-          aws_s3_bucket.white_rabbit-flag3.arn,
-          "${aws_s3_bucket.white_rabbit-flag3.arn}/*"
+          aws_s3_bucket.white-rabbit-flag3.arn,
+          "${aws_s3_bucket.white-rabbit-flag3.arn}/*"
         ],
         Condition = {
           StringNotLikeIfExists = {
@@ -607,12 +693,12 @@ resource "aws_iam_policy" "s3_permissions_boundary" {
     Version = "2012-10-17",
     Statement = [
       {
-        Sid    = "AllowS3OnlyOnWhite_RabbitBuckets",
+        Sid    = "AllowS3OnlyOnWhiteRabbitBuckets",
         Effect = "Allow",
         Action = "s3:*",
         Resource = [
-          "arn:aws:s3:::white_rabbit-*",
-          "arn:aws:s3:::white_rabbit-*/*"
+          "arn:aws:s3:::white-rabbit-*",
+          "arn:aws:s3:::white-rabbit-*/*"
         ]
       },
       {
@@ -626,21 +712,83 @@ resource "aws_iam_policy" "s3_permissions_boundary" {
 }
 
 
-resource "aws_iam_policy" "caterpillar_iam_management_limited" {
-  name = "caterpillar_iam"
+resource "aws_iam_policy" "caterpillar_management_limited" {
+  name = "caterpillar"
 
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
-        Effect = "Allow",
-        Action = [
+        "Action": "ec2:*",
+        "Effect": "Allow",
+			  "Resource": "*",
+			  "Condition": {
+				  "StringEquals": {
+					  "aws:ResourceTag/challenge": "white_rabbit"
+				  }
+			  }
+        },
+        {
+          "Effect": "Allow",
+          "Action": "elasticloadbalancing:*",
+			    "Resource": "*",
+			    "Condition": {
+				    "StringEquals": {
+					    "aws:ResourceTag/challenge": "white_rabbit"
+				    }
+			    }
+        },
+        {
+          "Effect": "Allow",
+          "Action": "cloudwatch:*",
+			    "Resource": "*",
+			    "Condition": {
+				    "StringEquals": {
+					    "aws:ResourceTag/challenge": "white_rabbit"
+				    }
+			    }
+        },
+        {
+          "Effect": "Allow",
+          "Action": "autoscaling:*",
+			    "Resource": "*",
+			    "Condition": {
+				    "StringEquals": {
+					    "aws:ResourceTag/challenge": "white_rabbit"
+				    }
+			    }
+        },
+        {
+            "Effect": "Allow",
+            "Action": "iam:CreateServiceLinkedRole",
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "iam:AWSServiceName": [
+                        "autoscaling.amazonaws.com",
+                        "ec2scheduled.amazonaws.com",
+                        "elasticloadbalancing.amazonaws.com",
+                        "spot.amazonaws.com",
+                        "spotfleet.amazonaws.com",
+                        "transitgateway.amazonaws.com"
+                    ]
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Action": "iam:PassRole",
+            "Resource": "arn:aws:iam::${var.account_id}:role/${aws_iam_role.codebuild-test-service-role.arn}"
+        },
+              {
+        "Effect" = "Allow",
+        "Action" = [
           "iam:CreateRole",
           "iam:PutRolePolicy",
           "iam:AttachRolePolicy",
           "iam:PassRole"
         ],
-        Resource = "arn:aws:iam::*:role/*"
+        "Resource" = "arn:aws:iam::${var.account_id}:role/*"
       }
     ]
   })
@@ -649,7 +797,7 @@ resource "aws_iam_policy" "caterpillar_iam_management_limited" {
 //attach the caterpillar policy to the caterpillar role
  resource "aws_iam_role_policy_attachment" "caterpillar-attachment" {
    role       = aws_iam_role.caterpillar.name
-   policy_arn = aws_iam_policy.caterpillar_iam_management_limited.arn
+   policy_arn = aws_iam_policy.caterpillar_management_limited.arn
  }
 
 // create march_hare_encrypted role
@@ -687,29 +835,261 @@ resource "aws_iam_role" "march_hare_encrypted-ewrfhovhu" {
 
 
 
+//Flag1 creation
+resource "aws_iam_role" "codebuild-test-service-role" {
+  name = "codebuild-test-service-role"
 
-# SEGUE BUCKET
+  assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "codebuild.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+})
+}
 
+resource "aws_iam_policy" "CodeBuildBasePolicy-test" {
+  name = "CodeBuildBasePolicy-test"
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:logs:${var.AWS_REGION}:${var.account_id}:log-group:/aws/codebuild/test-codebuild-project",
+                "arn:aws:logs:${var.AWS_REGION}:${var.account_id}:log-group:/aws/codebuild/test-codebuild-project:*"
+            ],
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:s3:::codepipeline-${var.AWS_REGION}-*"
+            ],
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:GetBucketAcl",
+                "s3:GetBucketLocation"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "codebuild:CreateReportGroup",
+                "codebuild:CreateReport",
+                "codebuild:UpdateReport",
+                "codebuild:BatchPutTestCases",
+                "codebuild:BatchPutCodeCoverages"
+            ],
+            "Resource": [
+                "arn:aws:codebuild:${var.AWS_REGION}:${var.account_id}:report-group/test-codebuild-project*"
+            ]
+        },
+        {
+        "Effect" : "Allow",
+        "Action" : [
+          "secretsmanager:ListSecrets"
+        ],
+        "Resource" : "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "secretsmanager:GetSecretValue"
+        ],
+        "Resource" : aws_secretsmanager_secret.white-rabbit_flag1.arn
+      }
+    ]
+})
+}
 
-### REPLACE
-//create S3 bucket
-resource "aws_s3_bucket" "deployment-automation" {
-  bucket = "deployment-automation-${random_string.resource-suffix.result}"
-  force_destroy = true
-  tags = {
-    Name        = "deployment-automation-${random_string.resource-suffix.result}"
+resource "aws_iam_role_policy_attachment" "codebuild-test-service-role-codebuildattach" {
+  role       = aws_iam_role.codebuild-test-service-role.name
+  policy_arn = aws_iam_policy.CodeBuildBasePolicy-test.arn
+}
+
+# CHANGE ME TO RESTRICT ACCESS
+resource "aws_iam_role_policy_attachment" "codebuild_s3_access" {
+  role       = aws_iam_role.codebuild-test-service-role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
+resource "aws_iam_policy" "queen-of-hearts" {
+  name = "queen-of-hearts"
+  policy = jsonencode({
+    "Statement": [
+        {
+            "Sid": "AWSServicesAccess",
+            "Action": [
+                "codebuild:StartBuild",
+                "codebuild:StopBuild",
+                "codebuild:StartBuildBatch",
+                "codebuild:StopBuildBatch",
+                "codebuild:RetryBuild",
+                "codebuild:RetryBuildBatch",
+                "codebuild:BatchGet*",
+                "codebuild:GetResourcePolicy",
+                "codebuild:DescribeTestCases",
+                "codebuild:DescribeCodeCoverages",
+                "codebuild:List*",
+                "codecommit:GetBranch",
+                "codecommit:GetCommit",
+                "codecommit:GetRepository",
+                "codecommit:ListBranches",
+                "cloudwatch:GetMetricStatistics",
+                "events:DescribeRule",
+                "events:ListTargetsByRule",
+                "events:ListRuleNamesByTarget",
+                "logs:GetLogEvents",
+                "s3:GetBucketLocation",
+                "s3:ListAllMyBuckets"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Sid": "SSMParameterWriteAccess",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:PutParameter"
+            ],
+            "Resource": "arn:aws:ssm:*:*:parameter/CodeBuild/*"
+        },
+        {
+            "Sid": "SSMStartSessionAccess",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:StartSession"
+            ],
+            "Resource": "arn:aws:ecs:*:*:task/*/*"
+        },
+        {
+            "Sid": "CodeStarConnectionsUserAccess",
+            "Effect": "Allow",
+            "Action": [
+                "codestar-connections:ListConnections",
+                "codestar-connections:GetConnection"
+            ],
+            "Resource": [
+                "arn:aws:codestar-connections:*:*:connection/*",
+                "arn:aws:codeconnections:*:*:connection/*"
+            ]
+        },
+        {
+            "Sid": "CodeStarNotificationsReadWriteAccess",
+            "Effect": "Allow",
+            "Action": [
+                "codestar-notifications:CreateNotificationRule",
+                "codestar-notifications:DescribeNotificationRule",
+                "codestar-notifications:UpdateNotificationRule",
+                "codestar-notifications:Subscribe",
+                "codestar-notifications:Unsubscribe"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "ArnLike": {
+                    "codestar-notifications:NotificationsForResource": "arn:aws:codebuild:*:*:project/*"
+                }
+            }
+        },
+        {
+            "Sid": "CodeStarNotificationsListAccess",
+            "Effect": "Allow",
+            "Action": [
+                "codestar-notifications:ListNotificationRules",
+                "codestar-notifications:ListEventTypes",
+                "codestar-notifications:ListTargets",
+                "codestar-notifications:ListTagsforResource"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "SNSTopicListAccess",
+            "Effect": "Allow",
+            "Action": [
+                "sns:ListTopics",
+                "sns:GetTopicAttributes"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "CodeStarNotificationsChatbotAccess",
+            "Effect": "Allow",
+            "Action": [
+                "chatbot:DescribeSlackChannelConfigurations",
+                "chatbot:ListMicrosoftTeamsChannelConfigurations"
+            ],
+            "Resource": "*"
+        }
+    ],
+    "Version": "2012-10-17"
+})
+}
+
+resource "aws_iam_role_policy_attachment" "queen-of-heartsattach" {
+  role       = aws_iam_role.queen_of_hearts.name
+  policy_arn = aws_iam_policy.queen-of-hearts.arn
+}
+
+# CodeBuild Project
+# CHANGE ME S3 NEEDS TO BE UPDATED
+resource "aws_codebuild_project" "test" {
+  name         = "test-codebuild-project"
+  description  = "Test project with proper role"
+  service_role = aws_iam_role.codebuild-test-service-role.arn
+
+  source {
+    type      = "S3"
+    location  = "${aws_s3_bucket.codebuild-deployment.bucket}/my-source.zip" # Replace with actual bucket/key
+    buildspec = <<EOF
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "Running build..."
+      - echo "Build complete."
+artifacts:
+  files:
+    - '**/*'
+EOF
+  }
+
+  environment {
+    compute_type                = "BUILD_GENERAL1_SMALL"
+    image                       = "aws/codebuild/standard:6.0"
+    type                        = "LINUX_CONTAINER"
+    privileged_mode             = false
+  }
+
+  artifacts {
+    type = "NO_ARTIFACTS"
   }
 }
 
-### REPLACE
-#resource "aws_s3_bucket_acl" "cdeployment-automation-acl" {
-#   bucket = aws_s3_bucket.cdeployment-automation.id
-#   acl    = "private"
-# }
+//create S3 bucket for codebuild
+resource "aws_s3_bucket" "codebuild-deployment" {
+  bucket = "codebuild-deployment-${random_string.resource-suffix.result}"
+  force_destroy = true
+#  region = "${var.AWS_REGION}"
+  tags = {
+    Name        = "codebuild-deployment-${random_string.resource-suffix.result}"
+  }
+}
 
-### REPLACE
-resource "aws_s3_bucket_public_access_block" "deployment-automation-public-access-block" {
-  bucket = aws_s3_bucket.deployment-automation.id
+resource "aws_s3_bucket_public_access_block" "codebuild-deployment-public-access-block" {
+  bucket = aws_s3_bucket.codebuild-deployment.id
 
   block_public_acls       = true
   block_public_policy     = true
@@ -717,18 +1097,63 @@ resource "aws_s3_bucket_public_access_block" "deployment-automation-public-acces
   restrict_public_buckets = true
 }
 
-### REPLACE
-// upload a file to the bucket.
-resource "aws_s3_object" "deployment-automation-object" {
-  bucket = aws_s3_bucket.deployment-automation.id
-  key    = "Security Review Process.pdf"
-  source = "challenges/Segue/data/s3/Security Review Process.pdf"
+// upload code to the bucket.
+resource "aws_s3_object" "codebuild-deployment-object" {
+  bucket = aws_s3_bucket.codebuild-deployment.id
+  key    = "my-source.zip"
+  source = "${path.module}/data/s3/my-source.zip"
 }
 
-### REPLACE
-// upload another file to the bucket.
-resource "aws_s3_object" "deployment-automation-object-2" {
-  bucket = aws_s3_bucket.deployment-automation.id
-  key    = "Deployment Process Description.pdf"
-  source = "challenges/Segue/data/s3/Deployment Process Description.pdf"
+//create white rabbit flag1 in secretsmanager
+resource "aws_secretsmanager_secret" "white-rabbit_flag1" {
+  name                    = "white-rabbit_flag1"
+  recovery_window_in_days = 0
+  tags = {
+    Name = "white rabbit flag1"
+  }
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid      = "WhiteRabbitFlag1",
+        Effect   = "Allow",
+        Principal = {
+          AWS = "arn:aws:iam::${var.account_id}:role/codebuild-test-service-role"
+        },
+        Action   = [
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret"
+        ],
+        Resource = "*"
+      },
+      {
+        Sid    = "DenyEveryoneElse",
+        Effect = "Deny",
+        Principal = "*",
+        Action   = "*",
+        Resource = "*",
+        Condition = {
+          StringNotLikeIfExists = {
+            "aws:PrincipalArn" = [
+              "arn:aws:iam::${var.account_id}:role/codebuild-test-service-role",
+              "arn:aws:iam::${var.account_id}:role/aws-reserved/sso.amazonaws.com/*/AWSReservedSSO_",
+              "arn:aws:sts::${var.account_id}:assumed-role/AWSReservedSSO_*",
+              "arn:aws:iam::${var.account_id}:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_*",
+              "${var.aws_assume_role_arn}"
+            ]
+          }
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_secretsmanager_secret_version" "white-rabbit_flag1" {
+  secret_id     = aws_secretsmanager_secret.white-rabbit_flag1.id
+  secret_string = <<EOF
+Curtsey while you're thinking. It saves time.
+
+FLAG1{white-rabbit:CodeCommitCanBeUsedToExecuteAWS}
+EOF
 }

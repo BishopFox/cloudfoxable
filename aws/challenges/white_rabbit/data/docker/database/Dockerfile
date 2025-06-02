@@ -12,7 +12,7 @@ RUN chmod +x /docker-entrypoint-initdb.d/get_secrets.sh
 
 # Set the environment variable for AWS region
 ENV AWS_REGION=us-west-2
-ENV AWS_ACCESS_KEY_ID=AKIAXP6GSWBEU7GH7OLI
+ENV AWS_ACCESS_KEY_ID=AKIAXP6GSWBE2PA67JW5
 ENV AWS_SECRET_ACCESS_KEY=REMOVED
 ENV VERSION=latest
 

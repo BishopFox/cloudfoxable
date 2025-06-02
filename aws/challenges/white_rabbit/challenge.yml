@@ -5,7 +5,7 @@ description: |-
 
   - **Author:** Joseph Barcia (Bishop Fox)
   - **Default state:** Disabled
-  - **Estimated Cost:** $0.00/month
+  - **Estimated Cost:** $5.00/month
   - **Starting Point:** `arn:aws:iam::ACCOUNT_ID:role/fixed_devops`
 
   **CloudFoxable Setup**
@@ -14,7 +14,7 @@ description: |-
 
   **Challenge Details**
 
-  We fixed it! 
+  
 
   **Cleanup Tasks**
 
@@ -22,7 +22,7 @@ description: |-
 value: 400
 
 flags:
-- content: 'FLAG1{white_rabbit:CodeCommitCanBeUsedToAccessSecrets}'
+- content: 'FLAG1{white_rabbit:CodeCommitCanBeUsedToExecuteAWS}'
   type: static
   data: case_insensitive
 - content: FLAG2{white_rabbit:RemoveAllCredentialsFromOldRepositories}
@@ -35,4 +35,4 @@ flags:
 
 hints:
 - >-
-  We removed and disabled all of the exposed secrets.
+  

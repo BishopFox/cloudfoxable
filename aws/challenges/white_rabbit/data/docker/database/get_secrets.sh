@@ -4,7 +4,7 @@
 REGION="${AWS_REGION}"
 
 # Set the AWS Secrets Manager Secret ID
-SECRET_ID="arn:aws:secretsmanager:us-west-2:515275665481:secret:database_credentials-S2xKDl"
+SECRET_ID="arn:aws:secretsmanager:us-west-2:515275665481:secret:database_credentials-Db7DEm"
 
 # Define the MySQL configuration file path
 MYSQL_CONFIG=/docker-entrypoint-initdb.d/mysql-config.cnf
