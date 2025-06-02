@@ -18,7 +18,7 @@ description: |-
 
   In total, there are three flags designated as Flag1, Flag2, and Flag3. Can you find and read them all? Be careful of the false positives and the rabbit holes. Have fun exploiting and hopefully you learn something new. It's no use going back to yesterday, because I was a different person then.
 
-  Example Flag: FLAG1{white_rabbit:...}
+  Example Flag: FLAG1{white_rabbit:...}, FLAG2{white-rabbit:...}, FLAG3{white-rabbit:...}
 
   **Cleanup Tasks**
 
