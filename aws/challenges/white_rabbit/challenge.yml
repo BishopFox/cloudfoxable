@@ -16,7 +16,9 @@ description: |-
 
   In Lewis Carroll's Alice's Adventures in Wonderland, the "rabbit hole" is the literal entrance to Wonderland, which Alice falls down after chasing the White Rabbit. This fall leads her to a bizarre and surreal world where the laws of physics and logic don't apply.
 
-  In total, there are three flags designated as Flag1, Flag2, and Flag3. Can you find and read them all? Be careful of the false positives and the rabbit holes. Have fun exploiting and hopefully you learn something new. It's no use going back to yesterday, because I was a different person then.
+  In total, there are three flags designated as Flag1, Flag2, and Flag3. Can you find and read them all? Be careful of the false positives and the rabbit holes. Have fun exploiting and hopefully you learn something new. 
+  
+  It's no use going back to yesterday, because I was a different person then.
 
   Example Flag: FLAG1{white_rabbit:...}, FLAG2{white-rabbit:...}, FLAG3{white-rabbit:...}
 
