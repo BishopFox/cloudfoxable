@@ -20,14 +20,17 @@ Requirements:
 
   In total, there are three flags designated as Flag1, Flag2, and Flag3. Can you find and read them all? Becareful of the false positives and the rabbit holes. Have fun exploiting and hopefully you learn something new. It's no use going back to yesterday, because I was a different person then.
 
-  Example Flag: FLAG1{white_rabbit:...}
+  Example Flag: FLAG1{white-rabbit:...}, FLAG2{white-rabbit:...}, FLAG3{white-rabbit:...}
 
   **Cleanup Tasks**
 
   Manually delete any additional resources you have created then execute the following: 
 
   ```
-  bash cloudfoxable/aws/challenges/white_rabbit/cleanup.sh [PROFILE]
+  bash cloudfoxable/aws/challenges/white_rabbit/cleanup.sh [profile] [region]
+
+  ie.
+  bash cloudfoxable/aws/challenges/white_rabbit/cleanup.sh default us-west-2
   ```
 
 Value: 400

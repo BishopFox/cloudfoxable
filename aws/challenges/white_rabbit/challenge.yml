@@ -25,7 +25,10 @@ description: |-
   Manually delete any additional resources you have created then execute the following: 
 
   ```
-  bash cloudfoxable/aws/challenges/white_rabbit/cleanup.sh [PROFILE]
+  bash cloudfoxable/aws/challenges/white_rabbit/cleanup.sh [profile] [region]
+
+  ie.
+  bash cloudfoxable/aws/challenges/white_rabbit/cleanup.sh default us-west-2
   ```
 
 value: 400

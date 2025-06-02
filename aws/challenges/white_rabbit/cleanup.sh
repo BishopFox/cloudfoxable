@@ -1,5 +1,5 @@
 #! /bin/bash
-# cleanup.sh profile region
+# cleanup.sh [profile] [region]
 # Cleanup environment variables
 
 unset PROFILE
