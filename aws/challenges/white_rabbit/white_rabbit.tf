@@ -64,12 +64,33 @@ resource "null_resource" "build" {
     cp -f ${path.module}/data/templates/webapp/requirements.txt ${path.module}/data/docker/webapp/requirements.txt
     cp -f ${path.module}/data/templates/webapp/web.dockerfile ${path.module}/data/docker/webapp/Dockerfile
     for i in $(seq 1 5); do sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile; bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v$i ${var.AWS_REGION}; done
-    cp -f ${path.module}/data/templates/webapp/web2.dockerfile ${path.module}/data/docker/webapp/Dockerfile && \
-      sed -i "s/^ENV AWS_ACCESS_KEY_ID=.*$/ENV AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID/g" ${path.module}/data/docker/webapp/Dockerfile && \
-      sed -i "s/^ENV AWS_SECRET_ACCESS_KEY=.*$/ENV AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY/g" ${path.module}/data/docker/webapp/Dockerfile && \
-      sed -i "s/^ENV VERSION=.*$/ENV VERSION=6/g" ${path.module}/data/docker/webapp/Dockerfile && \
-      cp -f ${path.module}/data/docker/webapp/Dockerfile ${path.module}/data/docker/webapp/backup && \
-      bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v6 ${var.AWS_REGION}
+    
+    max_attempts=5
+    attempt_num=1
+    success=false
+
+    while [ "$success" = false ] && [ "$attempt_num" -le "$max_attempts" ]; do
+      # Replace with your command
+      cp -f ${path.module}/data/templates/webapp/web2.dockerfile ${path.module}/data/docker/webapp/Dockerfile && \
+        sed -i "s/^ENV AWS_ACCESS_KEY_ID=.*$/ENV AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID/g" ${path.module}/data/docker/webapp/Dockerfile && \
+        sed -i "s/^ENV AWS_SECRET_ACCESS_KEY=.*$/ENV AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY/g" ${path.module}/data/docker/webapp/Dockerfile && \
+        sed -i "s/^ENV VERSION=.*$/ENV VERSION=6/g" ${path.module}/data/docker/webapp/Dockerfile && \
+        cp -f ${path.module}/data/docker/webapp/Dockerfile ${path.module}/data/docker/webapp/backup && \
+        bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v6 ${var.AWS_REGION}
+      if [ "$?" -eq 0 ]; then
+        success=true
+      else
+        echo "Attempt $attempt_num failed. Trying again..."
+        attempt_num=$((attempt_num + 1))
+      fi
+    done
+
+    if [ "$success" = true ]; then
+      echo "Vulnerability added successfully after $attempt_num attempts."
+    else
+      echo "Vulnerability was not added successfully after $max_attempts attempts."
+    fi
+    
     rm -rf ${path.module}/data/docker/webapp/backup
     cp -f ${path.module}/data/templates/webapp/web.dockerfile ${path.module}/data/docker/webapp/Dockerfile
     for i in $(seq 7 15); do sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile; bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v$i ${var.AWS_REGION}; done

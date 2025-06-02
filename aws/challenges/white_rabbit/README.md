@@ -27,26 +27,7 @@ Requirements:
   Manually delete any additional resources you have created then execute the following: 
 
   ```
-  unset AWS_ACCESS_KEY_ID
-  unset AWS_SECRET_ACCESS_KEY
-  unset AWS_SESSION_TOKEN
-
-  repos=("webapp" "database" "test")
-  for repo in "${repos[@]}"; do
-    echo $repo
-    aws ecr batch-delete-image --region `terraform output -raw CTF_Region` \
-      --repository-name $repo \
-      --image-ids "$(aws ecr list-images --region `terraform output -raw CTF_Region` --repository-name $repo --query 'imageIds[*]' --output json)" || true
-  done
-
-  docker images | grep "`terraform output -raw CTF_Account`.dkr.ecr.`terraform output -raw CTF_Region`.amazonaws.com" | awk '{print $3}' | while read image_id; do
-    docker rmi -f "$image_id"
-  done
-  
-  terraform destroy --auto-approve 
-
-  # NOTE: Sometime terraform will try to delete roles before removing attached policies, just rerun destroy command to fully cleanup
-  terraform destroy --auto-approve 
+  bash cloudfoxable/aws/challenges/white_rabbit/cleanup.sh [PROFILE]
   ```
 
 Value: 400
