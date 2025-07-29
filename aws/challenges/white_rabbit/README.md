@@ -22,7 +22,11 @@ Requirements:
   
   It's no use going back to yesterday, because I was a different person then.
 
-  Example Flag: '{FLAG:white_rabbit::FLAG1_FLAG2_FLAG3}'
+  Example Flag1: 'FLAG1{SomeSecret}'
+  Example Flag2: 'FLAG1{SomeSecretTwo}'
+  Example Flag3: 'FLAG1{SomeSecretThree}'
+  Example Flag Submission: '{FLAG:white_rabbit::SomeSecret_SomeSecretTwo_SomeSecretThree}'
+
 
   **Cleanup Tasks**
 
