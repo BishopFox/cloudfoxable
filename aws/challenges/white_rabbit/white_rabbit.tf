@@ -45,18 +45,19 @@ locals {
 
 # Temporary disable for testing
 #
-resource "null_resource" "build" {
+resource "null_resource" "webapp" {
   # Runs the build.sh script which builds the dockerfile and pushes to ecr
+
+  depends_on = [
+    aws_ecr_repository.repo,
+    aws_iam_access_key.access_key
+  ]
   triggers = {
     access_key_id  = aws_iam_access_key.access_key["terraform"].id
     secret_access_key = aws_iam_access_key.access_key["terraform"].secret
   }
  
   provisioner "local-exec" {
-    environment = {
-      ACCESS_KEY_ID     = aws_iam_access_key.access_key["terraform"].id
-      SECRET_ACCESS_KEY = aws_iam_access_key.access_key["terraform"].secret
-    }
 
     command = <<-EOT
     cp -f ${path.module}/data/templates/webapp/app.py ${path.module}/data/docker/webapp/app.py
@@ -65,58 +66,107 @@ resource "null_resource" "build" {
     cp -f ${path.module}/data/templates/webapp/web.dockerfile ${path.module}/data/docker/webapp/Dockerfile
     for i in $(seq 1 5); do sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile; bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v$i ${var.AWS_REGION}; done
     
-    max_attempts=5
-    attempt_num=1
-    success=false
-
-    while [ "$success" = false ] && [ "$attempt_num" -le "$max_attempts" ]; do
-      # Replace with your command
-      cp -f ${path.module}/data/templates/webapp/web2.dockerfile ${path.module}/data/docker/webapp/Dockerfile && \
-        sed -i "s/^ENV AWS_ACCESS_KEY_ID=.*$/ENV AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID/g" ${path.module}/data/docker/webapp/Dockerfile && \
-        sed -i "s/^ENV AWS_SECRET_ACCESS_KEY=.*$/ENV AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY/g" ${path.module}/data/docker/webapp/Dockerfile && \
-        sed -i "s/^ENV VERSION=.*$/ENV VERSION=6/g" ${path.module}/data/docker/webapp/Dockerfile && \
-        cp -f ${path.module}/data/docker/webapp/Dockerfile ${path.module}/data/docker/webapp/backup && \
-        bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v6 ${var.AWS_REGION}
-      if [ "$?" -eq 0 ]; then
-        success=true
-      else
-        echo "Attempt $attempt_num failed. Trying again..."
-        attempt_num=$((attempt_num + 1))
-      fi
-    done
-
-    if [ "$success" = true ]; then
-      echo "Vulnerability added successfully after $attempt_num attempts."
-    else
-      echo "Vulnerability was not added successfully after $max_attempts attempts."
-    fi
-    
-    rm -rf ${path.module}/data/docker/webapp/backup
-    cp -f ${path.module}/data/templates/webapp/web.dockerfile ${path.module}/data/docker/webapp/Dockerfile
-    for i in $(seq 7 15); do sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile; bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v$i ${var.AWS_REGION}; done
-    sed -i "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/webapp/Dockerfile
-    bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:latest ${var.AWS_REGION}
-
-    cp -f ${path.module}/data/templates/database/database.dockerfile ${path.module}/data/docker/database/Dockerfile
-    cp -f ${path.module}/data/templates/database/get_secrets.sh ${path.module}/data/docker/database/get_secrets.sh
-    cp -f ${path.module}/data/templates/database/entrypoint.sh ${path.module}/data/docker/database/entrypoint.sh
-    sed -i "s/CHANGESECRETID/${aws_secretsmanager_secret.db_credentials.id}/g" ${path.module}/data/docker/database/get_secrets.sh
-    sed -i "s/CHANGEREGION/${var.AWS_REGION}/g" ${path.module}/data/docker/database/Dockerfile
-    sed -i "s/REPLACEACCESS/$ACCESS_KEY_ID/g" ${path.module}/data/docker/database/Dockerfile
-    for i in $(seq 1 10); do sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/database/Dockerfile; bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/database ${aws_ecr_repository.repo["database"].repository_url}:v$i ${var.AWS_REGION}; done
-    sed -i "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/database/Dockerfile
-    bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/database ${aws_ecr_repository.repo["database"].repository_url}:latest ${var.AWS_REGION}
-
-    cp -f ${path.module}/data/templates/test/dockerfile ${path.module}/data/docker/test/Dockerfile
-    cp -f ${path.module}/data/templates/test/testfile ${path.module}/data/docker/test/testfile
-    cp -f ${path.module}/data/templates/test/hello.py ${path.module}/data/docker/test/hello.py
-    bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/test ${aws_ecr_repository.repo["test"].repository_url}:latest ${var.AWS_REGION}
-
     EOT
 
   }
-  depends_on = [aws_iam_access_key.access_key]
 }
+
+resource "null_resource" "webapp2" {
+  # Runs the build.sh script which builds the dockerfile and pushes to ecr
+  depends_on = [
+    null_resource.webapp,
+    aws_ecr_repository.repo,
+    aws_iam_access_key.access_key
+    ]
+
+  provisioner "local-exec" {
+    environment = {
+      ACCESS_KEY_ID     = aws_iam_access_key.access_key["terraform"].id
+      SECRET_ACCESS_KEY = aws_iam_access_key.access_key["terraform"].secret
+    }
+
+    command = <<-EOT
+      cp -f ${path.module}/data/templates/webapp/web2.dockerfile ${path.module}/data/docker/webapp/Dockerfile
+      sleep 5 
+      sed -i "s/^ENV AWS_ACCESS_KEY_ID=.*$/ENV AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID/g" ${path.module}/data/docker/webapp/Dockerfile 
+      sed -i "s/^ENV AWS_SECRET_ACCESS_KEY=.*$/ENV AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY/g" ${path.module}/data/docker/webapp/Dockerfile 
+      sed -i "s/^ENV VERSION=.*$/ENV VERSION=6/g" ${path.module}/data/docker/webapp/Dockerfile 
+      sleep 5 
+      cp -f ${path.module}/data/docker/webapp/Dockerfile ${path.module}/data/docker/webapp/backup 
+      sleep 5
+      bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v6 ${var.AWS_REGION}
+     EOT
+
+  }
+}   
+
+resource "null_resource" "webapp3" {
+  # Runs the build.sh script which builds the dockerfile and pushes to ecr
+  depends_on = [
+    null_resource.webapp2,
+    aws_ecr_repository.repo,
+]
+
+  provisioner "local-exec" {
+
+    command = <<-EOT
+      rm -rf ${path.module}/data/docker/webapp/backup
+      cp -f ${path.module}/data/templates/webapp/web.dockerfile ${path.module}/data/docker/webapp/Dockerfile
+      for i in $(seq 7 15); do sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile; bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v$i ${var.AWS_REGION}; done
+      sed -i "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/webapp/Dockerfile
+      bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:latest ${var.AWS_REGION}
+     EOT
+
+  }
+}   
+
+resource "null_resource" "database" {
+  # Runs the build.sh script which builds the dockerfile and pushes to ecr
+  depends_on = [
+    aws_ecr_repository.repo,
+    aws_secretsmanager_secret.db_credentials
+    ]
+
+
+  provisioner "local-exec" {
+    environment = {
+      ACCESS_KEY_ID     = aws_iam_access_key.access_key["terraform"].id
+      SECRET_ACCESS_KEY = aws_iam_access_key.access_key["terraform"].secret
+    }
+
+    command = <<-EOT
+      cp -f ${path.module}/data/templates/database/database.dockerfile ${path.module}/data/docker/database/Dockerfile
+      cp -f ${path.module}/data/templates/database/get_secrets.sh ${path.module}/data/docker/database/get_secrets.sh
+      cp -f ${path.module}/data/templates/database/entrypoint.sh ${path.module}/data/docker/database/entrypoint.sh
+      sed -i "s/CHANGESECRETID/${aws_secretsmanager_secret.db_credentials.id}/g" ${path.module}/data/docker/database/get_secrets.sh
+      sed -i "s/CHANGEREGION/${var.AWS_REGION}/g" ${path.module}/data/docker/database/Dockerfile
+      sed -i "s/REPLACEACCESS/$ACCESS_KEY_ID/g" ${path.module}/data/docker/database/Dockerfile
+      for i in $(seq 1 10); do sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/database/Dockerfile; bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/database ${aws_ecr_repository.repo["database"].repository_url}:v$i ${var.AWS_REGION}; done
+      sed -i "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/database/Dockerfile
+      bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/database ${aws_ecr_repository.repo["database"].repository_url}:latest ${var.AWS_REGION}
+    EOT
+
+  }
+}   
+
+
+resource "null_resource" "testapp" {
+  # Runs the build.sh script which builds the dockerfile and pushes to ecr
+  depends_on = [aws_ecr_repository.repo]
+
+  provisioner "local-exec" {
+
+    command = <<-EOT
+      cp -f ${path.module}/data/templates/test/dockerfile ${path.module}/data/docker/test/Dockerfile
+      cp -f ${path.module}/data/templates/test/testfile ${path.module}/data/docker/test/testfile
+      cp -f ${path.module}/data/templates/test/hello.py ${path.module}/data/docker/test/hello.py
+      bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/test ${aws_ecr_repository.repo["test"].repository_url}:latest ${var.AWS_REGION}
+    EOT
+
+  }
+}   
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -170,6 +170,7 @@ module "challenge_needles" {
 
 module "challenge_white_rabbit" {
   source = "./challenges/white_rabbit"
+  count = var.segue_enabled ? 1 : 0
   aws_assume_role_arn = (var.aws_assume_role_arn != "" ? var.aws_assume_role_arn : data.aws_caller_identity.current.arn) 
   account_id = data.aws_caller_identity.current.account_id
   aws_local_profile = var.aws_local_profile
