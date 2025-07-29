@@ -12,7 +12,7 @@ description:
 
 Requirements:
   - AWS cli w/ default profile configured for Cloudfoxable
-  - Docker
+  - Docker installed and configured
 
   **Challenge Details**
 
