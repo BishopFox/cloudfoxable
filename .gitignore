@@ -39,9 +39,9 @@ cloudfox-output
 .infracost
 response.json
 **/cheatsheet.md
-aws/challenges/white_rabbit/data/docker/webapp/*
-aws/challenges/white_rabbit/data/docker/database/*
-aws/challenges/white_rabbit/data/docker/test/*
+**/aws/challenges/white_rabbit/data/docker/webapp/*
+**/aws/challenges/white_rabbit/data/docker/database/*
+**/aws/challenges/white_rabbit/data/docker/test/*
 
 .ctf
 config 
