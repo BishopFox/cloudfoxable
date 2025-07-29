@@ -174,5 +174,5 @@ variable "segue_enabled" {
   variable "white_rabbit_enabled" {
   description = "Enable or disable white_rabbit challenge (true = enabled, false = disabled)"
   type        = bool
-  default     = true
+  default     = false
   }

@@ -322,6 +322,7 @@ locals {
     var.segue_enabled ?                   "segue                        | No Cost      |" : "",   
     var.bastion_enabled ?                 "bastion                      | $4/month     |" : "",
     var.wyatt_enabled ?                   "wyatt                        | $4/month     |" : "",
+    var.white_rabbit_enabled ?            "white_rabbit                 | $5/month     |" : "",
     var.double_tap_enabled ?              "double_tap                   | $9/month     |" : "",
     var.variable_enabled ?                "variable                     | $13/month    |" : "",
     var.search1and2_enabled ?             "search1and2                  | $27/month    |" : ""

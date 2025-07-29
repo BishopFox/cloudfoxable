@@ -71,6 +71,10 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
   # NOTE: Sometime terraform will try to delete roles before removing attached policies, just rerun destroy command to fully cleanup
   terraform destroy --auto-approve 
 
+  rm -rf challenges/white_rabbit/data/docker/webapp/*
+  rm -rf challenges/white_rabbit/data/docker/database/*
+  rm -rf challenges/white_rabbit/data/docker/test/*
+
 else
   echo
   echo "Rerun the script: $(pwd)/cleanup.sh profile region"  
