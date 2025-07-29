@@ -20,7 +20,7 @@ description: |-
   
   It's no use going back to yesterday, because I was a different person then.
 
-  Example Flag: FLAG1{white_rabbit:...}, FLAG2{white-rabbit:...}, FLAG3{white-rabbit:...}
+  Example Flag: '{FLAG:white_rabbit::FLAG1_FLAG2_FLAG3}'
 
   **Cleanup Tasks**
 
@@ -36,16 +36,9 @@ description: |-
 value: 400
 
 flags:
-- content: 'FLAG1{white_rabbit:CodeCommitCanBeUsedToExecuteAWS}'
+- content: '{FLAG:white_rabbit::CodeCommitCanBeUsedToExecuteAWS_RemoveAllCredentialsFromOldRepositories_PermissionBoundariesCanBeUsedToRestrictPermissions}'
   type: static
   data: case_insensitive
-- content: FLAG2{white_rabbit:RemoveAllCredentialsFromOldRepositories}
-  type: static
-  data: case_insensitive
-- content: 'FLAG3{white_rabbit:PermissionBoundariesCanBeUsedToRestrictPermissions}'
-  type: static
-  data: case_insensitive
-
 
 hints:
 - "The hurrier I go, the behinder I get"

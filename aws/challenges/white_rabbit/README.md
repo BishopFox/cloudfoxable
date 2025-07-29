@@ -22,7 +22,7 @@ Requirements:
   
   It's no use going back to yesterday, because I was a different person then.
 
-  Example Flag: FLAG1{white-rabbit:...}, FLAG2{white-rabbit:...}, FLAG3{white-rabbit:...}
+  Example Flag: '{FLAG:white_rabbit::FLAG1_FLAG2_FLAG3}'
 
   **Cleanup Tasks**
 
