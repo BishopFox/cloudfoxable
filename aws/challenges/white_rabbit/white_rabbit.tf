@@ -361,7 +361,7 @@ resource "aws_secretsmanager_secret_version" "white-rabbit_flag2" {
   secret_string = <<EOF
 If you don't know where you want to go, any road will take you there. Then it doesn't matter which way you go.
 
-FLAG2{white-rabbit:RemoveAllCredentialsFromOldRepositories}
+FLAG2{RemoveAllCredentialsFromOldRepositories}
 EOF
 }
 
@@ -1174,6 +1174,6 @@ resource "aws_secretsmanager_secret_version" "white-rabbit_flag1" {
   secret_string = <<EOF
 Curtsey while you're thinking. It saves time.
 
-FLAG1{white-rabbit:CodeCommitCanBeUsedToExecuteAWS}
+FLAG1{CodeCommitCanBeUsedToExecuteAWS}
 EOF
 }
