@@ -67,6 +67,8 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
   done
 
   #Cleanup AWS
+  terraform refresh -var-file=terraform.tfvars
+
   terraform destroy --auto-approve 
   # NOTE: Sometime terraform will try to delete roles before removing attached policies, just rerun destroy command to fully cleanup
   terraform destroy --auto-approve 
