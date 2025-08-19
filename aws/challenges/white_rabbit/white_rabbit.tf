@@ -225,12 +225,16 @@ resource "aws_iam_policy" "authorized_devs" {
 resource "aws_iam_role_policy_attachment" "authorized_devs-attachment" {
   role       = aws_iam_role.alice.name
   policy_arn = aws_iam_policy.authorized_devs.arn
+
+  depends_on = [aws_iam_role.alice, aws_iam_policy.authorized_devs]
 }
 
 //also attach security audit, just to add some extra unnecessary permissions
 resource "aws_iam_role_policy_attachment" "security_audit-attachment" {
   role       = aws_iam_role.alice.name
   policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
+
+  depends_on = [aws_iam_role.alice]
 }  
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -260,6 +264,8 @@ resource "aws_iam_role" "mad_hatter" {
 resource "aws_iam_role_policy_attachment" "read-only-attachment" {
   role       = aws_iam_role.mad_hatter.name
   policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+
+  depends_on = [aws_iam_role.mad_hatter]
 }  
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -332,6 +338,8 @@ resource "aws_iam_role" "terraform" {
 resource "aws_iam_role_policy_attachment" "cheshire_cat-attachment" {
   role       = aws_iam_role.cheshire_cat.name
   policy_arn = aws_iam_policy.cheshire_cat.arn
+
+  depends_on = [aws_iam_role.cheshire_cat, aws_iam_policy.cheshire_cat]
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -543,16 +551,22 @@ resource "aws_iam_policy" "secret_access" {
 resource "aws_iam_role_policy_attachment" "attach_to_devrole" {
   role       = aws_iam_role.cheshire_cat.name
   policy_arn = aws_iam_policy.secret_access.arn
+
+  depends_on = [aws_iam_role.cheshire_cat, aws_iam_policy.secret_access]
 }
 
 resource "aws_iam_role_policy_attachment" "attach_to_terraformrole" {
   role       = aws_iam_role.terraform.name
   policy_arn = aws_iam_policy.secret_access.arn
+
+  depends_on = [aws_iam_role.terraform, aws_iam_policy.secret_access]
 }
 
 resource "aws_iam_user_policy_attachment" "attach_to_terraformuser" {
   user       = aws_iam_user.user["terraform"].name
   policy_arn = aws_iam_policy.secret_access.arn
+
+  depends_on = [aws_iam_user.user, aws_iam_policy.secret_access]
 }
 
 resource "aws_iam_role" "devops" {
@@ -583,6 +597,8 @@ resource "aws_iam_role" "devops" {
 resource "aws_iam_role_policy_attachment" "devops_policy_attachment" {
   role       = aws_iam_role.devops.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
+
+  depends_on = [aws_iam_role.devops]
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -634,11 +650,15 @@ resource "aws_iam_policy" "ecr_push_policy" {
 resource "aws_iam_role_policy_attachment" "attach_ecr_push_policy_to_ecr_push_role" {
   role       = aws_iam_role.ecr_push_role.name
   policy_arn = aws_iam_policy.ecr_push_policy.arn
+
+  depends_on = [aws_iam_role.ecr_push_role, aws_iam_policy.ecr_push_policy]
 }
 
 resource "aws_iam_role_policy_attachment" "attach_ecr_push_policy_to_cheshire_cat" {
   role       = aws_iam_role.cheshire_cat.name
   policy_arn = aws_iam_policy.ecr_push_policy.arn
+
+  depends_on = [aws_iam_role.cheshire_cat, aws_iam_policy.ecr_push_policy]
 }
 
 
@@ -727,7 +747,7 @@ resource "aws_iam_role" "caterpillar" {
     ]
   })
 
-  permissions_boundary = "arn:aws:iam::${var.account_id}:policy/iam_permissions_boundary"
+  permissions_boundary = aws_iam_policy.iam_permissions_boundary.arn
 }
 
 resource "aws_iam_policy" "iam_permissions_boundary" {
@@ -873,6 +893,8 @@ resource "aws_iam_policy" "caterpillar_management_limited" {
  resource "aws_iam_role_policy_attachment" "caterpillar-attachment" {
    role       = aws_iam_role.caterpillar.name
    policy_arn = aws_iam_policy.caterpillar_management_limited.arn
+
+   depends_on = [aws_iam_role.caterpillar, aws_iam_policy.caterpillar_management_limited]
  }
 
 // create march_hare_encrypted role
