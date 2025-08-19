@@ -33,6 +33,7 @@ resource "aws_secretsmanager_secret_version" "db_credentials_version" {
 resource "aws_ecr_repository" "repo" {
   for_each = toset(local.repos)
   name     = each.key
+  force_delete = true # Allows deletion of the repository even if it contains images
 }
 
 locals {
