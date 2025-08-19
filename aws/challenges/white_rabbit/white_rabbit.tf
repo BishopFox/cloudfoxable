@@ -60,6 +60,7 @@ resource "null_resource" "webapp" {
   provisioner "local-exec" {
 
     command = <<-EOT
+    mkdir -p ${path.module}/data/docker/webapp
     cp -f ${path.module}/data/templates/webapp/app.py ${path.module}/data/docker/webapp/app.py
     cp -f ${path.module}/data/templates/webapp/entrypoint.sh ${path.module}/data/docker/webapp/entrypoint.sh
     cp -f ${path.module}/data/templates/webapp/requirements.txt ${path.module}/data/docker/webapp/requirements.txt
@@ -135,6 +136,7 @@ resource "null_resource" "database" {
     }
 
     command = <<-EOT
+      mkdir -p ${path.module}/data/docker/database
       cp -f ${path.module}/data/templates/database/database.dockerfile ${path.module}/data/docker/database/Dockerfile
       cp -f ${path.module}/data/templates/database/get_secrets.sh ${path.module}/data/docker/database/get_secrets.sh
       cp -f ${path.module}/data/templates/database/entrypoint.sh ${path.module}/data/docker/database/entrypoint.sh
@@ -157,6 +159,7 @@ resource "null_resource" "testapp" {
   provisioner "local-exec" {
 
     command = <<-EOT
+      mkdir -p ${path.module}/data/docker/test
       cp -f ${path.module}/data/templates/test/dockerfile ${path.module}/data/docker/test/Dockerfile
       cp -f ${path.module}/data/templates/test/testfile ${path.module}/data/docker/test/testfile
       cp -f ${path.module}/data/templates/test/hello.py ${path.module}/data/docker/test/hello.py
