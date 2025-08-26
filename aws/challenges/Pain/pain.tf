@@ -72,10 +72,10 @@ resource "aws_iam_role_policy_attachment" "pulisic-cloudformation-policy-attachm
 }
 
 // attach a managed policy to pulisic that allows pulisic read only to opsworks things
-resource "aws_iam_role_policy_attachment" "pulisic-opsworks-policy-attachment" {
-    role = aws_iam_role.pain.name
-    policy_arn = "arn:aws:iam::aws:policy/AWSOpsWorksCMInstanceProfileRole"
-}
+//resource "aws_iam_role_policy_attachment" "pulisic-opsworks-policy-attachment" {
+//    role = aws_iam_role.pain.name
+//    policy_arn = "arn:aws:iam::aws:policy/AWSOpsWorksCMInstanceProfileRole"
+//}
 
 
 
