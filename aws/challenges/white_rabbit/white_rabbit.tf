@@ -51,14 +51,22 @@ resource "null_resource" "webapp" {
 
   depends_on = [
     aws_ecr_repository.repo,
-    aws_iam_access_key.access_key
+    aws_iam_access_key.access_key,
+    aws_iam_user_policy_attachment.terraform_ecr_attachment,
+    null_resource.iam_propagation_delay
   ]
   triggers = {
     access_key_id  = aws_iam_access_key.access_key["terraform"].id
     secret_access_key = aws_iam_access_key.access_key["terraform"].secret
+    policy_attachment = aws_iam_user_policy_attachment.terraform_ecr_attachment.id
   }
  
   provisioner "local-exec" {
+    environment = {
+      AWS_ACCESS_KEY_ID     = aws_iam_access_key.access_key["terraform"].id
+      AWS_SECRET_ACCESS_KEY = aws_iam_access_key.access_key["terraform"].secret
+      AWS_DEFAULT_REGION    = var.AWS_REGION
+    }
 
     command = <<-EOT
     mkdir -p ${path.module}/data/docker/webapp
@@ -66,7 +74,14 @@ resource "null_resource" "webapp" {
     cp -f ${path.module}/data/templates/webapp/entrypoint.sh ${path.module}/data/docker/webapp/entrypoint.sh
     cp -f ${path.module}/data/templates/webapp/requirements.txt ${path.module}/data/docker/webapp/requirements.txt
     cp -f ${path.module}/data/templates/webapp/web.dockerfile ${path.module}/data/docker/webapp/Dockerfile
-    for i in $(seq 1 5); do sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile; bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v$i ${var.AWS_REGION}; done
+    for i in $(seq 1 5); do 
+      if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile
+      else
+        sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile
+      fi
+      bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v$i ${var.AWS_REGION}
+    done
     
     EOT
 
@@ -78,21 +93,35 @@ resource "null_resource" "webapp2" {
   depends_on = [
     null_resource.webapp,
     aws_ecr_repository.repo,
-    aws_iam_access_key.access_key
+    aws_iam_access_key.access_key,
+    aws_iam_user_policy_attachment.terraform_ecr_attachment
     ]
+
+  triggers = {
+    policy_attachment = aws_iam_user_policy_attachment.terraform_ecr_attachment.id
+  }
 
   provisioner "local-exec" {
     environment = {
       ACCESS_KEY_ID     = aws_iam_access_key.access_key["terraform"].id
       SECRET_ACCESS_KEY = aws_iam_access_key.access_key["terraform"].secret
+      AWS_ACCESS_KEY_ID     = aws_iam_access_key.access_key["terraform"].id
+      AWS_SECRET_ACCESS_KEY = aws_iam_access_key.access_key["terraform"].secret
+      AWS_DEFAULT_REGION    = var.AWS_REGION
     }
 
     command = <<-EOT
       cp -f ${path.module}/data/templates/webapp/web2.dockerfile ${path.module}/data/docker/webapp/Dockerfile
       sleep 5 
-      sed -i "s/^ENV AWS_ACCESS_KEY_ID=.*$/ENV AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID/g" ${path.module}/data/docker/webapp/Dockerfile 
-      sed -i "s/^ENV AWS_SECRET_ACCESS_KEY=.*$/ENV AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY/g" ${path.module}/data/docker/webapp/Dockerfile 
-      sed -i "s/^ENV VERSION=.*$/ENV VERSION=6/g" ${path.module}/data/docker/webapp/Dockerfile 
+      if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "s/^ENV AWS_ACCESS_KEY_ID=.*$/ENV AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID/g" ${path.module}/data/docker/webapp/Dockerfile 
+        sed -i '' "s/^ENV AWS_SECRET_ACCESS_KEY=.*$/ENV AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY/g" ${path.module}/data/docker/webapp/Dockerfile 
+        sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=6/g" ${path.module}/data/docker/webapp/Dockerfile 
+      else
+        sed -i "s/^ENV AWS_ACCESS_KEY_ID=.*$/ENV AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID/g" ${path.module}/data/docker/webapp/Dockerfile 
+        sed -i "s/^ENV AWS_SECRET_ACCESS_KEY=.*$/ENV AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY/g" ${path.module}/data/docker/webapp/Dockerfile 
+        sed -i "s/^ENV VERSION=.*$/ENV VERSION=6/g" ${path.module}/data/docker/webapp/Dockerfile 
+      fi
       sleep 5 
       cp -f ${path.module}/data/docker/webapp/Dockerfile ${path.module}/data/docker/webapp/backup 
       sleep 5
@@ -107,15 +136,36 @@ resource "null_resource" "webapp3" {
   depends_on = [
     null_resource.webapp2,
     aws_ecr_repository.repo,
+    aws_iam_user_policy_attachment.terraform_ecr_attachment
 ]
 
+  triggers = {
+    policy_attachment = aws_iam_user_policy_attachment.terraform_ecr_attachment.id
+  }
+
   provisioner "local-exec" {
+    environment = {
+      AWS_ACCESS_KEY_ID     = aws_iam_access_key.access_key["terraform"].id
+      AWS_SECRET_ACCESS_KEY = aws_iam_access_key.access_key["terraform"].secret
+      AWS_DEFAULT_REGION    = var.AWS_REGION
+    }
 
     command = <<-EOT
       rm -rf ${path.module}/data/docker/webapp/backup
       cp -f ${path.module}/data/templates/webapp/web.dockerfile ${path.module}/data/docker/webapp/Dockerfile
-      for i in $(seq 7 15); do sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile; bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v$i ${var.AWS_REGION}; done
-      sed -i "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/webapp/Dockerfile
+      for i in $(seq 7 15); do 
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+          sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile
+        else
+          sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile
+        fi
+        bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v$i ${var.AWS_REGION}
+      done
+      if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/webapp/Dockerfile
+      else
+        sed -i "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/webapp/Dockerfile
+      fi
       bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:latest ${var.AWS_REGION}
      EOT
 
@@ -126,14 +176,22 @@ resource "null_resource" "database" {
   # Runs the build.sh script which builds the dockerfile and pushes to ecr
   depends_on = [
     aws_ecr_repository.repo,
-    aws_secretsmanager_secret.db_credentials
+    aws_secretsmanager_secret.db_credentials,
+    aws_iam_user_policy_attachment.terraform_ecr_attachment,
+    null_resource.iam_propagation_delay
     ]
 
+  triggers = {
+    policy_attachment = aws_iam_user_policy_attachment.terraform_ecr_attachment.id
+  }
 
   provisioner "local-exec" {
     environment = {
       ACCESS_KEY_ID     = aws_iam_access_key.access_key["terraform"].id
       SECRET_ACCESS_KEY = aws_iam_access_key.access_key["terraform"].secret
+      AWS_ACCESS_KEY_ID     = aws_iam_access_key.access_key["terraform"].id
+      AWS_SECRET_ACCESS_KEY = aws_iam_access_key.access_key["terraform"].secret
+      AWS_DEFAULT_REGION    = var.AWS_REGION
     }
 
     command = <<-EOT
@@ -141,11 +199,25 @@ resource "null_resource" "database" {
       cp -f ${path.module}/data/templates/database/database.dockerfile ${path.module}/data/docker/database/Dockerfile
       cp -f ${path.module}/data/templates/database/get_secrets.sh ${path.module}/data/docker/database/get_secrets.sh
       cp -f ${path.module}/data/templates/database/entrypoint.sh ${path.module}/data/docker/database/entrypoint.sh
-      sed -i "s/CHANGESECRETID/${aws_secretsmanager_secret.db_credentials.id}/g" ${path.module}/data/docker/database/get_secrets.sh
-      sed -i "s/CHANGEREGION/${var.AWS_REGION}/g" ${path.module}/data/docker/database/Dockerfile
-      sed -i "s/REPLACEACCESS/$ACCESS_KEY_ID/g" ${path.module}/data/docker/database/Dockerfile
-      for i in $(seq 1 10); do sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/database/Dockerfile; bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/database ${aws_ecr_repository.repo["database"].repository_url}:v$i ${var.AWS_REGION}; done
-      sed -i "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/database/Dockerfile
+      if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "s/CHANGESECRETID/${aws_secretsmanager_secret.db_credentials.id}/g" ${path.module}/data/docker/database/get_secrets.sh
+        sed -i '' "s/CHANGEREGION/${var.AWS_REGION}/g" ${path.module}/data/docker/database/Dockerfile
+        sed -i '' "s/REPLACEACCESS/$ACCESS_KEY_ID/g" ${path.module}/data/docker/database/Dockerfile
+        for i in $(seq 1 10); do 
+          sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/database/Dockerfile
+          bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/database ${aws_ecr_repository.repo["database"].repository_url}:v$i ${var.AWS_REGION}
+        done
+        sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/database/Dockerfile
+      else
+        sed -i "s/CHANGESECRETID/${aws_secretsmanager_secret.db_credentials.id}/g" ${path.module}/data/docker/database/get_secrets.sh
+        sed -i "s/CHANGEREGION/${var.AWS_REGION}/g" ${path.module}/data/docker/database/Dockerfile
+        sed -i "s/REPLACEACCESS/$ACCESS_KEY_ID/g" ${path.module}/data/docker/database/Dockerfile
+        for i in $(seq 1 10); do 
+          sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/database/Dockerfile
+          bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/database ${aws_ecr_repository.repo["database"].repository_url}:v$i ${var.AWS_REGION}
+        done
+        sed -i "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/database/Dockerfile
+      fi
       bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/database ${aws_ecr_repository.repo["database"].repository_url}:latest ${var.AWS_REGION}
     EOT
 
@@ -155,9 +227,22 @@ resource "null_resource" "database" {
 
 resource "null_resource" "testapp" {
   # Runs the build.sh script which builds the dockerfile and pushes to ecr
-  depends_on = [aws_ecr_repository.repo]
+  depends_on = [
+    aws_ecr_repository.repo,
+    aws_iam_user_policy_attachment.terraform_ecr_attachment,
+    null_resource.iam_propagation_delay
+  ]
+
+  triggers = {
+    policy_attachment = aws_iam_user_policy_attachment.terraform_ecr_attachment.id
+  }
 
   provisioner "local-exec" {
+    environment = {
+      AWS_ACCESS_KEY_ID     = aws_iam_access_key.access_key["terraform"].id
+      AWS_SECRET_ACCESS_KEY = aws_iam_access_key.access_key["terraform"].secret
+      AWS_DEFAULT_REGION    = var.AWS_REGION
+    }
 
     command = <<-EOT
       mkdir -p ${path.module}/data/docker/test
@@ -1193,11 +1278,32 @@ resource "aws_s3_bucket_public_access_block" "codebuild-deployment-public-access
   restrict_public_buckets = true
 }
 
+# Create the zip file from the my-source directory
+resource "null_resource" "create_source_zip" {
+  triggers = {
+    # Trigger when any file in the my-source directory changes
+    source_files = filemd5("${path.module}/data/s3/my-source/app.py")
+    buildspec = filemd5("${path.module}/data/s3/my-source/buildspec.yml")
+    requirements = filemd5("${path.module}/data/s3/my-source/requirements.txt")
+    test_file = filemd5("${path.module}/data/s3/my-source/tests/test_app.py")
+  }
+  
+  provisioner "local-exec" {
+    command = <<-EOT
+      cd ${path.module}/data/s3
+      rm -f my-source.zip
+      zip -r my-source.zip my-source/
+    EOT
+  }
+}
+
 // upload code to the bucket.
 resource "aws_s3_object" "codebuild-deployment-object" {
   bucket = aws_s3_bucket.codebuild-deployment.id
   key    = "my-source.zip"
   source = "${path.module}/data/s3/my-source.zip"
+  
+  depends_on = [null_resource.create_source_zip]
 }
 
 //create white rabbit flag1 in secretsmanager
@@ -1252,4 +1358,51 @@ Curtsey while you're thinking. It saves time.
 
 FLAG1{CodeCommitCanBeUsedToExecuteAWS}
 EOF
+}
+
+# Create ECR permissions policy for the terraform user
+resource "aws_iam_policy" "terraform_ecr_policy" {
+  name        = "terraform_ecr_policy"
+  description = "Policy for terraform user to access ECR"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:PutImage",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# Attach ECR policy to terraform user
+resource "aws_iam_user_policy_attachment" "terraform_ecr_attachment" {
+  user       = aws_iam_user.user["terraform"].name
+  policy_arn = aws_iam_policy.terraform_ecr_policy.arn
+
+  depends_on = [aws_iam_user.user, aws_iam_policy.terraform_ecr_policy]
+}
+
+# Add a delay to allow IAM permissions to propagate
+resource "null_resource" "iam_propagation_delay" {
+  depends_on = [aws_iam_user_policy_attachment.terraform_ecr_attachment]
+  
+  triggers = {
+    policy_attachment = aws_iam_user_policy_attachment.terraform_ecr_attachment.id
+  }
+  
+  provisioner "local-exec" {
+    command = "sleep 30"
+  }
 }
