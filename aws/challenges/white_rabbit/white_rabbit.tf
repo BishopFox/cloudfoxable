@@ -74,7 +74,14 @@ resource "null_resource" "webapp" {
     cp -f ${path.module}/data/templates/webapp/entrypoint.sh ${path.module}/data/docker/webapp/entrypoint.sh
     cp -f ${path.module}/data/templates/webapp/requirements.txt ${path.module}/data/docker/webapp/requirements.txt
     cp -f ${path.module}/data/templates/webapp/web.dockerfile ${path.module}/data/docker/webapp/Dockerfile
-    for i in $(seq 1 5); do sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile; bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v$i ${var.AWS_REGION}; done
+    for i in $(seq 1 5); do 
+      if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile
+      else
+        sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile
+      fi
+      bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v$i ${var.AWS_REGION}
+    done
     
     EOT
 
@@ -106,9 +113,15 @@ resource "null_resource" "webapp2" {
     command = <<-EOT
       cp -f ${path.module}/data/templates/webapp/web2.dockerfile ${path.module}/data/docker/webapp/Dockerfile
       sleep 5 
-      sed -i '' "s/^ENV AWS_ACCESS_KEY_ID=.*$/ENV AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID/g" ${path.module}/data/docker/webapp/Dockerfile 
-      sed -i '' "s/^ENV AWS_SECRET_ACCESS_KEY=.*$/ENV AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY/g" ${path.module}/data/docker/webapp/Dockerfile 
-      sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=6/g" ${path.module}/data/docker/webapp/Dockerfile 
+      if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "s/^ENV AWS_ACCESS_KEY_ID=.*$/ENV AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID/g" ${path.module}/data/docker/webapp/Dockerfile 
+        sed -i '' "s/^ENV AWS_SECRET_ACCESS_KEY=.*$/ENV AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY/g" ${path.module}/data/docker/webapp/Dockerfile 
+        sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=6/g" ${path.module}/data/docker/webapp/Dockerfile 
+      else
+        sed -i "s/^ENV AWS_ACCESS_KEY_ID=.*$/ENV AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID/g" ${path.module}/data/docker/webapp/Dockerfile 
+        sed -i "s/^ENV AWS_SECRET_ACCESS_KEY=.*$/ENV AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY/g" ${path.module}/data/docker/webapp/Dockerfile 
+        sed -i "s/^ENV VERSION=.*$/ENV VERSION=6/g" ${path.module}/data/docker/webapp/Dockerfile 
+      fi
       sleep 5 
       cp -f ${path.module}/data/docker/webapp/Dockerfile ${path.module}/data/docker/webapp/backup 
       sleep 5
@@ -140,8 +153,19 @@ resource "null_resource" "webapp3" {
     command = <<-EOT
       rm -rf ${path.module}/data/docker/webapp/backup
       cp -f ${path.module}/data/templates/webapp/web.dockerfile ${path.module}/data/docker/webapp/Dockerfile
-      for i in $(seq 7 15); do sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile; bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v$i ${var.AWS_REGION}; done
-      sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/webapp/Dockerfile
+      for i in $(seq 7 15); do 
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+          sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile
+        else
+          sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/webapp/Dockerfile
+        fi
+        bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:v$i ${var.AWS_REGION}
+      done
+      if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/webapp/Dockerfile
+      else
+        sed -i "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/webapp/Dockerfile
+      fi
       bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/webapp ${aws_ecr_repository.repo["webapp"].repository_url}:latest ${var.AWS_REGION}
      EOT
 
@@ -175,11 +199,25 @@ resource "null_resource" "database" {
       cp -f ${path.module}/data/templates/database/database.dockerfile ${path.module}/data/docker/database/Dockerfile
       cp -f ${path.module}/data/templates/database/get_secrets.sh ${path.module}/data/docker/database/get_secrets.sh
       cp -f ${path.module}/data/templates/database/entrypoint.sh ${path.module}/data/docker/database/entrypoint.sh
-      sed -i '' "s/CHANGESECRETID/${aws_secretsmanager_secret.db_credentials.id}/g" ${path.module}/data/docker/database/get_secrets.sh
-      sed -i '' "s/CHANGEREGION/${var.AWS_REGION}/g" ${path.module}/data/docker/database/Dockerfile
-      sed -i '' "s/REPLACEACCESS/$ACCESS_KEY_ID/g" ${path.module}/data/docker/database/Dockerfile
-      for i in $(seq 1 10); do sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/database/Dockerfile; bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/database ${aws_ecr_repository.repo["database"].repository_url}:v$i ${var.AWS_REGION}; done
-      sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/database/Dockerfile
+      if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "s/CHANGESECRETID/${aws_secretsmanager_secret.db_credentials.id}/g" ${path.module}/data/docker/database/get_secrets.sh
+        sed -i '' "s/CHANGEREGION/${var.AWS_REGION}/g" ${path.module}/data/docker/database/Dockerfile
+        sed -i '' "s/REPLACEACCESS/$ACCESS_KEY_ID/g" ${path.module}/data/docker/database/Dockerfile
+        for i in $(seq 1 10); do 
+          sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/database/Dockerfile
+          bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/database ${aws_ecr_repository.repo["database"].repository_url}:v$i ${var.AWS_REGION}
+        done
+        sed -i '' "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/database/Dockerfile
+      else
+        sed -i "s/CHANGESECRETID/${aws_secretsmanager_secret.db_credentials.id}/g" ${path.module}/data/docker/database/get_secrets.sh
+        sed -i "s/CHANGEREGION/${var.AWS_REGION}/g" ${path.module}/data/docker/database/Dockerfile
+        sed -i "s/REPLACEACCESS/$ACCESS_KEY_ID/g" ${path.module}/data/docker/database/Dockerfile
+        for i in $(seq 1 10); do 
+          sed -i "s/^ENV VERSION=.*$/ENV VERSION=$i/g" ${path.module}/data/docker/database/Dockerfile
+          bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/database ${aws_ecr_repository.repo["database"].repository_url}:v$i ${var.AWS_REGION}
+        done
+        sed -i "s/^ENV VERSION=.*$/ENV VERSION=latest/g" ${path.module}/data/docker/database/Dockerfile
+      fi
       bash ${path.module}/data/bin/build.sh ${path.module}/data/docker/database ${aws_ecr_repository.repo["database"].repository_url}:latest ${var.AWS_REGION}
     EOT
 
