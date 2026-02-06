@@ -1,0 +1,1 @@
+FLAG{should_this_storage_blob_be_publicly_accessible}
