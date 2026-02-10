@@ -1,3 +1,9 @@
+# resource group
+resource "azurerm_resource_group" "vmiam" {
+  name      = "vmiamRG"
+  location  = var.azure_region
+}
+
 data "azurerm_client_config" "current" {}
 
 resource "random_string" "rand" {
@@ -22,8 +28,8 @@ locals {
 # Key Vault
 resource "azurerm_key_vault" "ctf_kv" {
   name                        = "ctfkv${random_string.rand.id}"
-  location                    = var.resource_group_location
-  resource_group_name         = var.resource_group_name
+  resource_group_name         = azurerm_resource_group.vmiam.name
+  location                    = azurerm_resource_group.vmiam.location
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   sku_name                    = "standard"
   purge_protection_enabled    = false
@@ -52,8 +58,8 @@ resource "azurerm_key_vault_secret" "flag" {
 # Managed Identity
 resource "azurerm_user_assigned_identity" "ctf_identity" {
   name                = "ctf-kv-reader-id"
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.vmiam.name
+  location            = azurerm_resource_group.vmiam.location
 }
 
 # RBAC
@@ -67,28 +73,28 @@ resource "azurerm_role_assignment" "kv_reader" {
 resource "azurerm_virtual_network" "ctf_vnet" {
   name                = "ctf-vnet"
   address_space       = ["10.0.0.0/16"]
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.vmiam.name
+  location            = azurerm_resource_group.vmiam.location
 }
 
 resource "azurerm_subnet" "ctf_subnet" {
   name                 = "ctf-subnet"
-  resource_group_name  = var.resource_group_name
+  resource_group_name  = azurerm_resource_group.vmiam.name
   virtual_network_name = azurerm_virtual_network.ctf_vnet.name
   address_prefixes     = ["10.0.1.0/24"]
 }
 
 resource "azurerm_public_ip" "ctf_ip" {
   name                = "ctf-public-ip"
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.vmiam.name
+  location            = azurerm_resource_group.vmiam.location
   allocation_method   = "Static"
 }
 
 resource "azurerm_network_interface" "ctf_nic" {
   name                = "ctf-nic"
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.vmiam.name
+  location            = azurerm_resource_group.vmiam.location
 
   ip_configuration {
     name                          = "internal"
@@ -101,8 +107,8 @@ resource "azurerm_network_interface" "ctf_nic" {
 
 resource "azurerm_network_security_group" "ctf_nsg" {
   name                = "ctf-nsg"
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.vmiam.name
+  location            = azurerm_resource_group.vmiam.location
 
   security_rule {
     name                       = "Allow-SSH"
@@ -125,8 +131,8 @@ resource "azurerm_subnet_network_security_group_association" "ctf_subnet_assoc" 
 # VM
 resource "azurerm_linux_virtual_machine" "ctf_vm" {
   name                = "ctf-vm"
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.vmiam.name
+  location            = azurerm_resource_group.vmiam.location
   size                = "Standard_B1s"
   admin_username      = "azureuser"
   disable_password_authentication = false
@@ -155,15 +161,15 @@ resource "azurerm_linux_virtual_machine" "ctf_vm" {
 }
 
 resource "azurerm_role_assignment" "user_vm_reader" {
-  scope                = var.resource_group_id
+  scope                = azurerm_resource_group.vmiam.id
   role_definition_name = "Key Vault Reader"
   principal_id         = var.player_object_id
 }
 
 resource "azurerm_key_vault" "ctf2" {
   name                        = "ctfkv${random_id.suffix.hex}"
-  location                    = var.resource_group_location
-  resource_group_name         = var.resource_group_name
+  resource_group_name         = azurerm_resource_group.vmiam.name
+  location                    = azurerm_resource_group.vmiam.location
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   sku_name                    = "standard"
   purge_protection_enabled    = false

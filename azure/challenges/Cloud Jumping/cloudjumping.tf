@@ -1,3 +1,9 @@
+# resource group
+resource "azurerm_resource_group" "cloudjumping" {
+  name      = "cloudjumpingRG"
+  location  = var.azure_region
+}
+
 data "azuread_domains" "domain" {
   only_initial = true
 }
@@ -59,8 +65,8 @@ locals {
 
 resource "azurerm_storage_account" "sa" {
   name                      = "cloudjumping${random_id.challenge_instance_id.hex}"
-  resource_group_name       = var.resource_group_name
-  location                  = var.resource_group_location
+  resource_group_name       = azurerm_resource_group.cloudjumping.name
+  location                  = azurerm_resource_group.cloudjumping.location
   account_tier              = "Standard"
   account_replication_type = "LRS"
   allow_nested_items_to_be_public = true
@@ -90,7 +96,7 @@ resource "azurerm_storage_blob" "blob" {
 }
 
 resource "azurerm_role_assignment" "user_reader" {
-  scope                = var.resource_group_id
+  scope                = azurerm_resource_group.cloudjumping.id
   role_definition_name = "Reader"
   principal_id         = var.player_object_id
 }
@@ -104,8 +110,8 @@ resource "azurerm_role_assignment" "user_reader" {
 
 resource "azurerm_user_assigned_identity" "contributor_managed_identity" {
   name                = "contributor-managed-identity"
-  resource_group_name       = var.resource_group_name
-  location                  = var.resource_group_location
+  resource_group_name       = azurerm_resource_group.cloudjumping.name
+  location                  = azurerm_resource_group.cloudjumping.location
 }
 
 resource "azurerm_role_assignment" "contributor" {
@@ -132,7 +138,7 @@ resource "random_password" "jump_host_user_password" {
 
 resource "azurerm_resource_group_template_deployment" "jump_host_vm" {
   name                = "jump_host"
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.cloudjumping.name
   deployment_mode     = "Incremental"
   template_content    = data.local_file.jump_host_template.content
   parameters_content  = jsonencode({
@@ -161,28 +167,28 @@ resource "random_password" "linux_vm_user_password" {
 resource "azurerm_virtual_network" "linux_vm_vnet" {
   name                = "production-vnet"
   address_space       = ["10.2.0.0/16"]
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
+  resource_group_name       = azurerm_resource_group.cloudjumping.name
+  location                  = azurerm_resource_group.cloudjumping.location
 }
 
 resource "azurerm_subnet" "linux_vm_subnet" {
   name                 = "production-subnet"
-  resource_group_name  = var.resource_group_name
+  resource_group_name       = azurerm_resource_group.cloudjumping.name
   virtual_network_name = azurerm_virtual_network.linux_vm_vnet.name
   address_prefixes     = ["10.2.1.0/24"]
 }
 
 resource "azurerm_public_ip" "linux_vm_ip" {
   name                = "production-public-ip"
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.cloudjumping.name
+  location            = azurerm_resource_group.cloudjumping.location
   allocation_method   = "Static"
 }
 
 resource "azurerm_network_interface" "linux_vm_nic" {
   name                = "production-vm-nic"
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.cloudjumping.name
+  location            = azurerm_resource_group.cloudjumping.location
 
   ip_configuration {
     name                          = "internal"
@@ -198,8 +204,8 @@ resource "azurerm_network_interface" "linux_vm_nic" {
 
 resource "azurerm_network_security_group" "ctf_nsg" {
   name                = "ctf-nsg"
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.cloudjumping.name
+  location            = azurerm_resource_group.cloudjumping.location
 
   security_rule {
     name                       = "Allow-SSH"
@@ -221,8 +227,8 @@ resource "azurerm_subnet_network_security_group_association" "ctf_subnet_assoc" 
 
 resource "azurerm_linux_virtual_machine" "linux_vm" {
   name                            = "production-server"
-  resource_group_name             = var.resource_group_name
-  location                        = var.resource_group_location
+  resource_group_name             = azurerm_resource_group.cloudjumping.name
+  location                        = azurerm_resource_group.cloudjumping.location
   size                            = "Standard_B1s"
   admin_username                  = "azureadmin"
   admin_password                  = random_password.linux_vm_user_password.result

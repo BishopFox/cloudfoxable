@@ -1,3 +1,9 @@
+# resource group
+resource "azurerm_resource_group" "permisery" {
+  name      = "permiseryRG"
+  location  = var.azure_region
+}
+
 resource "random_id" "suffix" {
   byte_length = 4
 }
@@ -20,8 +26,8 @@ locals {
 # create key vault
 resource "azurerm_key_vault" "ctf" {
   name                        = "ctfkv${random_id.suffix.hex}"
-  location                    = var.resource_group_location
-  resource_group_name         = var.resource_group_name
+  resource_group_name         = azurerm_resource_group.permisery.name
+  location                    = azurerm_resource_group.permisery.location
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   sku_name                    = "standard"
   purge_protection_enabled    = false
@@ -62,8 +68,8 @@ resource "azurerm_role_assignment" "guest_kv_reader" {
 # create a service plan (free tier), needed to create the web app
 resource "azurerm_service_plan" "cloudfoxable" {
   name                = "cloudfoxable"
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.permisery.name
+  location            = azurerm_resource_group.permisery.location
   os_type             = "Linux"
   sku_name            = "F1"
 }
@@ -71,8 +77,8 @@ resource "azurerm_service_plan" "cloudfoxable" {
 # create web app
 resource "azurerm_linux_web_app" "webapp" {
   name                = "myfirstwebapp-${random_id.suffix2.hex}"
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.permisery.name
+  location            = azurerm_resource_group.permisery.location
   service_plan_id     = azurerm_service_plan.cloudfoxable.id
 
   identity {
@@ -215,7 +221,7 @@ data "archive_file" "app_zip" {
 resource "null_resource" "zip_deploy" {
   provisioner "local-exec" {
     command = <<EOT
-az webapp deploy --resource-group ${var.resource_group_name} \
+az webapp deploy --resource-group ${azurerm_resource_group.permisery.name} \
   --name ${azurerm_linux_web_app.webapp.name} \
   --src-path ${data.archive_file.app_zip.output_path} \
   --type zip

@@ -1,3 +1,9 @@
+# resource group
+resource "azurerm_resource_group" "notsosecret" {
+  name      = "notsosecretRG"
+  location  = var.azure_region
+}
+
 resource "random_id" "suffix" {
     byte_length = 5
 }
@@ -22,8 +28,8 @@ resource "azurerm_role_assignment" "reader" {
 # create storage account 1
 resource "azurerm_storage_account" "storage_account_1" {
   name                     = "notsosecret${random_id.suffix.hex}"
-  resource_group_name      = var.resource_group_name
-  location                 = var.resource_group_location
+  resource_group_name      = azurerm_resource_group.notsosecret.name
+  location                 = azurerm_resource_group.notsosecret.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }
@@ -31,8 +37,8 @@ resource "azurerm_storage_account" "storage_account_1" {
 # create storage account 2
 resource "azurerm_storage_account" "storage_account_2" {
   name                     = "notsosecret${random_id.suffix2.hex}"
-  resource_group_name      = var.resource_group_name
-  location                 = var.resource_group_location
+  resource_group_name      = azurerm_resource_group.notsosecret.name
+  location                 = azurerm_resource_group.notsosecret.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
   allow_nested_items_to_be_public = true

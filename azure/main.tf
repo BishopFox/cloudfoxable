@@ -16,14 +16,13 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    key_vault {
+      recover_soft_deleted_key_vaults = false
+      purge_soft_delete_on_destroy    = true
+    }
+  }
   subscription_id = var.subscription_id
-}
-
-# resource group to hold ctf resources
-resource "azurerm_resource_group" "rg" {
-  name     = "myTFResourceGroup"
-  location = var.azure_region
 }
 
 # user password
@@ -44,49 +43,44 @@ resource "azuread_user" "ctf_user" {
 
 module "challenge_notsosecret" {
   source                      = "./challenges/Not so secret"
-  resource_group_name         = azurerm_resource_group.rg.name
-  resource_group_location     = azurerm_resource_group.rg.location
+  azure_region                = var.azure_region
   player_upn                  = azuread_user.ctf_user.user_principal_name 
   player_object_id            = azuread_user.ctf_user.object_id
 }
 
 module "challenge_permisery" {
   source                      = "./challenges/Permisery"
-  resource_group_name         = azurerm_resource_group.rg.name
-  resource_group_location     = azurerm_resource_group.rg.location
+  azure_region                = var.azure_region
   player_upn                  = azuread_user.ctf_user.user_principal_name 
   player_object_id            = azuread_user.ctf_user.object_id
 }
 
 module "challenge_image-inationcontinuation" {
   source                      = "./challenges/Image-ination Continuation"
-  resource_group_name         = azurerm_resource_group.rg.name
-  resource_group_location     = azurerm_resource_group.rg.location
+  azure_region                = var.azure_region
   player_upn                  = azuread_user.ctf_user.user_principal_name 
   player_object_id            = azuread_user.ctf_user.object_id
 }
 
 module "challenge_image-inationstation" {
   source                      = "./challenges/Image-ination Station"
-  resource_group_name         = azurerm_resource_group.rg.name
-  resource_group_location     = azurerm_resource_group.rg.location
+  azure_region                = var.azure_region
   player_upn                  = azuread_user.ctf_user.user_principal_name 
   player_object_id            = azuread_user.ctf_user.object_id
   depends_on                  = [module.challenge_image-inationcontinuation]
+  depends_on_output = module.challenge_image-inationcontinuation.some_output #needed to make sure stuff finishes before other stuff
 }
 
 module "challenge_vmiam" {
   source                      = "./challenges/VM I Am"
-  resource_group_name         = azurerm_resource_group.rg.name
-  resource_group_location     = azurerm_resource_group.ctf.location
+  azure_region                = var.azure_region
   player_upn                  = azuread_user.ctf_user.user_principal_name 
   player_object_id            = azuread_user.ctf_user.object_id
 }
 
 module "challenge_cloudjumping" {
   source                      = "./challenges/Cloud Jumping"
-  resource_group_name         = azurerm_resource_group.rg.name
-  resource_group_location     = azurerm_resource_group.rg.location
+  azure_region                      = var.azure_region
   player_upn                  = azuread_user.ctf_user.user_principal_name 
   player_object_id            = azuread_user.ctf_user.object_id
 }

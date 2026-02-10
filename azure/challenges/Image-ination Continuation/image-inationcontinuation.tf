@@ -1,3 +1,9 @@
+# resource group
+resource "azurerm_resource_group" "imageinationcontinuation" {
+  name      = "imageinationcontinuationRG"
+  location  = var.azure_region
+}
+
 resource "random_id" "suffix" {
   byte_length = 4
 }
@@ -12,12 +18,11 @@ data "azurerm_client_config" "current" {}
 # create a key vault
 resource "azurerm_key_vault" "ctf" {
   name                        = "ctfkv${random_id.suffix.hex}"
-  location                    = var.resource_group_location
-  resource_group_name         = var.resource_group_name
+  resource_group_name         = azurerm_resource_group.imageinationcontinuation.name
+  location                    = azurerm_resource_group.imageinationcontinuation.location
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   sku_name                    = "standard"
   purge_protection_enabled    = false
-  soft_delete_retention_days  = 7
   enable_rbac_authorization   = true
 }
 
@@ -31,8 +36,8 @@ resource "azurerm_key_vault_secret" "flag" {
 # create an identity for the logic app
 resource "azurerm_user_assigned_identity" "logicapp_identity" {
   name                = "logicapp-mi-${random_id.suffix.hex}"
-  location            = var.resource_group_location
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.imageinationcontinuation.name
+  location            = azurerm_resource_group.imageinationcontinuation.location
 }
 
 locals {
@@ -42,7 +47,7 @@ locals {
 # create a deployment template for the logic app
 resource "azurerm_resource_group_template_deployment" "logicapp_with_flag" {
   name                = "logicapp-deploy-${random_id.suffix.hex}"
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.imageinationcontinuation.name
   deployment_mode     = "Incremental"
 
   template_content = jsonencode({
@@ -54,7 +59,7 @@ resource "azurerm_resource_group_template_deployment" "logicapp_with_flag" {
         "type" = "Microsoft.Logic/workflows",
         "apiVersion" = "2019-05-01",
         "name" = "${local.logicapp_name}",
-        "location" = var.resource_group_location,
+        "location" = azurerm_resource_group.imageinationcontinuation.location,
         "identity" = {
           "type" = "SystemAssigned"
         },
@@ -119,7 +124,7 @@ resource "null_resource" "get_logicapp_identity" {
     cd "challenges/Image-ination Continuation/data/"
       az logic workflow show \
         --name ${local.logicapp_name} \
-        --resource-group ${var.resource_group_name} \
+        --resource-group ${azurerm_resource_group.imageinationcontinuation.name} \
         --query "identity.principalId" \
         --output tsv > logicapp_identity.txt
     EOT
@@ -178,7 +183,7 @@ resource "azurerm_role_assignment" "sp_reader" {
 resource "azurerm_role_assignment" "logicapp_reader" {
   principal_id         = azuread_service_principal.sp.object_id
   role_definition_name = "Logic App Contributor"
-  scope                = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Logic/workflows/flag-logicapp-${random_id.suffix.hex}"
+  scope                = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${azurerm_resource_group.imageinationcontinuation.name}/providers/Microsoft.Logic/workflows/flag-logicapp-${random_id.suffix.hex}"
 
   depends_on = [azurerm_resource_group_template_deployment.logicapp_with_flag]
 }
@@ -197,8 +202,12 @@ echo '{
   "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
   "subscription_id": "${data.azurerm_client_config.current.subscription_id}",
   "resource": "https://management.azure.com/",
-  "resource_group": "${var.resource_group_name}"
+  "resource_group": "${azurerm_resource_group.imageinationcontinuation.name}"
 }' > challenges/Image-ination\ Station/data/sp-creds.json
 EOT
   }
+}
+
+output "some_output" {
+  value = azuread_service_principal_password.sp_secret.key_id
 }

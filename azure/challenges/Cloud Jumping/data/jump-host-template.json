@@ -88,7 +88,7 @@
       },
       "networkSecurityGroupName": {
         "type": "string",
-        "defaultValue": "SecGroupNet",
+        "defaultValue": "CJjumpHostSecGroup",
         "metadata": {
           "description": "Name of the Network Security Group"
         }
