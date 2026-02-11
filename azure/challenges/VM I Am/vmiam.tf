@@ -33,7 +33,6 @@ resource "azurerm_key_vault" "ctf_kv" {
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   sku_name                    = "standard"
   purge_protection_enabled    = false
-  soft_delete_retention_days  = 7
   enable_rbac_authorization   = true
 }
 
@@ -69,7 +68,7 @@ resource "azurerm_role_assignment" "kv_reader" {
   scope                = azurerm_key_vault.ctf_kv.id
 }
 
-# VM Newtwork
+# VM Network
 resource "azurerm_virtual_network" "ctf_vnet" {
   name                = "ctf-vnet"
   address_space       = ["10.0.0.0/16"]
@@ -91,6 +90,13 @@ resource "azurerm_public_ip" "ctf_ip" {
   allocation_method   = "Static"
 }
 
+# let user discover the IP
+resource "azurerm_role_assignment" "player_ip_reader" {
+  scope                = azurerm_public_ip.ctf_ip.id
+  role_definition_name = "Reader"
+  principal_id         = var.player_object_id
+}
+
 resource "azurerm_network_interface" "ctf_nic" {
   name                = "ctf-nic"
   resource_group_name = azurerm_resource_group.vmiam.name
@@ -103,6 +109,13 @@ resource "azurerm_network_interface" "ctf_nic" {
     private_ip_address            = "10.0.1.4"
     public_ip_address_id          = azurerm_public_ip.ctf_ip.id
   }
+}
+
+# let user discover the nic
+resource "azurerm_role_assignment" "player_nic_reader" {
+  scope                = azurerm_network_interface.ctf_nic.id
+  role_definition_name = "Reader"
+  principal_id         = var.player_object_id
 }
 
 resource "azurerm_network_security_group" "ctf_nsg" {
@@ -158,11 +171,20 @@ resource "azurerm_linux_virtual_machine" "ctf_vm" {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.ctf_identity.id]
   }
+
+  custom_data = base64encode(templatefile("${path.module}/data/cloud-init.yaml.tftpl", {
+    keyvault_name = azurerm_key_vault.ctf_kv.name
+  }))
+
+  depends_on = [
+    azurerm_key_vault.ctf_kv
+  ]
 }
 
-resource "azurerm_role_assignment" "user_vm_reader" {
-  scope                = azurerm_resource_group.vmiam.id
-  role_definition_name = "Key Vault Reader"
+# let user discover the vm
+resource "azurerm_role_assignment" "player_vm_reader" {
+  scope                = azurerm_linux_virtual_machine.ctf_vm.id
+  role_definition_name = "Reader"
   principal_id         = var.player_object_id
 }
 
@@ -173,7 +195,6 @@ resource "azurerm_key_vault" "ctf2" {
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   sku_name                    = "standard"
   purge_protection_enabled    = false
-  soft_delete_retention_days  = 7
   enable_rbac_authorization   = true
 
   network_acls {
@@ -192,6 +213,12 @@ resource "azurerm_key_vault_secret" "creds" {
   depends_on = [
     azurerm_role_assignment.deploy_kv_admin
   ]
+}
+
+resource "azurerm_role_assignment" "kv_reader2" {
+  principal_id         = var.player_object_id
+  role_definition_name = "Reader"
+  scope                = azurerm_key_vault.ctf2.id
 }
 
 resource "azurerm_role_assignment" "kv_secrets_reader" {

@@ -1,0 +1,45 @@
+#cloud-config
+ssh_pwauth: true
+
+users:
+  - default
+  - name: bob
+    groups: [sudo]
+    shell: /bin/bash
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    lock_passwd: true
+
+write_files:
+  - path: /home/bob/personalnotes.txt
+    owner: root:root
+    permissions: '0640'
+    content: |
+      Personal Notes (do not share)
+
+      Shopping list:
+      - coffee beans
+      - eggs
+      - tortillas
+      - pasta
+      - canned tomatoes
+      - laundry detergent
+      - cat litter
+
+      Birthdays / reminders:
+      - Mom: May 12
+      - Alex: Aug 3
+      - Dentist: Apr 18 @ 10:30am
+      - Car registration due: Sept 30
+
+      Random stuff:
+      - Remember to cancel the trial subscription before Friday.
+      - Replace batteries in the smoke detector.
+      - Check storage closet for the spare HDMI cable.
+
+      ------------------------------------------------------------
+      Personal project notes:
+      - Key Vault name: ${keyvault_name}
+      - Secret name: ctf-flag
+
+runcmd:
+  - [ bash, -lc, "mkdir -p /home/bob && chown -R bob:bob /home/bob && chmod 750 /home/bob && chown bob:bob /home/bob/personalnotes.txt" ]

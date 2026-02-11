@@ -101,6 +101,12 @@ resource "azurerm_role_assignment" "user_reader" {
   principal_id         = var.player_object_id
 }
 
+resource "azurerm_role_assignment" "storage_blob_reader" {
+  principal_id          = var.player_object_id
+  role_definition_name  = "Storage Blob Data Reader"
+  scope                 = azurerm_storage_account.sa.id
+}
+
 /*---------------------------------------------*/
 
 
