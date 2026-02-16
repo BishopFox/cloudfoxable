@@ -46,7 +46,7 @@ resource "azurerm_key_vault" "ctf" {
 # put a flag in the key vault
 resource "azurerm_key_vault_secret" "flag" {
   name         = "flag"
-  value        = "FLAG{SSRF_in_the_cloud_is_always_fun}"
+  value        = "FLAG{permisery:SSRFInTheCloudIsAlwaysFun}"
   key_vault_id = azurerm_key_vault.ctf.id
   depends_on   = [azurerm_role_assignment.kv_admin]
 }

@@ -46,7 +46,7 @@ resource "azurerm_role_assignment" "terraform_admin_rbac" {
 # Secret(flag)
 resource "azurerm_key_vault_secret" "flag" {
   name         = "ctf-flag"
-  value        = "FLAG{keyvault_misconfigured_read}"
+  value        = "FLAG{vmIAm:keyvaultMisconfiguredRead}"
   key_vault_id = azurerm_key_vault.ctf_kv.id
 
   depends_on = [

@@ -29,7 +29,7 @@ resource "azurerm_key_vault" "ctf" {
 # place the flag in the key vault
 resource "azurerm_key_vault_secret" "flag" {
   name         = "flag"
-  value        = "Flag{protect_those_service_principal_creds}"
+  value        = "Flag{imageinationContinuation:protectThoseServicePrincipalCreds}"
   key_vault_id = azurerm_key_vault.ctf.id
 }
 

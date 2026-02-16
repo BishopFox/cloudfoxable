@@ -18,11 +18,13 @@ locals {
   user_ip = chomp(data.http.current_ip.response_body)
 }
 
+# password for read user
 resource "random_password" "read_user_password" {
   length  = 16
   special = true
 }
 
+# store creds locally then later upload them to storage account
 resource "local_file" "credentials" {
   filename = "${path.module}/data/container/tmp.txt"
   content = <<-EOF
@@ -31,6 +33,7 @@ resource "local_file" "credentials" {
   EOF
 }
 
+# create read user and give them global reader
 resource "azuread_user" "read_user" {
   user_principal_name = "az.reader@${data.azuread_domains.domain.domains.0.domain_name}"
   display_name        = "Azure Reader"
@@ -95,16 +98,17 @@ resource "azurerm_storage_blob" "blob" {
   source                 = "${path.module}/data/container/${each.value}"
 }
 
-resource "azurerm_role_assignment" "user_reader" {
-  scope                = azurerm_resource_group.cloudjumping.id
-  role_definition_name = "Reader"
-  principal_id         = var.player_object_id
-}
-
+# give player permissions to read storage account and data
 resource "azurerm_role_assignment" "storage_blob_reader" {
   principal_id          = var.player_object_id
   role_definition_name  = "Storage Blob Data Reader"
   scope                 = azurerm_storage_account.sa.id
+}
+
+resource "azurerm_role_assignment" "reader" {
+  principal_id         = var.player_object_id
+  role_definition_name = "Reader"
+  scope                = azurerm_storage_account.sa.id
 }
 
 /*---------------------------------------------*/
@@ -120,8 +124,9 @@ resource "azurerm_user_assigned_identity" "contributor_managed_identity" {
   location                  = azurerm_resource_group.cloudjumping.location
 }
 
+# managed identity should have contributor role for cloudjumping resource group
 resource "azurerm_role_assignment" "contributor" {
-  scope                = data.azurerm_subscription.current.id
+  scope                = azurerm_resource_group.cloudjumping.id
   role_definition_name = "Contributor"
   principal_id         = azurerm_user_assigned_identity.contributor_managed_identity.principal_id
 }
@@ -133,6 +138,7 @@ resource "azurerm_role_assignment" "contributor" {
 // Create Linux VM with a managed identity
 #################################################
 
+# vm1 (jump-host) gets deployed from a template
 data "local_file" "jump_host_template" {
   filename = "${path.module}/data/jump-host-template.json"
 }

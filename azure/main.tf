@@ -25,6 +25,8 @@ provider "azurerm" {
   subscription_id = var.subscription_id
 }
 
+data "azurerm_client_config" "current" {}
+
 # user password
 resource "random_password" "ctf_user_pw" {
   length           = 14 
@@ -42,6 +44,7 @@ resource "azuread_user" "ctf_user" {
 }
 
 module "challenge_notsosecret" {
+  count                       = var.notsosecret_enabled ? 1 : 0
   source                      = "./challenges/Not so secret"
   azure_region                = var.azure_region
   player_upn                  = azuread_user.ctf_user.user_principal_name 
@@ -49,6 +52,7 @@ module "challenge_notsosecret" {
 }
 
 module "challenge_permisery" {
+  count                       = var.permisery_enabled ? 1 : 0
   source                      = "./challenges/Permisery"
   azure_region                = var.azure_region
   player_upn                  = azuread_user.ctf_user.user_principal_name 
@@ -56,6 +60,7 @@ module "challenge_permisery" {
 }
 
 module "challenge_image-inationcontinuation" {
+  count                       = var.imageination_enabled ? 1 : 0
   source                      = "./challenges/Image-ination Continuation"
   azure_region                = var.azure_region
   player_upn                  = azuread_user.ctf_user.user_principal_name 
@@ -63,15 +68,17 @@ module "challenge_image-inationcontinuation" {
 }
 
 module "challenge_image-inationstation" {
+  count                       = var.imageination_enabled ? 1 : 0
   source                      = "./challenges/Image-ination Station"
   azure_region                = var.azure_region
   player_upn                  = azuread_user.ctf_user.user_principal_name 
   player_object_id            = azuread_user.ctf_user.object_id
   depends_on                  = [module.challenge_image-inationcontinuation]
-  depends_on_output = module.challenge_image-inationcontinuation.some_output #needed to make sure stuff finishes before other stuff
+  depends_on_output           = module.challenge_image-inationcontinuation[0].some_output # needed to make sure stuff finishes before other stuff
 }
 
 module "challenge_vmiam" {
+  count                       = var.vmiam_enabled ? 1 : 0
   source                      = "./challenges/VM I Am"
   azure_region                = var.azure_region
   player_upn                  = azuread_user.ctf_user.user_principal_name 
@@ -79,35 +86,50 @@ module "challenge_vmiam" {
 }
 
 module "challenge_cloudjumping" {
+  count                       = var.cloudjumping_enabled ? 1 : 0
   source                      = "./challenges/Cloud Jumping"
   azure_region                      = var.azure_region
   player_upn                  = azuread_user.ctf_user.user_principal_name 
   player_object_id            = azuread_user.ctf_user.object_id
 }
 
+locals {
+  enabled_challenges = compact([
+    var.notsosecret_enabled                ? "Not So Secret (~$0.01/month)" : "",
+    var.permisery_enabled                  ? "Permisery (~$0/month)" : "",
+    var.imageination_enabled               ? "Image-ination Challenges (~$5/month)" : "",
+    var.vmiam_enabled                      ? "VM I Am (~$15/month)" : "",
+    var.cloudjumping_enabled               ? "Cloud Jumping (~$15/month)" : ""
+  ])
+}
+
 output "Next_Steps" {
-  value = <<-EOT
+  value = <<EOT
   +---------
   | 
-  |   +-------------------------------------------------------------------------------------+
-  |   | Deployment Information:                                                             |
-  |   |                                                                                     |
-  |   | Profile Used:             TBD                                                       |
-  |   | Deployment User:          TBD                                                       |
-  |   | CloudFoxable deployed to: TBD                                                       |
-  |   | Scoreboard URL:           https://cloudfoxable.bishopfox.com                        |
-  |   | CTF Starting User:        TBD                                                       |
-  |   +-------------------------------------------------------------------------------------+
+  |   +---------------------------------------------------------------------------------------------+
+  |   | Deployment Information:                                                                     |
+  |   |                                                                                             |
+  |   | CloudFoxable deployed to: Subscription ${data.azurerm_client_config.current.subscription_id}|
+  |   |                           Tenant ${data.azurerm_client_config.current.tenant_id}            |
+  |   | Scoreboard URL:           https://cloudfoxable.bishopfox.com                                |
+  |   | CTF Starting User:        Willem                                                            |
+  |   | Credentials:              cat credentials.txt                                               |
+  |   +---------------------------------------------------------------------------------------------+
   | 
   | Next steps:
   | 
-  |   1. Set up your starting user credentials (From within this directory):
+  |   1. Access the credentials for your CTF user:
   |  
-  |      TBD
+  |      cat credentials.txt
   |
-  |   2. Verify your credentials are working:
+  |   2. Logout your admin user:
   |
-  |      TBD
+  |      az logout 
+  |
+  |   3. Verify your CTF user's credentials are working:
+  |
+  |      az login
   |
   |   3. Head back to https://cloudfoxable.bishopfox.com and complete the first challenge!
   |
@@ -116,7 +138,7 @@ output "Next_Steps" {
   |  +---------------------------------+--------------+
   |  |  Currently Enabled Challenges   |  Cost/Month  | 
   |  +---------------------------------+--------------+
-  |  |    TBD
+  |  |  ${length(local.enabled_challenges) > 0 ? join("\n|  |    ", local.enabled_challenges) : "None"}
   |  +------------------------------------------------+
   |
   +---------
@@ -128,11 +150,6 @@ locals {
   client_id = ${azuread_user.ctf_user.user_principal_name}
   password = ${random_password.ctf_user_pw.result}
   EOT
-}
-
-output "credentials" {
-  value     = local.credentials_text
-  sensitive = true
 }
 
 resource "local_file" "credentials" {

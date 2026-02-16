@@ -1,1 +1,1 @@
-FLAG{just_another_day_cloudsurfing}
+FLAG{cloudJumping:justAnotherDayCloudJumping}

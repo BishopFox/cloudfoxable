@@ -11,3 +11,28 @@ variable "subscription_id" {
 variable "domain" {
   type = string
 }
+
+variable "notsosecret_enabled" {
+  type    = bool
+  default = true
+}
+
+variable "permisery_enabled" {
+  type    = bool
+  default = true
+}
+
+variable "imageination_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "vmiam_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "cloudjumping_enabled" {
+  type    = bool
+  default = false
+}

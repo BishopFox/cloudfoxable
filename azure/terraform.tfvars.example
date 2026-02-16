@@ -23,23 +23,15 @@ domain = ""
 # If you don't specify anything, the default behavior is to use https://icanhazip.com to pull your IP address
 # user_ip = "[YOUR_IP_ADDRESS]"
 
-###########################
-# Assume role Configuration 
-###########################
-
-# Nothing here
-
 ############################
 # Enabled/Disabled Challenges
 ############################
 
-# Low or No cost - Always on
-# TBD
+# enabled by default
+notsosecret_enabled = true
+permisery_enabled   = true
 
-# This challenges incur noticeable cost. Enable when needed
-# TBD
-
-##  Bastion host related challenges           
-##  The following challenges all need `bastion_enabled = true`
-
-# TBD
+# disabled by default (cost)
+imageination_enabled              = false # about $5 per month / $0.17 per day 
+vmiam_enabled                     = false # about $15 per month / $0.50 per day
+cloudjumping_enabled              = false # about $15 per month / $0.50 per day
