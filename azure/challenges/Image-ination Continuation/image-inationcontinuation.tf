@@ -31,6 +31,8 @@ resource "azurerm_key_vault_secret" "flag" {
   name         = "flag"
   value        = "Flag{imageinationContinuation:protectThoseServicePrincipalCreds}"
   key_vault_id = azurerm_key_vault.ctf.id
+
+  depends_on = [azurerm_role_assignment.kv_admin]
 }
 
 # create an identity for the logic app
@@ -116,6 +118,8 @@ resource "azurerm_role_assignment" "kv_admin" {
   role_definition_name = "Key Vault Administrator"
   scope                = azurerm_key_vault.ctf.id
 }
+
+
 
 # get the logic app identity and store in a local file
 resource "null_resource" "get_logicapp_identity" {

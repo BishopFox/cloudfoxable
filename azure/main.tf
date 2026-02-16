@@ -94,55 +94,81 @@ module "challenge_cloudjumping" {
 }
 
 locals {
-  enabled_challenges = compact([
-    var.notsosecret_enabled                ? "Not So Secret (~$0.01/month)" : "",
-    var.permisery_enabled                  ? "Permisery (~$0/month)" : "",
-    var.imageination_enabled               ? "Image-ination Challenges (~$5/month)" : "",
-    var.vmiam_enabled                      ? "VM I Am (~$15/month)" : "",
-    var.cloudjumping_enabled               ? "Cloud Jumping (~$15/month)" : ""
-  ])
+  challenge_catalog = [
+    {
+      enabled = var.notsosecret_enabled
+      name    = "Not So Secret"
+      cost    = "~$0.01/month"
+    },
+    {
+      enabled = var.permisery_enabled
+      name    = "Permisery"
+      cost    = "~$0/month"
+    },
+    {
+      enabled = var.imageination_enabled
+      name    = "Image-ination"
+      cost    = "~$5/month"
+    },
+    {
+      enabled = var.vmiam_enabled
+      name    = "VM I Am"
+      cost    = "~$15/month"
+    },
+    {
+      enabled = var.cloudjumping_enabled
+      name    = "Cloud Jumping"
+      cost    = "~$15/month"
+    }
+  ]
+
+  enabled_challenges = [
+    for c in local.challenge_catalog :
+    format("|  |  %-31s | %-12s |", c.name, c.cost)
+    if c.enabled
+  ]
 }
 
 output "Next_Steps" {
   value = <<EOT
-  +---------
-  | 
-  |   +---------------------------------------------------------------------------------------------+
-  |   | Deployment Information:                                                                     |
-  |   |                                                                                             |
-  |   | CloudFoxable deployed to: Subscription ${data.azurerm_client_config.current.subscription_id}|
-  |   |                           Tenant ${data.azurerm_client_config.current.tenant_id}            |
-  |   | Scoreboard URL:           https://cloudfoxable.bishopfox.com                                |
-  |   | CTF Starting User:        Willem                                                            |
-  |   | Credentials:              cat credentials.txt                                               |
-  |   +---------------------------------------------------------------------------------------------+
-  | 
-  | Next steps:
-  | 
-  |   1. Access the credentials for your CTF user:
-  |  
-  |      cat credentials.txt
-  |
-  |   2. Logout your admin user:
-  |
-  |      az logout 
-  |
-  |   3. Verify your CTF user's credentials are working:
-  |
-  |      az login
-  |
-  |   3. Head back to https://cloudfoxable.bishopfox.com and complete the first challenge!
-  |
-  |      You'll need this: FLAG{congrats_you_set_up_Terraform_with_Azure}
-  |
-  |  +---------------------------------+--------------+
-  |  |  Currently Enabled Challenges   |  Cost/Month  | 
-  |  +---------------------------------+--------------+
-  |  |  ${length(local.enabled_challenges) > 0 ? join("\n|  |    ", local.enabled_challenges) : "None"}
-  |  +------------------------------------------------+
-  |
-  +---------
-  EOT
++---------
+| 
+|   +---------------------------------------------------------------------------------------------+
+|   | Deployment Information:                                                                     |
+|   |                                                                                             |
+|   | CloudFoxable deployed to: Subscription ${data.azurerm_client_config.current.subscription_id}|
+|   |                           Tenant ${data.azurerm_client_config.current.tenant_id}            |
+|   | Scoreboard URL:           https://cloudfoxable.bishopfox.com                                |
+|   | CTF Starting User:        Willem                                                            |
+|   | Credentials:              cat credentials.txt                                               |
+|   +---------------------------------------------------------------------------------------------+
+| 
+| Next steps:
+| 
+|   1. Access the credentials for your CTF user:
+|  
+|      cat credentials.txt
+|
+|   2. Logout your admin user:
+|
+|      az logout 
+|
+|   3. Verify your CTF user's credentials are working:
+|
+|      az login
+|
+|   3. Head back to https://cloudfoxable.bishopfox.com and complete the first Azure challenge!
+|
+|      You'll need this: FLAG{congrats_you_set_up_Terraform_with_Azure}
+|
+|  +---------------------------------+---------------+
+|  |  Currently Enabled Challenges   |  Cost/Month   | 
+|  +---------------------------------+---------------+
+${length(local.enabled_challenges) > 0 ? join("\n", local.enabled_challenges) : "|  None                            |              |"}
+|  +-------------------------------------------------+
+|
++---------
+EOT
 }
 
 locals {
