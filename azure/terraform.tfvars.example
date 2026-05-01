@@ -1,0 +1,37 @@
+######################
+# Azure Configuration 
+######################
+
+# Set your subscription_id
+subscription_id = ""
+
+# Set the region to which to deploy resources. The default region is westus2
+# azure_region = ""
+
+#######################
+# User Configuration 
+#######################
+
+# Use this variable to set the domain for your CTF users. You can find this by logging into Azure, going to Users, and looking at the domain name associated with the User Principal Name of your user account. For example: @johndoe.onmicrosoft.com
+domain = ""
+
+#######################
+# User IP Configuration 
+#######################
+
+# Specify your IP address here to bre used with security groups (so that "public" challenges are only accessible to you)
+# If you don't specify anything, the default behavior is to use https://icanhazip.com to pull your IP address
+# user_ip = "[YOUR_IP_ADDRESS]"
+
+############################
+# Enabled/Disabled Challenges
+############################
+
+# enabled by default
+notsosecret_enabled = true
+permisery_enabled   = true
+
+# disabled by default (cost)
+imageination_enabled              = false # about $5 per month / $0.17 per day 
+vmiam_enabled                     = false # about $15 per month / $0.50 per day
+cloudjumping_enabled              = false # about $15 per month / $0.50 per day

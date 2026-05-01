@@ -46,5 +46,15 @@ response.json
 .ctf
 config 
 
+# challenge specific files
+azure/challenges/Cloud Jumping/data/container/tmp.txt
+azure/challenges/Image-ination Continuation/data/logicapp_identity.txt
+azure/challenges/Image-ination Station/data/sp-creds.json
+azure/challenges/Not so secret/data/assets.csv
+azure/challenges/Permisery/data/app.py
+azure/challenges/Permisery/data/requirements.txt
+azure/challenges/Permisery/zip/
 
-
+# other azure files
+azure/credentials.txt
+azure/terraform.tfvars
